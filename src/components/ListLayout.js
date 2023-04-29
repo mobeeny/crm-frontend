@@ -9,54 +9,62 @@ import Avatar from "@mui/material/Avatar";
 import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
+import { Button, Container, Grid, Stack } from "@mui/material";
 
 export default function ListLayout() {
-    return (
-        <List
-            sx={{
-                width: "100%",
-                maxWidth: 360,
-                bgcolor: "background.paper",
-            }}
-            subheader={
-                <ListSubheader component="div" id="nested-list-subheader">
-                    Users/Projects
-                </ListSubheader>
-            }
+  return (
+    <>
+      <Grid container direction="column" maxWidth={360}>
+        <Grid item sx={{ textAlign: "right", margin: 2 }}>
+          <Button variant="contained">Add User</Button>
+        </Grid>
+        <Grid
+          item
+          sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
         >
+          <List
+            subheader={
+              <ListSubheader component="div" id="nested-list-subheader">
+                Users/Projects
+              </ListSubheader>
+            }
+          >
             <ListItemButton>
-                <ListItem>
-                    <ListItemAvatar>
-                        <Avatar>
-                            <BeachAccessIcon />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="User Name" secondary="July 20, 2014" />
-                </ListItem>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <BeachAccessIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="User Name" secondary="July 20, 2014" />
+              </ListItem>
             </ListItemButton>
             <Divider component="li" />
             <ListItemButton>
-                <ListItem>
-                    <ListItemAvatar>
-                        <Avatar>
-                            <BeachAccessIcon />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="User Name" secondary="July 20, 2014" />
-                </ListItem>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <BeachAccessIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="User Name" secondary="July 20, 2014" />
+              </ListItem>
             </ListItemButton>
 
             <Divider component="li" />
             <ListItemButton>
-                <ListItem>
-                    <ListItemAvatar>
-                        <Avatar>
-                            <BeachAccessIcon />
-                        </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="User Name" secondary="July 20, 2014" />
-                </ListItem>
+              <ListItem>
+                <ListItemAvatar>
+                  <Avatar>
+                    <BeachAccessIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText primary="User Name" secondary="July 20, 2014" />
+              </ListItem>
             </ListItemButton>
-        </List>
-    );
+          </List>
+        </Grid>
+      </Grid>
+    </>
+  );
 }
