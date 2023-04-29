@@ -10,6 +10,7 @@ import ProjectIcon from "@mui/icons-material/AccountTree";
 import QuoteIcon from "@mui/icons-material/RequestQuote";
 import InvoiceIcon from "@mui/icons-material/Receipt";
 import PaymentsIcon from "@mui/icons-material/Paid";
+import Counter from "./Counter";
 
 export default function DetailsLayout() {
   const [value, setValue] = React.useState(2);
@@ -40,7 +41,10 @@ export default function DetailsLayout() {
             <Tab icon={<InvoiceIcon />} label="Invoices" />
             <Tab icon={<PaymentsIcon />} label="Payments" />
           </Tabs>
+          Form for New User
+          <input type="date" id="birthdate" name="birthdate" />
         </Grid>
+        <Counter />
       </Grid>
     </>
   );
