@@ -11,7 +11,7 @@ import QuoteIcon from "@mui/icons-material/RequestQuote";
 import InvoiceIcon from "@mui/icons-material/Receipt";
 import PaymentsIcon from "@mui/icons-material/Paid";
 import Counter from "./Counter";
-
+import SampleFirebaseComponent from 
 export default function DetailsLayout() {
   const [value, setValue] = React.useState(2);
 
@@ -45,6 +45,7 @@ export default function DetailsLayout() {
           <input type="date" id="birthdate" name="birthdate" />
         </Grid>
         <Counter />
+        <SampleFirebaseComponent/>
       </Grid>
     </>
   );

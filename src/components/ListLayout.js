@@ -10,26 +10,14 @@ import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { Button, Container, Grid, Stack } from "@mui/material";
-import database from "../firebaseConfig";
 import { useState, useEffect } from "react";
-import { ref, set } from "firebase/database";
 
 export default function ListLayout() {
-  const [data, setData] = useState(null);
-  // useEffect(() => {
-
-  // }, []);
-  const setFData = async () => {
-    set(ref(database, "tenco/users/" + 1), {
-      username: "Mobeen",
-      email: "Email@hlc.com",
-    });
-  };
   return (
     <>
       <Grid container direction="column" maxWidth={360}>
         <Grid item sx={{ textAlign: "right", margin: 2 }}>
-          <Button variant="contained" onClick={setFData}>
+          <Button variant="contained" >
             Add User
           </Button>
         </Grid>
