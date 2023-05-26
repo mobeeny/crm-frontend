@@ -26,6 +26,10 @@ export const SampleFirebaseComponent = () => {
     };
 
     const deleteMovie = async (id) => {
+        console.log("Auth Email", auth?.currentUser?.email);
+        console.log("Auth uid", auth?.uid);
+        console.log("Auth currentUser.uid", auth?.currentUser?.uid);
+
         const movieDoc = doc(db, "movies", id);
         await deleteDoc(movieDoc);
     };
