@@ -12,13 +12,14 @@ import InvoiceIcon from "@mui/icons-material/Receipt";
 import PaymentsIcon from "@mui/icons-material/Paid";
 import Counter from "./Counter";
 import { SampleFirebaseComponent } from "../components/SampleFirebaseComponent";
+import Profile from "./Profile";
 
 export default function DetailsLayout() {
-    const [value, setValue] = React.useState(2);
+    const [selectedTab, setSelectedTab] = React.useState(2);
 
-    // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    //     setValue(newValue);
-    // };
+    const handleTabChange = (event, newValue) => {
+        setSelectedTab(newValue);
+    };
 
     return (
         <>
@@ -28,8 +29,8 @@ export default function DetailsLayout() {
                 </Grid>
                 <Grid item textAlign="center" width="100%">
                     <Tabs
-                        value={value}
-                        // onChange={handleChange}
+                        value={selectedTab}
+                        onChange={handleTabChange}
                         variant="fullWidth"
                         aria-label="icon label tabs example"
                     >
@@ -40,12 +41,13 @@ export default function DetailsLayout() {
                         <Tab icon={<InvoiceIcon />} label="Invoices" />
                         <Tab icon={<PaymentsIcon />} label="Payments" />
                     </Tabs>
-                    Form for New User
-                    <input type="date" id="birthdate" name="birthdate" />
                 </Grid>
-                <Counter />
+                {/* <Counter /> */}
 
-                <SampleFirebaseComponent />
+                {/* <SampleFirebaseComponent /> */}
+                <Grid item textAlign="center" width="100%" sx={{ textAlign: "left", margin: 2 }}>
+                    <Profile sx={{ textAlign: "left", margin: 2 }} />
+                </Grid>
             </Grid>
         </>
     );

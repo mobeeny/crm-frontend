@@ -1,17 +1,25 @@
+import { selectClasses } from "@mui/material";
 import { createSlice } from "@reduxjs/toolkit";
 
 const usersSlice = createSlice({
     name: "users",
     initialState: {
         users: [],
+        selectedUser: {},
     },
     reducers: {
-        // increment: (state) => {
-        //   state.value += 1;
-        // },
-        // decrement: (state) => {
-        //   state.value -= 1;
-        // },
+        setUsers(state, action) {
+            state.users = action.payload;
+        },
+        setSelectedUser(state, action) {
+            state.selectedUser = action.payload;
+        },
+        setUpdatedUser(state, action) {
+            return {
+                ...state,
+                users: state.users.map((user) => (user.id === state.selectedUser.id ? state.selectedUser : user)),
+            };
+        },
         readUsers(state, action) {
             console.log("All Users are read and available in Redux State");
         },
@@ -25,6 +33,6 @@ const usersSlice = createSlice({
     },
 });
 
-export const { increment, decrement } = counterSlice.actions;
+export const { setSelectedUser, setUpdatedUser, setUsers } = usersSlice.actions;
 
-export default counterSlice.reducer;
+export default usersSlice.reducer;

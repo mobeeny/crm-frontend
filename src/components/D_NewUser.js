@@ -8,11 +8,11 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { auth, googleAuthProvider, db } from "../config/firebase";
+import { auth, googleAuthProvider, db, baseRef } from "../config/firebase";
 import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 export default function AddUserDialog() {
-    const usersCollectionRef = collection(db, "users");
+    const usersCollectionRef = collection(db, baseRef + "/users");
 
     const [open, setOpen] = React.useState();
     const [uName, setUName] = useState("");
@@ -48,6 +48,7 @@ export default function AddUserDialog() {
                 bDate: uDateBirth,
                 notes: uNotes,
             });
+            setOpen(false);
         } catch (err) {
             console.error(err);
         }
@@ -150,7 +151,9 @@ export default function AddUserDialog() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={onSubmitUser}>Add User</Button>
+                    <Button variant="contained" onClick={onSubmitUser}>
+                        Add User
+                    </Button>
                 </DialogActions>
             </Dialog>
         </div>

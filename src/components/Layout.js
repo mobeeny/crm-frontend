@@ -18,6 +18,12 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
+
+import UsersIcon from "@mui/icons-material/PeopleAlt";
+import SettingsIcon from "@mui/icons-material/Settings";
+import UpdateIcon from "@mui/icons-material/Update";
+import AboutIcon from "@mui/icons-material/Info";
+
 import Grid from "@mui/material/Grid";
 import ListLayout from "./ListLayout";
 import DetailsLayout from "./DetailsLayout";
@@ -92,7 +98,18 @@ const Drawer = styled(MuiDrawer, {
 export default function Layout() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-
+    const sx_ListItemButton = {
+        minHeight: 48,
+        justifyContent: open ? "initial" : "center",
+        px: 2.5,
+    };
+    const sx_ListItemIcon = {
+        minWidth: 0,
+        mr: open ? 3 : "auto",
+        justifyContent: "center",
+    };
+    const sx_ListItemText = { opacity: open ? 1 : 0 };
+    const sx_ListItem = { display: "block" };
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -130,54 +147,43 @@ export default function Layout() {
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
+                {/* ["Users", "Company", "Projects", "Quotes", "Invoices", "Payments"] */}
                 <List>
-                    {["Users", "Company", "Projects", "Quotes", "Invoices", "Payments"].map((text, index) => (
-                        <ListItem key={text} disablePadding sx={{ display: "block" }}>
-                            <ListItemButton
-                                sx={{
-                                    minHeight: 48,
-                                    justifyContent: open ? "initial" : "center",
-                                    px: 2.5,
-                                }}
-                            >
-                                <ListItemIcon
-                                    sx={{
-                                        minWidth: 0,
-                                        mr: open ? 3 : "auto",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                                </ListItemIcon>
-                                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
+                    <ListItem key={"Users"} disablePadding sx={sx_ListItem}>
+                        <ListItemButton sx={sx_ListItemButton}>
+                            <ListItemIcon sx={sx_ListItemIcon}>
+                                <UsersIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Users"} sx={sx_ListItemText} />
+                        </ListItemButton>
+                    </ListItem>
                 </List>
                 <Divider />
                 <List>
-                    {["Settings", "Updates", "About"].map((text, index) => (
-                        <ListItem key={text} disablePadding sx={{ display: "block" }}>
-                            <ListItemButton
-                                sx={{
-                                    minHeight: 48,
-                                    justifyContent: open ? "initial" : "center",
-                                    px: 2.5,
-                                }}
-                            >
-                                <ListItemIcon
-                                    sx={{
-                                        minWidth: 0,
-                                        mr: open ? 3 : "auto",
-                                        justifyContent: "center",
-                                    }}
-                                >
-                                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                                </ListItemIcon>
-                                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
+                    <ListItem key={"Settings"} disablePadding sx={sx_ListItem}>
+                        <ListItemButton sx={sx_ListItemButton}>
+                            <ListItemIcon sx={sx_ListItemIcon}>
+                                <SettingsIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Settings"} sx={sx_ListItemText} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={"Updates"} disablePadding sx={sx_ListItem}>
+                        <ListItemButton sx={sx_ListItemButton}>
+                            <ListItemIcon sx={sx_ListItemIcon}>
+                                <UpdateIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"Updates"} sx={sx_ListItemText} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={"About"} disablePadding sx={sx_ListItem}>
+                        <ListItemButton sx={sx_ListItemButton}>
+                            <ListItemIcon sx={sx_ListItemIcon}>
+                                <AboutIcon />
+                            </ListItemIcon>
+                            <ListItemText primary={"About"} sx={sx_ListItemText} />
+                        </ListItemButton>
+                    </ListItem>
                 </List>
             </Drawer>
             <ListLayout />
