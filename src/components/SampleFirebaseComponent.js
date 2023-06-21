@@ -61,7 +61,7 @@ export const SampleFirebaseComponent = () => {
     return (
         <div>
             <Auth />
-            <div>
+            {/* <div>
                 <input placeholder="Title: " onChange={(e) => setNewMovieTitle(e.target.value)} />
                 <input
                     placeholder="Release year: "
@@ -89,7 +89,7 @@ export const SampleFirebaseComponent = () => {
                         <button onClick={() => updateMovie(movie.id)}>Update Title</button>
                     </div>
                 ))}
-            </div>
+            </div> */}
         </div>
     );
 };

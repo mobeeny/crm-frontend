@@ -16,19 +16,20 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
-
+import Tooltip from "@mui/material/Tooltip";
 import UsersIcon from "@mui/icons-material/PeopleAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import UpdateIcon from "@mui/icons-material/Update";
 import AboutIcon from "@mui/icons-material/Info";
-
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
 import Grid from "@mui/material/Grid";
 import ListLayout from "./ListLayout";
 import DetailsLayout from "./DetailsLayout";
+import MenuItem from "@mui/material/MenuItem";
+import { auth, db } from "../config/firebase";
 
-const drawerWidth = 240;
+const drawerWidth = 150;
 
 const openedMixin = (theme) => ({
     width: drawerWidth,
@@ -95,9 +96,13 @@ const Drawer = styled(MuiDrawer, {
     }),
 }));
 
+const settings = ["Logout"];
+
 export default function Layout() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
+
     const sx_ListItemButton = {
         minHeight: 48,
         justifyContent: open ? "initial" : "center",
@@ -113,7 +118,15 @@ export default function Layout() {
     const handleDrawerOpen = () => {
         setOpen(true);
     };
-
+    const handleOpenUserMenu = (event) => {
+        setAnchorElUser(event.currentTarget);
+    };
+    const handleCloseUserMenu = () => {
+        setAnchorElUser(null);
+    };
+    const handleSignOut = () => {
+        auth.signOut();
+    };
     const handleDrawerClose = () => {
         setOpen(false);
     };
@@ -121,7 +134,7 @@ export default function Layout() {
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />
-            <AppBar position="fixed" open={open}>
+            <AppBar open={open}>
                 <Toolbar>
                     <IconButton
                         color="inherit"
@@ -138,16 +151,42 @@ export default function Layout() {
                     <Typography variant="h6" noWrap component="div">
                         Hosterlink CRM - TENCO
                     </Typography>
+                    <Box sx={{ flexGrow: 0, marginLeft: "auto" }}>
+                        <Tooltip title="Open settings">
+                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            sx={{ mt: "45px" }}
+                            id="menu-appbar"
+                            anchorEl={anchorElUser}
+                            anchorOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
+                            }}
+                            open={Boolean(anchorElUser)}
+                            onClose={handleCloseUserMenu}
+                        >
+                            <MenuItem key="logout" onClick={handleSignOut}>
+                                <Typography textAlign="center">Logout</Typography>
+                            </MenuItem>
+                        </Menu>
+                    </Box>
                 </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
                     <IconButton onClick={handleDrawerClose}>
-                        {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+                        <ChevronLeftIcon />
                     </IconButton>
                 </DrawerHeader>
                 <Divider />
-                {/* ["Users", "Company", "Projects", "Quotes", "Invoices", "Payments"] */}
                 <List>
                     <ListItem key={"Users"} disablePadding sx={sx_ListItem}>
                         <ListItemButton sx={sx_ListItemButton}>

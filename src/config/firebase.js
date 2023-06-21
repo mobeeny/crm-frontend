@@ -29,10 +29,18 @@ const firebaseConfigProd = {
     measurementId: "G-E8EX497RGP",
 };
 
+let app;
+console.log("ENV", process.env.NODE_ENV);
 // Initialize Firebase
-const app = initializeApp(firebaseConfigProd);
+if (process.env.NODE_ENV === "development") {
+    app = initializeApp(firebaseConfigDev);
+    console.log("ENV DEV", process.env.NODE_ENV);
+} else {
+    app = initializeApp(firebaseConfigProd);
+    console.log("ENV PROD", process.env.NODE_ENV);
+}
 // const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const googleAuthProvider = new GoogleAuthProvider();
 export const db = getFirestore(app);
-export const baseRef = "instances/tenco";
+export const baseRef = "instances/hosterlink";

@@ -36,13 +36,15 @@ export default function ListLayout() {
     useEffect(() => {
         getUsers();
     }, []);
+
+    console.log("UsersList Count: ", usersList.length);
     return (
-        <>
-            <Grid container direction="column" maxWidth={360}>
+        <div>
+            <Grid container direction="column" maxWidth={420}>
                 <Grid item sx={{ textAlign: "right", margin: 2 }}>
                     <AddUserDialog />
                 </Grid>
-                <Grid item sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+                <Grid item sx={{ width: "100%", maxWidth: 420, bgcolor: "background.paper", overflow: "auto" }}>
                     <List
                         subheader={
                             <ListSubheader component="div" id="nested-list-subheader">
@@ -64,7 +66,7 @@ export default function ListLayout() {
                                                 <PersonIcon />
                                             </Avatar>
                                         </ListItemAvatar>
-                                        <ListItemText primary={user.name} secondary={user.cDate} />
+                                        <ListItemText primary={user.name} secondary={user.email} />
                                     </ListItem>
                                 </ListItemButton>
                                 <Divider component="li" />
@@ -73,6 +75,6 @@ export default function ListLayout() {
                     </List>
                 </Grid>
             </Grid>
-        </>
+        </div>
     );
 }

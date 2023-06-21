@@ -13,6 +13,7 @@ import PaymentsIcon from "@mui/icons-material/Paid";
 import Counter from "./Counter";
 import { SampleFirebaseComponent } from "../components/SampleFirebaseComponent";
 import Profile from "./Profile";
+import DataLoader from "./DataLoader";
 
 export default function DetailsLayout() {
     const [selectedTab, setSelectedTab] = React.useState(2);
@@ -43,7 +44,7 @@ export default function DetailsLayout() {
                     </Tabs>
                 </Grid>
                 {/* <Counter /> */}
-
+                <DataLoader />
                 {/* <SampleFirebaseComponent /> */}
                 <Grid item textAlign="center" width="100%" sx={{ textAlign: "left", margin: 2 }}>
                     <Profile sx={{ textAlign: "left", margin: 2 }} />
