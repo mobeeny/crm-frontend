@@ -1,14 +1,11 @@
-import logo from "./logo.svg";
 import "./App.css";
 import ResponsiveAppBar from "./components/AppBar";
 import Layout from "./components/Layout";
 import LoginPage from "./components/LoginPage";
 import { useEffect, useState } from "react";
 import { auth, db } from "./config/firebase";
-import FileUpload from "./components/Upload";
-import FileUploadForm from "./components/UploadProgress";
-import UploadComponent from "./components/Upload2";
 import { useAuthState } from "react-firebase-hooks/auth";
+import WelcomeFlow from "./components/WelcomeFlow";
 
 function App() {
     // console.log("AUTH: ", auth?.currentUser);
@@ -28,8 +25,9 @@ function App() {
         <div>
             {user ? (
                 <>
-                    <ResponsiveAppBar />
-                    <Layout />
+                    <WelcomeFlow />
+                    {/* <ResponsiveAppBar />
+                    <Layout /> */}
                 </>
             ) : (
                 <>

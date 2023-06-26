@@ -4,6 +4,7 @@ import cartReducer from "../reducers/cart";
 import productsReducer from "../reducers/products";
 import counterReducer from "../reducers/counter";
 import usersReducer from "../reducers/users";
+import configReducer from "../reducers/config";
 
 const store = configureStore({
     // reducer: rootReducer,
@@ -12,6 +13,7 @@ const store = configureStore({
         products: productsReducer,
         counter: counterReducer,
         users: usersReducer,
+        config: configReducer,
     },
 });
 

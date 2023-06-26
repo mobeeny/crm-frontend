@@ -1,4 +1,3 @@
-import { selectClasses } from "@mui/material";
 import { createSlice } from "@reduxjs/toolkit";
 
 const usersSlice = createSlice({
