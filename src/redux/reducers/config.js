@@ -13,9 +13,12 @@ const configSlice = createSlice({
         setUserName(state, action) {
             state.username = action.payload;
         },
+        resetState(state, action) {
+            state.username = "";
+        },
     },
 });
 
-export const { setEmail, setUserName } = configSlice.actions;
+export const { setEmail, setUserName, resetState } = configSlice.actions;
 
 export default configSlice.reducer;

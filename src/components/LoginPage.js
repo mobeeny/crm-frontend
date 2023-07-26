@@ -13,6 +13,9 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Auth } from "./Auth";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { resetState, setUserName } from "../redux/reducers/config";
 
 function Copyright(props) {
     return (
@@ -32,6 +35,13 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
+    console.log("Hello Login Page");
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(resetState());
+    }, []);
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);

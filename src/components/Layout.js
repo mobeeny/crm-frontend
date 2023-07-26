@@ -17,7 +17,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Tooltip from "@mui/material/Tooltip";
-import UsersIcon from "@mui/icons-material/PeopleAlt";
+import ClientIcon from "@mui/icons-material/PeopleAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import UpdateIcon from "@mui/icons-material/Update";
 import AboutIcon from "@mui/icons-material/Info";
@@ -28,6 +28,8 @@ import ListLayout from "./ListLayout";
 import DetailsLayout from "./DetailsLayout";
 import MenuItem from "@mui/material/MenuItem";
 import { auth, db } from "../config/firebase";
+import { useSelector, useDispatch } from "react-redux";
+import { resetState, setUserName } from "../redux/reducers/config";
 
 const drawerWidth = 150;
 
@@ -102,6 +104,7 @@ export default function Layout() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
+    const dispatch = useDispatch();
 
     const sx_ListItemButton = {
         minHeight: 48,
@@ -126,6 +129,7 @@ export default function Layout() {
     };
     const handleSignOut = () => {
         auth.signOut();
+        dispatch(resetState());
     };
     const handleDrawerClose = () => {
         setOpen(false);
@@ -188,12 +192,12 @@ export default function Layout() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    <ListItem key={"Users"} disablePadding sx={sx_ListItem}>
+                    <ListItem key={"Client"} disablePadding sx={sx_ListItem}>
                         <ListItemButton sx={sx_ListItemButton}>
                             <ListItemIcon sx={sx_ListItemIcon}>
-                                <UsersIcon />
+                                <ClientIcon />
                             </ListItemIcon>
-                            <ListItemText primary={"Users"} sx={sx_ListItemText} />
+                            <ListItemText primary={"Client"} sx={sx_ListItemText} />
                         </ListItemButton>
                     </ListItem>
                 </List>

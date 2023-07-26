@@ -1,4 +1,4 @@
-const users = [
+const client = [
     {
         id: "1",
         uuid: "3d707116-84de-415c-9a1f-a91ecb8ac3fe",
@@ -18350,4 +18350,4 @@ const users = [
     },
 ];
 
-export default users;
+export default client;

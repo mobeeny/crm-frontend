@@ -8,11 +8,14 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { auth, googleAuthProvider, db, baseRef } from "../config/firebase";
+import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { useSelector, useDispatch } from "react-redux";
 
-export default function AddUserDialog() {
-    const usersCollectionRef = collection(db, baseRef + "/users");
+export default function AddClientDialog() {
+    const username = useSelector((state) => state.config.username);
+
+    const clientCollectionRef = collection(db, instancesRef + username + "/client");
 
     const [open, setOpen] = React.useState();
     const [uName, setUName] = useState("");
@@ -34,9 +37,9 @@ export default function AddUserDialog() {
         setOpen(false);
     };
 
-    const onSubmitUser = async () => {
+    const onSubmitClient = async () => {
         try {
-            await addDoc(usersCollectionRef, {
+            await addDoc(clientCollectionRef, {
                 name: uName,
                 email: uEmail,
                 phone: uPhone,
@@ -57,10 +60,10 @@ export default function AddUserDialog() {
     return (
         <div>
             <Button variant="contained" onClick={handleClickOpen}>
-                Add User
+                Add Client
             </Button>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Add New User</DialogTitle>
+                <DialogTitle>Add New Client</DialogTitle>
                 <DialogContent>
                     {/* <DialogContentText>
                         
@@ -151,8 +154,8 @@ export default function AddUserDialog() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" onClick={onSubmitUser}>
-                        Add User
+                    <Button variant="contained" onClick={onSubmitClient}>
+                        Add Client
                     </Button>
                 </DialogActions>
             </Dialog>

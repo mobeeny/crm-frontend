@@ -43,4 +43,4 @@ if (process.env.NODE_ENV === "development") {
 export const auth = getAuth(app);
 export const googleAuthProvider = new GoogleAuthProvider();
 export const db = getFirestore(app);
-export const baseRef = "instances/hosterlink";
+export const instancesRef = "instances/";

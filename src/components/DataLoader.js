@@ -2,43 +2,45 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { increment, decrement } from "../redux/reducers/counter";
-import users from "../data/clients";
-import { auth, googleAuthProvider, db, baseRef } from "../config/firebase";
+import client from "../data/clients";
+import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 export default function DataLoader() {
     const count = useSelector((state) => state.counter.value);
-    const dispatch = useDispatch();
-    const usersCollectionRef = collection(db, baseRef + "/users");
+    const username = useSelector((state) => state.config.username);
 
-    const submitUsers = async (user) => {
+    const dispatch = useDispatch();
+    const clientCollectionRef = collection(db, instancesRef + username + "/client");
+
+    const submitClient = async (client) => {
         try {
-            await addDoc(usersCollectionRef, {
-                name: user.firstname + " " + user.lastname,
-                email: user.email,
-                phone: user.phonenumber,
+            await addDoc(clientCollectionRef, {
+                name: client.firstname + " " + client.lastname,
+                email: client.email,
+                phone: client.phonenumber,
                 cof: "hosterlink",
                 source: "hosterlink",
                 cnic: "NA",
-                city: user.city,
-                cDate: user.created_at,
+                city: client.city,
+                cDate: client.created_at,
                 bDate: "NA",
-                notes: user.notes,
+                notes: client.notes,
             });
         } catch (err) {
             console.error(err);
         }
     };
     const LoadDataToFirebase = async () => {
-        users.forEach(async (user) => {
+        client.forEach(async (client) => {
             try {
-                await submitUsers(user);
+                await submitClient(client);
             } catch (err) {
                 console.error(err);
             }
         });
     };
-    console.log("Users: ", users);
+    console.log("Client: ", client);
 
     return (
         <div>

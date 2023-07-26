@@ -9,35 +9,37 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Alert, Box, FormControl, InputLabel, Snackbar, TextField } from "@mui/material";
-import { setSelectedUser, setUpdatedUser } from "../redux/reducers/users";
-import { db, baseRef } from "../config/firebase";
+import { setSelectedClient, setUpdatedClient } from "../redux/reducers/clients";
+import { db, instancesRef } from "../config/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { current } from "@reduxjs/toolkit";
 
 function Profile() {
-    let currentUser = useSelector((state) => state.users.selectedUser);
+    let currentClient = useSelector((state) => state.clients.selectedClient);
+    const username = useSelector((state) => state.config.username);
+
     const dispatch = useDispatch();
     const [toastOpen, setToastOpen] = useState(false);
 
     const handleInputChange = (event) => {
         const { id, value } = event.target;
-        currentUser = {
-            ...currentUser,
+        currentClient = {
+            ...currentClient,
             [id]: value,
         };
         //Update the Value in Store
-        console.log("Change: ", currentUser);
-        dispatch(setSelectedUser(currentUser));
+        console.log("Change: ", currentClient);
+        dispatch(setSelectedClient(currentClient));
     };
-    const updateUserProfile = async (id) => {
-        const userDoc = doc(db, baseRef + "/users", id);
-        await updateDoc(userDoc, currentUser);
-        dispatch(setUpdatedUser());
+    const updateClientProfile = async (id) => {
+        const clientDoc = doc(db, instancesRef + username + "/client", id);
+        await updateDoc(clientDoc, currentClient);
+        dispatch(setUpdatedClient());
         setToastOpen(true);
         // getMovies();
     };
 
-    if (!currentUser) {
+    if (!currentClient) {
         return null; // Or show a loading indicator, error message, etc.
     }
 
@@ -46,12 +48,6 @@ function Profile() {
             <Card width="100%">
                 <CardMedia sx={{ height: 40 }} image="/static/images/banner1.jpg" title="green iguana" />
                 <CardContent>
-                    {/* <Typography gutterBottom variant="h5" component="div">
-                        {currentUser.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        Short Description / Notes for the person
-                    </Typography> */}
                     <Box
                         component="form"
                         sx={{
@@ -69,7 +65,7 @@ function Profile() {
                             label="Name"
                             type="name"
                             variant="standard"
-                            value={currentUser.name}
+                            value={currentClient.name}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 // shrink: !!currentUser.name
@@ -81,7 +77,7 @@ function Profile() {
                             label="Email Address"
                             type="email"
                             variant="standard"
-                            value={currentUser.email}
+                            value={currentClient.email}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -92,7 +88,7 @@ function Profile() {
                             label="Care Of (Ref. Person)"
                             type="name"
                             variant="standard"
-                            value={currentUser.cof}
+                            value={currentClient.cof}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -103,7 +99,7 @@ function Profile() {
                             label="CNIC"
                             fullWidth
                             variant="standard"
-                            value={currentUser.cnic}
+                            value={currentClient.cnic}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -114,7 +110,7 @@ function Profile() {
                             label="Phone #"
                             type="phone"
                             variant="standard"
-                            value={currentUser.phone}
+                            value={currentClient.phone}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -125,7 +121,7 @@ function Profile() {
                             label="City"
                             type="name"
                             variant="standard"
-                            value={currentUser.city}
+                            value={currentClient.city}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -136,7 +132,7 @@ function Profile() {
                             label="Contact Date"
                             type="date"
                             variant="standard"
-                            value={currentUser.cDate}
+                            value={currentClient.cDate}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -147,7 +143,7 @@ function Profile() {
                             label="Notes"
                             type="textarea"
                             variant="standard"
-                            value={currentUser.notes}
+                            value={currentClient.notes}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -158,7 +154,7 @@ function Profile() {
                             label="Date of Birth"
                             type="date"
                             variant="standard"
-                            value={currentUser.bDate}
+                            value={currentClient.bDate}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -169,7 +165,7 @@ function Profile() {
                             label="Source"
                             type="name"
                             variant="standard"
-                            value={currentUser.source}
+                            value={currentClient.source}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -183,7 +179,7 @@ function Profile() {
                             m: 2,
                         }}
                     >
-                        <Button variant="contained" onClick={() => updateUserProfile(currentUser.id)}>
+                        <Button variant="contained" onClick={() => updateClientProfile(currentClient.id)}>
                             Save Changes
                         </Button>
                     </Box>

@@ -26,7 +26,7 @@ export default function DetailsLayout() {
         <>
             <Grid container direction="column">
                 <Grid item sx={{ textAlign: "left", margin: 2 }}>
-                    <Alert severity="success">This is a success alert — check it out!</Alert>
+                    {/* <Alert severity="success">This is a success alert — check it out!</Alert> */}
                 </Grid>
                 <Grid item textAlign="center" width="100%">
                     <Tabs
@@ -44,7 +44,7 @@ export default function DetailsLayout() {
                     </Tabs>
                 </Grid>
                 {/* <Counter /> */}
-                <DataLoader />
+                {/* <DataLoader /> */}
                 {/* <SampleFirebaseComponent /> */}
                 <Grid item textAlign="center" width="100%" sx={{ textAlign: "left", margin: 2 }}>
                     <Profile sx={{ textAlign: "left", margin: 2 }} />
