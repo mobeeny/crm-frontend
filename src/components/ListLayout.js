@@ -12,10 +12,11 @@ import Typography from "@mui/material/Typography";
 import { Button, Container, Grid, Stack } from "@mui/material";
 import { useState, useEffect } from "react";
 import AddClientDialog from "./D_NewClient";
+import AddCompanyDialog from "./D_NewCompany";
 import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedClient, setClient } from "../redux/reducers/clients";
+import { setSelectedClient, setSelectedUserCompaniesIds, setClient } from "../redux/reducers/clients";
 
 export default function ListLayout() {
     const username = useSelector((state) => state.config.username);
@@ -44,7 +45,10 @@ export default function ListLayout() {
         <div>
             <Grid container direction="column" maxWidth={420}>
                 <Grid item sx={{ textAlign: "right", margin: 2 }}>
-                    <AddClientDialog />
+                    <Stack direction="row" spacing={2}>
+                        <AddClientDialog />
+                        <AddCompanyDialog />
+                    </Stack>
                 </Grid>
                 <Grid item sx={{ width: "100%", maxWidth: 420, bgcolor: "background.paper", overflow: "auto" }}>
                     <List
@@ -59,8 +63,9 @@ export default function ListLayout() {
                                 <ListItemButton>
                                     <ListItem
                                         onClick={() => {
-                                            console.log("Client Clicked", client);
+                                            console.log("Client Clicked", client, client.name);
                                             dispatch(setSelectedClient(client));
+                                            dispatch(setSelectedUserCompaniesIds(client.company));
                                         }}
                                     >
                                         <ListItemAvatar>

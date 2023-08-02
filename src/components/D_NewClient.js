@@ -7,6 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { Box } from "@mui/material";
 import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
@@ -59,8 +60,8 @@ export default function AddClientDialog() {
 
     return (
         <div>
-            <Button variant="contained" onClick={handleClickOpen}>
-                Add Client
+            <Button variant="contained" onClick={handleClickOpen} startIcon={<PersonAddAltIcon />}>
+                Client
             </Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Add New Client</DialogTitle>

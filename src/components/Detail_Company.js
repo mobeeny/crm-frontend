@@ -1,5 +1,5 @@
 //This is a Sample Redux Component
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { increment, decrement } from "../redux/reducers/counter";
 import Card from "@mui/material/Card";
@@ -9,13 +9,22 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Alert, Box, FormControl, InputLabel, Snackbar, TextField } from "@mui/material";
-import { setSelectedClient, setUpdatedClient } from "../redux/reducers/clients";
+import { setSelectedClient, setUpdatedClient, setSelectedCompany } from "../redux/reducers/clients";
 import { db, instancesRef } from "../config/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { current } from "@reduxjs/toolkit";
+import SaveIcon from "@mui/icons-material/Save";
+import ClientCompanies from "./ClientCompanies";
 
-function Profile() {
-    let currentClient = useSelector((state) => state.clients.selectedClient);
+function DetailCompany() {
+    const selectedCompany = useSelector((state) => state.clients.selectedCompany);
+    let currentCompany = selectedCompany || {};
+
+    useEffect(() => {
+        currentCompany = selectedCompany || {};
+        console.log("CHANGED CURRENT COMPANY: ", currentCompany);
+    }, [selectedCompany]);
+
     const username = useSelector((state) => state.config.username);
 
     const dispatch = useDispatch();
@@ -23,28 +32,29 @@ function Profile() {
 
     const handleInputChange = (event) => {
         const { id, value } = event.target;
-        currentClient = {
-            ...currentClient,
+        currentCompany = {
+            ...currentCompany,
             [id]: value,
         };
         //Update the Value in Store
-        console.log("Change: ", currentClient);
-        dispatch(setSelectedClient(currentClient));
+        console.log("Change: ", currentCompany);
+        dispatch(setSelectedCompany(currentCompany));
+        console.log("CURRENT COMPANY UPDATED:", currentCompany);
     };
-    const updateClientProfile = async (id) => {
-        const clientDoc = doc(db, instancesRef + username + "/client", id);
-        await updateDoc(clientDoc, currentClient);
-        dispatch(setUpdatedClient());
+    const updateCompanyProfile = async (id) => {
+        const companyDoc = doc(db, instancesRef + username + "/company", id);
+        await updateDoc(companyDoc, currentCompany);
+        // dispatch(setUpdatedClient());
         setToastOpen(true);
-        // getMovies();
     };
 
-    if (!currentClient) {
+    if (!currentCompany) {
         return null; // Or show a loading indicator, error message, etc.
     }
 
     return (
         <div>
+            <ClientCompanies />
             <Card width="100%">
                 <CardMedia sx={{ height: 40 }} image="/static/images/banner1.jpg" title="green iguana" />
                 <CardContent>
@@ -56,16 +66,13 @@ function Profile() {
                         noValidate
                         autoComplete="off"
                     >
-                        {/* <InputLabel shrink htmlFor="name">
-                                Name
-                            </InputLabel> */}
                         <TextField
                             autoFocus
                             id="name"
-                            label="Name"
+                            label="Company Name"
                             type="name"
                             variant="standard"
-                            value={currentClient.name}
+                            value={currentCompany.name}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 // shrink: !!currentUser.name
@@ -74,32 +81,34 @@ function Profile() {
                         />
                         <TextField
                             id="email"
-                            label="Email Address"
+                            label="Company Email"
                             type="email"
                             variant="standard"
-                            value={currentClient.email}
+                            value={currentCompany.email}
                             onChange={handleInputChange}
                             InputLabelProps={{
+                                // shrink: !!currentUser.name
                                 shrink: true,
                             }}
                         />
                         <TextField
-                            id="cof"
-                            label="Care Of (Ref. Person)"
+                            id="ntn"
+                            label="NTN / Inc #"
                             type="name"
-                            variant="standard"
-                            value={currentClient.cof}
+                            value={currentCompany.ntn}
                             onChange={handleInputChange}
+                            variant="standard"
                             InputLabelProps={{
+                                // shrink: !!currentUser.name
                                 shrink: true,
                             }}
                         />
                         <TextField
-                            id="cnic"
-                            label="CNIC"
+                            id="gst"
+                            label="GST #"
                             fullWidth
                             variant="standard"
-                            value={currentClient.cnic}
+                            value={currentCompany.gst}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -107,32 +116,76 @@ function Profile() {
                         />
                         <TextField
                             id="phone"
-                            label="Phone #"
+                            label="Company Phone #"
                             type="phone"
                             variant="standard"
-                            value={currentClient.phone}
+                            value={currentCompany.phone}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
                             }}
                         />
                         <TextField
-                            id="city"
-                            label="City"
+                            id="rto"
+                            label="RTO City"
                             type="name"
                             variant="standard"
-                            value={currentClient.city}
+                            value={currentCompany.city}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
                             }}
                         />
                         <TextField
-                            id="cDate"
+                            id="electricity"
+                            label="Electricity Ref. #"
+                            type="name"
+                            variant="standard"
+                            value={currentCompany.electricity}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            id="pAcctivity"
+                            label="Principal Activity"
+                            type="name"
+                            variant="standard"
+                            value={currentCompany.pactivity}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            id="address"
+                            label="Company Address"
+                            type="name"
+                            variant="standard"
+                            value={currentCompany.address}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            id="bank"
+                            label="Bank Account"
+                            type="name"
+                            variant="standard"
+                            value={currentCompany.bank}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            id="contactDate"
                             label="Contact Date"
                             type="date"
                             variant="standard"
-                            value={currentClient.cDate}
+                            value={currentCompany.cDate}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -143,18 +196,29 @@ function Profile() {
                             label="Notes"
                             type="textarea"
                             variant="standard"
-                            value={currentClient.notes}
+                            value={currentCompany.notes}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
                             }}
                         />
                         <TextField
-                            id="bDate"
-                            label="Date of Birth"
+                            id="regDate"
+                            label="Comp. Reg Date"
                             type="date"
                             variant="standard"
-                            value={currentClient.bDate}
+                            value={currentCompany.rDate}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            id="gstDate"
+                            label="GST Date"
+                            type="date"
+                            variant="standard"
+                            value={currentCompany.gDate}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -165,7 +229,7 @@ function Profile() {
                             label="Source"
                             type="name"
                             variant="standard"
-                            value={currentClient.source}
+                            value={currentCompany.source}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
@@ -179,8 +243,12 @@ function Profile() {
                             m: 2,
                         }}
                     >
-                        <Button variant="contained" onClick={() => updateClientProfile(currentClient.id)}>
-                            Save Changes
+                        <Button
+                            variant="contained"
+                            onClick={() => updateCompanyProfile(currentCompany.id)}
+                            startIcon={<SaveIcon />}
+                        >
+                            Save
                         </Button>
                     </Box>
                 </CardActions>
@@ -200,4 +268,4 @@ function Profile() {
     );
 }
 
-export default Profile;
+export default DetailCompany;
