@@ -1,10 +1,10 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { increment, decrement } from "../redux/reducers/counter";
-import { db, instancesRef } from "../config/firebase";
+import { db, instancesRef, auth } from "../config/firebase";
 import { getDocs, setDoc, collection, query, where, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
-import { setEmail, setUserName } from "../redux/reducers/config";
+import { setEmail, setUserName, resetState } from "../redux/reducers/config";
 
 const WelcomeFlow = ({ currentUser }) => {
     const [username, setUsername] = useState("");
@@ -13,9 +13,10 @@ const WelcomeFlow = ({ currentUser }) => {
 
     console.log("Hello Welcome Page");
 
-    // useEffect(() => {
-    //
-    // }, []);
+    const handleSignOut = () => {
+        auth.signOut();
+        dispatch(resetState());
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -71,6 +72,7 @@ const WelcomeFlow = ({ currentUser }) => {
             </div>
             {error && <div style={{ color: "red" }}>{error}</div>}
             <button type="submit">Submit</button>
+            <button onClick={handleSignOut}>Logout/Change User</button>
         </form>
     );
 };

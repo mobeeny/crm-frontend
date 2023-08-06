@@ -21,6 +21,8 @@ export default function AddClientDialog() {
     const [open, setOpen] = React.useState();
     const [uName, setUName] = useState("");
     const [uEmail, setUEmail] = useState("");
+    const [uFname, setUFName] = useState("");
+    const [uAddress, setUAddress] = useState("");
     const [uCareOf, setUCareOf] = useState("");
     const [uCNIC, setUCNIC] = useState("");
     const [uPhone, setUPhone] = useState("");
@@ -29,6 +31,9 @@ export default function AddClientDialog() {
     const [uSource, setUSource] = useState("");
     const [uDateContact, setUDateContact] = useState("2023-05-10");
     const [uDateBirth, setUDateBirth] = useState("2023-05-10");
+
+    const [uDateIssue, setUDateIssue] = useState("2023-05-10");
+    const [uDateExpiry, setUDateExpiry] = useState("2023-05-10");
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -42,6 +47,8 @@ export default function AddClientDialog() {
         try {
             await addDoc(clientCollectionRef, {
                 name: uName,
+                fname: uFname,
+                address: uAddress,
                 email: uEmail,
                 phone: uPhone,
                 cof: uCareOf,
@@ -50,6 +57,8 @@ export default function AddClientDialog() {
                 city: uCity,
                 cDate: uDateContact,
                 bDate: uDateBirth,
+                iDate: uDateIssue,
+                eDate: uDateExpiry,
                 notes: uNotes,
             });
             setOpen(false);
@@ -84,6 +93,22 @@ export default function AddClientDialog() {
                             type="name"
                             variant="standard"
                             onChange={(e) => setUName(e.target.value)}
+                        />
+                        <TextField
+                            autoFocus
+                            id="fname"
+                            label="Father's Name"
+                            type="name"
+                            variant="standard"
+                            onChange={(e) => setUFName(e.target.value)}
+                        />
+                        <TextField
+                            autoFocus
+                            id="address"
+                            label="Address"
+                            type="name"
+                            variant="standard"
+                            onChange={(e) => setUAddress(e.target.value)}
                         />
                         <TextField
                             id="email"
@@ -142,6 +167,22 @@ export default function AddClientDialog() {
                             variant="standard"
                             value={uDateBirth}
                             onChange={(e) => setUDateBirth(e.target.value)}
+                        />
+                        <TextField
+                            id="doi"
+                            label="Date of Issuance"
+                            type="date"
+                            variant="standard"
+                            value={uDateIssue}
+                            onChange={(e) => setUDateIssue(e.target.value)}
+                        />
+                        <TextField
+                            id="doe"
+                            label="Date of Expiry"
+                            type="date"
+                            variant="standard"
+                            value={uDateExpiry}
+                            onChange={(e) => setUDateExpiry(e.target.value)}
                         />
                         <TextField
                             id="source"

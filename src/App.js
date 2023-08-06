@@ -1,25 +1,25 @@
-import "./App.css";
+import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth, db } from "./config/firebase";
+import { getDocs, collection, query, where } from "firebase/firestore";
+import { setEmail, setUserName } from "./redux/reducers/config";
+import LoginPage from "./components/LoginPage";
 import ResponsiveAppBar from "./components/AppBar";
 import Layout from "./components/Layout";
-import LoginPage from "./components/LoginPage";
-import { useEffect, useState } from "react";
-import { auth, db } from "./config/firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
 import WelcomeFlow from "./components/WelcomeFlow";
-import { useSelector, useDispatch } from "react-redux";
-import { setEmail, setUserName } from "./redux/reducers/config";
-import { getDocs, collection, query, where, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 function App() {
-    // console.log("AUTH: ", auth?.currentUser);
     const dispatch = useDispatch();
 
     const [user, loading] = useAuthState(auth);
     const username = useSelector((state) => state.config.username);
+
+    const [isUsernameFetching, setIsUsernameFetching] = useState(false);
+
     useEffect(() => {
         if (user) {
-            console.log("User Info", auth, auth?.currentUser);
-            const currentUser = auth?.currentUser;
+            setIsUsernameFetching(true); // Set the state to indicate username fetch in progress
             const fetchUserData = async (currentUser) => {
                 try {
                     const usersCollection = collection(db, "users");
@@ -36,21 +36,18 @@ function App() {
                             console.log("Username:", username);
                             dispatch(setUserName(username));
                         } else {
-                            // Handle the case where the username field is not present
                             console.log("Username field is not present in the user document.");
-                            // Perform any other action, e.g., set a default username or show an error message
                         }
                     } else {
-                        // User document not found for the current user
                         console.log("User document not found for the current user.");
-                        // Perform any other action to handle this scenario
-                        // For example, you can set a default username or show an error message to the user
                     }
                 } catch (error) {
                     console.error("Error fetching user data:", error);
+                } finally {
+                    setIsUsernameFetching(false); // Set the state to indicate username fetch is completed
                 }
             };
-            fetchUserData(currentUser);
+            fetchUserData(user);
         }
     }, [user]);
 
@@ -58,11 +55,14 @@ function App() {
         return <div>Authentication in Progress . . . </div>;
     }
 
+    // Render the main content only when the username is available
     return (
         <div>
             {user ? (
                 <>
-                    {username ? (
+                    {isUsernameFetching ? (
+                        <div>Loading username...</div>
+                    ) : username ? (
                         <>
                             <ResponsiveAppBar />
                             <Layout />
@@ -72,9 +72,7 @@ function App() {
                     )}
                 </>
             ) : (
-                <>
-                    <LoginPage />
-                </>
+                <LoginPage />
             )}
         </div>
     );

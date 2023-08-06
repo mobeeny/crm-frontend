@@ -73,6 +73,32 @@ function Profile() {
                             }}
                         />
                         <TextField
+                            autoFocus
+                            id="fname"
+                            label="Father's Name"
+                            type="name"
+                            variant="standard"
+                            value={currentClient.fname}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                // shrink: !!currentUser.name
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            autoFocus
+                            id="address"
+                            label="Address"
+                            type="name"
+                            variant="standard"
+                            value={currentClient.address}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                // shrink: !!currentUser.name
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
                             id="email"
                             label="Email Address"
                             type="email"
@@ -155,6 +181,28 @@ function Profile() {
                             type="date"
                             variant="standard"
                             value={currentClient.bDate}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            id="iDate"
+                            label="Date of Issue"
+                            type="date"
+                            variant="standard"
+                            value={currentClient.iDate}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            id="eDate"
+                            label="Date of Expiry"
+                            type="date"
+                            variant="standard"
+                            value={currentClient.eDate}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,
