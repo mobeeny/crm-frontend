@@ -19,7 +19,7 @@ const SelectUser_AddCompanySearch = () => {
 
     const [selectedResults, setSelectedResults] = useState([]);
 
-    const username = useSelector((state) => state.config.username);
+    // const username = useSelector((state) => state.config.username);
     const dispatch = useDispatch();
     let results = {};
     // Your Firebase configuration and initialization
@@ -36,7 +36,7 @@ const SelectUser_AddCompanySearch = () => {
 
     const fetchSearchResults = async (squery) => {
         try {
-            const usersRef = collection(db, instancesRef + username + "/client");
+            const usersRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
             const q = query(usersRef, where("name", ">=", squery), where("name", "<=", squery + "\uf8ff"));
             const snapshot = await getDocs(q);
 

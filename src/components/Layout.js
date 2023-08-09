@@ -29,7 +29,8 @@ import DetailsLayout from "./DetailsLayout";
 import MenuItem from "@mui/material/MenuItem";
 import { auth, db } from "../config/firebase";
 import { useSelector, useDispatch } from "react-redux";
-import { resetState, setUserName } from "../redux/reducers/config";
+// import { resetState } from "../redux/reducers/config";
+import { Link } from "react-router-dom";
 
 const drawerWidth = 150;
 
@@ -129,7 +130,7 @@ export default function Layout() {
     };
     const handleSignOut = () => {
         auth.signOut();
-        dispatch(resetState());
+        // dispatch(resetState());
     };
     const handleDrawerClose = () => {
         setOpen(false);
@@ -191,7 +192,7 @@ export default function Layout() {
                 <Divider />
                 <List>
                     <ListItem key={"Client"} disablePadding sx={sx_ListItem}>
-                        <ListItemButton sx={sx_ListItemButton}>
+                        <ListItemButton component={Link} to={`/dashboard`} sx={sx_ListItemButton}>
                             <ListItemIcon sx={sx_ListItemIcon}>
                                 <ClientIcon />
                             </ListItemIcon>
@@ -202,7 +203,7 @@ export default function Layout() {
                 <Divider />
                 <List>
                     <ListItem key={"Settings"} disablePadding sx={sx_ListItem}>
-                        <ListItemButton sx={sx_ListItemButton}>
+                        <ListItemButton component={Link} to={`/settings`} sx={sx_ListItemButton}>
                             <ListItemIcon sx={sx_ListItemIcon}>
                                 <SettingsIcon />
                             </ListItemIcon>
@@ -227,10 +228,10 @@ export default function Layout() {
                     </ListItem>
                 </List>
             </Drawer>
-            <ListLayout />
-            <Divider orientation="vertical" variant="middle" flexItem />
+            {/* <ListLayout /> */}
+            {/* <Divider orientation="vertical" variant="middle" flexItem /> */}
 
-            <DetailsLayout />
+            {/* <DetailsLayout /> */}
         </Box>
     );
 }

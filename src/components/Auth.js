@@ -2,10 +2,10 @@ import { auth, googleAuthProvider } from "../config/firebase";
 import { createUserWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { useState } from "react";
 import { db, instancesRef } from "../config/firebase";
-import { getDocs, collection, query, where, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { getDocs, collection, query, where, addDoc, deleteDoc, doc, updateDoc, setDoc } from "firebase/firestore";
 import Button from "@mui/material/Button";
 import { useSelector, useDispatch } from "react-redux";
-import { resetState } from "../redux/reducers/config";
+// import { resetState } from "../redux/reducers/config";
 
 export const Auth = () => {
     const [email, setEmail] = useState("");
@@ -25,9 +25,11 @@ export const Auth = () => {
         try {
             const result = await signInWithPopup(auth, googleAuthProvider);
             const user = result.user;
+            console.log("Auth User:", user);
 
             // Check if the user already exists in the "users" collection
             const usersCollection = collection(db, "users");
+            const instancesCollection = collection(db, "instances");
             const userQuery = query(usersCollection, where("email", "==", user.email));
             const querySnapshot = await getDocs(userQuery);
             if (querySnapshot.empty) {
@@ -35,11 +37,22 @@ export const Auth = () => {
 
                 // Add a new document with the user's email
                 const newUserDoc = {
+                    creationDate: new Date().getTime(),
+                    email: user.email,
+                    authId: user.uid,
+                    // You can add more fields as needed
+                };
+
+                const newInstanceDoc = doc(instancesCollection, user.uid);
+                const newInstanceData = {
+                    creationDate: new Date().getTime(),
                     email: user.email,
                     // You can add more fields as needed
                 };
 
                 await addDoc(usersCollection, newUserDoc);
+                await setDoc(newInstanceDoc, newInstanceData);
+
                 console.log("New user document added to Firestore.");
             } else {
                 console.log("User already exists in Firestore.");

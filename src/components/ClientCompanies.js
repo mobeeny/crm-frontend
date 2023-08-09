@@ -25,10 +25,10 @@ import {
 } from "../redux/reducers/clients";
 
 export default function ClientCompanies() {
-    const username = useSelector((state) => state.config.username);
+    // const username = useSelector((state) => state.config.username);
     const currentCompany = useSelector((state) => state.config.selectedCompany);
-    const clientCollectionRef = collection(db, instancesRef + username + "/client");
-    const companyCollectionRef = collection(db, instancesRef + username + "/company");
+    const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
+    const companyCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/company");
     const companiesIdList = useSelector((state) => state.clients.selectedUserCompaniesIds);
     const companiesList = useSelector((state) => state.clients.selectedUserCompanies);
 
@@ -40,7 +40,7 @@ export default function ClientCompanies() {
 
         // Loop through each companyUid and fetch its data
         for (const companyUid of companiesIdList) {
-            const companyCollectionRef = collection(db, instancesRef + username + "/company");
+            const companyCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/company");
             const companyRef = doc(companyCollectionRef, companyUid);
 
             try {

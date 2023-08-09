@@ -14,9 +14,9 @@ import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase
 import { useSelector, useDispatch } from "react-redux";
 
 export default function AddClientDialog() {
-    const username = useSelector((state) => state.config.username);
+    // const username = useSelector((state) => state.config.username);
 
-    const clientCollectionRef = collection(db, instancesRef + username + "/client");
+    const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
 
     const [open, setOpen] = React.useState();
     const [uName, setUName] = useState("");
@@ -44,6 +44,8 @@ export default function AddClientDialog() {
     };
 
     const onSubmitClient = async () => {
+        console.log("Auth UID:", auth);
+
         try {
             await addDoc(clientCollectionRef, {
                 name: uName,

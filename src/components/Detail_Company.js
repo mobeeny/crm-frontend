@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Alert, Box, FormControl, InputLabel, Snackbar, TextField } from "@mui/material";
 import { setSelectedClient, setUpdatedClient, setSelectedCompany } from "../redux/reducers/clients";
-import { db, instancesRef } from "../config/firebase";
+import { db, instancesRef, auth } from "../config/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { current } from "@reduxjs/toolkit";
 import SaveIcon from "@mui/icons-material/Save";
@@ -25,7 +25,7 @@ function DetailCompany() {
         console.log("CHANGED CURRENT COMPANY: ", currentCompany);
     }, [selectedCompany]);
 
-    const username = useSelector((state) => state.config.username);
+    // const username = useSelector((state) => state.config.username);
 
     const dispatch = useDispatch();
     const [toastOpen, setToastOpen] = useState(false);
@@ -42,7 +42,7 @@ function DetailCompany() {
         console.log("CURRENT COMPANY UPDATED:", currentCompany);
     };
     const updateCompanyProfile = async (id) => {
-        const companyDoc = doc(db, instancesRef + username + "/company", id);
+        const companyDoc = doc(db, instancesRef + auth.currentUser.uid + "/company", id);
         await updateDoc(companyDoc, currentCompany);
         // dispatch(setUpdatedClient());
         setToastOpen(true);

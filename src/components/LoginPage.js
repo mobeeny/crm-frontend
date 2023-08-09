@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Auth } from "./Auth";
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { resetState, setUserName } from "../redux/reducers/config";
+// import { resetState, setUserName } from "../redux/reducers/config";
 
 function Copyright(props) {
     return (
@@ -38,9 +38,9 @@ export default function SignInSide() {
     console.log("Hello Login Page");
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(resetState());
-    }, []);
+    // useEffect(() => {
+    //     dispatch(resetState());
+    // }, []);
 
     const handleSubmit = (event) => {
         event.preventDefault();

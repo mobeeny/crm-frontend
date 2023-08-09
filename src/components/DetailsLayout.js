@@ -10,8 +10,6 @@ import ProjectIcon from "@mui/icons-material/AccountTree";
 import QuoteIcon from "@mui/icons-material/RequestQuote";
 import InvoiceIcon from "@mui/icons-material/Receipt";
 import PaymentsIcon from "@mui/icons-material/Paid";
-import Counter from "./Counter";
-import { SampleFirebaseComponent } from "../components/SampleFirebaseComponent";
 import Profile from "./Detail_Profile";
 import DataLoader from "./DataLoader";
 import DetailCompany from "./Detail_Company";
@@ -26,7 +24,7 @@ export default function DetailsLayout() {
     return (
         <>
             <Grid container direction="column">
-                <Grid item sx={{ textAlign: "left", margin: 2 }}>
+                <Grid item sx={{ textAlign: "left", marginTop: 8 }}>
                     {/* <Alert severity="success">This is a success alert — check it out!</Alert> */}
                 </Grid>
                 <Grid item textAlign="center" width="100%">
@@ -47,7 +45,7 @@ export default function DetailsLayout() {
                 {/* <Counter /> */}
                 {/* <DataLoader /> */}
                 {/* <SampleFirebaseComponent /> */}
-                <Grid item textAlign="center" width="100%" sx={{ textAlign: "left", margin: 2 }}>
+                <Grid item textAlign="center" width="100%" sx={{ textAlign: "left", padding: 1 }}>
                     {selectedTab == 0 ? (
                         <Profile sx={{ textAlign: "left", margin: 2 }} />
                     ) : selectedTab == 1 ? (

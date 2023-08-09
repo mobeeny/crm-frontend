@@ -8,10 +8,10 @@ import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase
 
 export default function DataLoader() {
     const count = useSelector((state) => state.counter.value);
-    const username = useSelector((state) => state.config.username);
+    // const username = useSelector((state) => state.config.username);
 
     const dispatch = useDispatch();
-    const clientCollectionRef = collection(db, instancesRef + username + "/client");
+    const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
 
     const submitClient = async (client) => {
         try {

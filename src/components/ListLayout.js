@@ -19,9 +19,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSelectedClient, setSelectedUserCompaniesIds, setClient } from "../redux/reducers/clients";
 
 export default function ListLayout() {
-    const username = useSelector((state) => state.config.username);
+    // const username = useSelector((state) => state.config.username);
 
-    const clientCollectionRef = collection(db, instancesRef + username + "/client");
+    const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
     const clientList = useSelector((state) => state.clients.client);
     const dispatch = useDispatch();
 

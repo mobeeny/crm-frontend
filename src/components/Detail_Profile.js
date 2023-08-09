@@ -9,14 +9,14 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Alert, Box, FormControl, InputLabel, Snackbar, TextField } from "@mui/material";
 import { setSelectedClient, setUpdatedClient } from "../redux/reducers/clients";
-import { db, instancesRef } from "../config/firebase";
+import { db, instancesRef, auth } from "../config/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import { current } from "@reduxjs/toolkit";
 import SaveIcon from "@mui/icons-material/Save";
 
 function Profile() {
     let currentClient = useSelector((state) => state.clients.selectedClient);
-    const username = useSelector((state) => state.config.username);
+    // const username = useSelector((state) => state.config.username);
 
     const dispatch = useDispatch();
     const [toastOpen, setToastOpen] = useState(false);
@@ -32,7 +32,7 @@ function Profile() {
         dispatch(setSelectedClient(currentClient));
     };
     const updateClientProfile = async (id) => {
-        const clientDoc = doc(db, instancesRef + username + "/client", id);
+        const clientDoc = doc(db, instancesRef + auth.currentUser.uid + "/client", id);
         await updateDoc(clientDoc, currentClient);
         dispatch(setUpdatedClient());
         setToastOpen(true);

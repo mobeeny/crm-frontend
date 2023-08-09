@@ -12,14 +12,14 @@ import AddBusiness from "@mui/icons-material/AddBusiness";
 import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, writeBatch, arrayUnion, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
-import SelectUser_AddCompanySearch from "./SelectUser_AddCompanySearch";
+import SearchClientsCompanyForm from "./SearchClientsCompanyForm";
 import { clearDirectorsNewCompany } from "../redux/reducers/clients";
 
 export default function AddCompanyDialog() {
-    const username = useSelector((state) => state.config.username);
+    // const username = useSelector((state) => state.config.username);
     const contactsDetails = {};
     const dispatch = useDispatch();
-    const clientCollectionRef = collection(db, instancesRef + username + "/company");
+    const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/company");
 
     const [open, setOpen] = React.useState();
 
@@ -56,7 +56,7 @@ export default function AddCompanyDialog() {
             console.log("COMPANY: Clients: ", cContacts);
             // Loop through each client id in cContacts and update the "company" field
             cContacts.forEach((clientId) => {
-                const clientRef = doc(db, instancesRef + username + "/client/" + clientId);
+                const clientRef = doc(db, instancesRef + auth.currentUser.uid + "/client/" + clientId);
                 batch.update(clientRef, { company: arrayUnion(companyId) });
                 console.log("COMPANY: LOOP: ", clientRef, clientId, companyId);
             });
@@ -131,7 +131,7 @@ export default function AddCompanyDialog() {
                             onChange={(e) => setCName(e.target.value)}
                         />
 
-                        <SelectUser_AddCompanySearch />
+                        <SearchClientsCompanyForm />
                         <TextField
                             id="email"
                             label="Company Email"
