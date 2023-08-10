@@ -3,6 +3,7 @@ import { useRoutes, Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import HomeComponent from "../components/HomeComponent";
 import ClientsComponent from "../components/ClientsHome";
+import Settings from "../components/Settings";
 
 
 function Index(props) {
@@ -14,7 +15,7 @@ function Index(props) {
         },
         {
           path: "settings",
-          element: <p>Settings Route</p>,
+          element: <Settings/>,
         },
       ], 
     },
@@ -22,4 +23,4 @@ function Index(props) {
   ]);
 }
 
-export default Index;
+export default Index;
