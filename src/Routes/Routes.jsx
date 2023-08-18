@@ -6,6 +6,10 @@ import ClientsComponent from "../components/ClientsHome";
 import Settings from "../components/Settings";
 
 
+
+
+
+
 function Index(props) {
   return useRoutes([
     { path: "/", element: <HomeComponent/>, children: [
