@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { TextField, Button, Grid, Paper } from "@mui/material";
+import { TextField, Button, Paper, Stack } from "@mui/material";
 import { auth, db } from "../../config/firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { NotificationContext } from "../NotificationSnackbar";
@@ -48,42 +48,44 @@ const GeneralSettings = () => {
     };
 
     return (
-        <Grid container justifyContent="center">
-            <Grid item xs={10} sm={8} md={6} lg={4}>
-                <Paper elevation={3} style={{ padding: "16px" }}>
-                    <TextField
-                        label="Name"
-                        fullWidth
-                        value={userData.name}
-                        onChange={(e) => handleChange("name", e.target.value)}
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Email"
-                        fullWidth
-                        value={userData.email}
-                        onChange={(e) => handleChange("email", e.target.value)}
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Phone Number"
-                        fullWidth
-                        value={userData.phoneNumber}
-                        onChange={(e) =>
-                            handleChange("phoneNumber", e.target.value)
-                        }
-                        margin="normal"
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => handleSave()}
-                    >
-                        Save
-                    </Button>
-                </Paper>
-            </Grid>
-        </Grid>
+        <Paper elevation={1} sx={{ padding: "24px", maxWidth: "295px" }}>
+            <Stack spacing={2}>
+                <TextField
+                    label="Name"
+                    variant="standard"
+                    sx={{ width: "250px" }}
+                    value={userData.name}
+                    onChange={(e) => handleChange("name", e.target.value)}
+                    margin="normal"
+                />
+                <TextField
+                    label="Email"
+                    variant="standard"
+                    sx={{ width: "250px" }}
+                    value={userData.email}
+                    onChange={(e) => handleChange("email", e.target.value)}
+                    margin="normal"
+                />
+                <TextField
+                    label="Phone Number"
+                    variant="standard"
+                    sx={{ width: "250px" }}
+                    value={userData.phoneNumber}
+                    onChange={(e) =>
+                        handleChange("phoneNumber", e.target.value)
+                    }
+                    margin="normal"
+                />
+                <Button
+                    variant="contained"
+                    sx={{ width: "250px" }}
+                    color="primary"
+                    onClick={() => handleSave()}
+                >
+                    Save
+                </Button>
+            </Stack>
+        </Paper>
     );
 };
 
