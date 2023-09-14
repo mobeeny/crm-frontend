@@ -6,7 +6,6 @@ import { getDocs, collection, query, where } from "firebase/firestore";
 // import { setEmail, setUserName } from "./redux/reducers/config";
 import LoginPage from "./components/LoginPage";
 import Layout from "./components/Layout";
-import { BrowserRouter, Route } from "react-router-dom";
 import ListLayout from "./components/ListLayout";
 import { Box, Divider } from "@mui/material";
 import DetailsLayout from "./components/DetailsLayout";

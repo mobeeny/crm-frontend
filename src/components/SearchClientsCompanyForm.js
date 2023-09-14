@@ -12,6 +12,8 @@ import { setDirectorsNewCompany } from "../redux/reducers/clients";
 import { Avatar, Card, CardActions, CardContent, CardHeader, Chip, IconButton, Typography } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { Stack } from "@mui/system";
+import  ResponsiveDialog from './D_ClientRole'
+import D_ClientRole from "./D_ClientRole";
 
 const SelectUser_AddCompanySearch = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -35,6 +37,7 @@ const SelectUser_AddCompanySearch = () => {
     };
 
     const fetchSearchResults = async (squery) => {
+
         try {
             const usersRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
             const q = query(usersRef, where("name", ">=", squery), where("name", "<=", squery + "\uf8ff"));
@@ -52,6 +55,7 @@ const SelectUser_AddCompanySearch = () => {
     };
 
     const addselectedResults = (clientId) => {
+        
         setSelectedResults((prevContacts) => [...prevContacts, clientId]);
         console.log("Directors: ", selectedResults);
     };
@@ -88,13 +92,16 @@ const SelectUser_AddCompanySearch = () => {
             />
 
             {searchResults.length > 0 && searchQuery.length > 0 && (
-                <List dense>
+             <>
+             <List dense>
                     {searchResults.map((client) => (
                         <ListItemButton key={client.id} onClick={() => handleUserClick(client)}>
                             <ListItemText primary={client.name} />
                         </ListItemButton>
                     ))}
                 </List>
+                <D_ClientRole/>
+                </>
             )}
             <Stack direction="row" spacing={1}>
                 {selectedResults.map((client) => (

@@ -77,7 +77,7 @@ export default function ClientCompanies() {
         fetchCompaniesData();
     }, [currentCompany]);
 
-    console.log("CompanyList Count: ", companiesIdList.length);
+    // console.log("CompanyList Count: ", companiesIdList.length);
     return (
         <div>
             <Grid container direction="column">
