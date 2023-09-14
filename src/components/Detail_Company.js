@@ -93,9 +93,21 @@ function DetailCompany() {
                         />
                         <TextField
                             id="ntn"
-                            label="NTN / Inc #"
+                            label="NTN #"
                             type="name"
                             value={currentCompany.ntn}
+                            onChange={handleInputChange}
+                            variant="standard"
+                            InputLabelProps={{
+                                // shrink: !!currentUser.name
+                                shrink: true,
+                            }}
+                        />
+                          <TextField
+                            id="inc"
+                            label="Inc #"
+                            type="name"
+                            value={currentCompany.inc}
                             onChange={handleInputChange}
                             variant="standard"
                             InputLabelProps={{
@@ -170,11 +182,33 @@ function DetailCompany() {
                             }}
                         />
                         <TextField
-                            id="bank"
-                            label="Bank Account"
+                            id="bankName"
+                            label="Bank Name"
                             type="name"
                             variant="standard"
-                            value={currentCompany.bank}
+                            value={currentCompany.bankName}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                         <TextField
+                            id="bankAcc"
+                            label="Account No"
+                            type="name"
+                            variant="standard"
+                            value={currentCompany.bankAccountNo}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                         <TextField
+                            id="bankCode"
+                            label="Branch Code"
+                            type="name"
+                            variant="standard"
+                            value={currentCompany.branchCode}
                             onChange={handleInputChange}
                             InputLabelProps={{
                                 shrink: true,

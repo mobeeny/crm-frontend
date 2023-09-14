@@ -21,6 +21,7 @@ import ClientIcon from "@mui/icons-material/PeopleAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import UpdateIcon from "@mui/icons-material/Update";
 import AboutIcon from "@mui/icons-material/Info";
+import DescriptionIcon from '@mui/icons-material/Description';
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import Grid from "@mui/material/Grid";
@@ -191,8 +192,16 @@ export default function Layout() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    <ListItem key={"Client"} disablePadding sx={sx_ListItem}>
+                <ListItem key={"dashboard"} disablePadding sx={sx_ListItem}>
                         <ListItemButton component={Link} to={`/dashboard`} sx={sx_ListItemButton}>
+                            <ListItemIcon sx={sx_ListItemIcon}>
+                             <DescriptionIcon/>
+                            </ListItemIcon>
+                            <ListItemText primary={"dashboard"} sx={sx_ListItemText} />
+                        </ListItemButton>
+                    </ListItem>
+                    <ListItem key={"main"} disablePadding sx={sx_ListItem}>
+                        <ListItemButton component={Link} to={`/main`} sx={sx_ListItemButton}>
                             <ListItemIcon sx={sx_ListItemIcon}>
                                 <ClientIcon />
                             </ListItemIcon>

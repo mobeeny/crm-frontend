@@ -7,15 +7,18 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, Chip } from "@mui/material";
 import AddBusiness from "@mui/icons-material/AddBusiness";
 import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, writeBatch, arrayUnion, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
 import SearchClientsCompanyForm from "./SearchClientsCompanyForm";
 import { clearDirectorsNewCompany } from "../redux/reducers/clients";
+import {Divider,Root} from "@mui/material";
 
 export default function AddCompanyDialog() {
+    const [fullWidth, setFullWidth] = React.useState(true);
+    const [maxWidth, setMaxWidth] = React.useState('sm');
     // const username = useSelector((state) => state.config.username);
     const contactsDetails = {};
     const dispatch = useDispatch();
@@ -26,7 +29,8 @@ export default function AddCompanyDialog() {
     const [cName, setCName] = useState("");
     const [cEmail, setCEmail] = useState("");
     const cContacts = useSelector((state) => state.clients.newCompanyDirectors);
-    const [cNtnInc, setCNtnInc] = useState("");
+    const [cNtn, setCNtn] = useState("");
+    const [cInc, setCInc] = useState("");
     const [cGST, setCGST] = useState("");
     const [cPhone, setCPhone] = useState("");
     const [cRtoCity, setCRtoCity] = useState("");
@@ -35,7 +39,9 @@ export default function AddCompanyDialog() {
     const [cAddress, setCAddress] = useState("");
     const [cElectricityRefNo, setCElectricityRefNo] = useState("");
     const [cPrincipalActivity, setCPrincipalActivity] = useState("");
+    const [cBankName, setCBankName] = useState("");
     const [cBankAccount, setCBankAccount] = useState("");
+    const [cBankCode, setCBankCode] = useState("");
     const [cDateContact, setCDateContact] = useState("2023-05-10");
     const [cDateRegistration, setCDateRegistration] = useState("2023-05-10");
     const [cDateGST, setCDateGST] = useState("2023-05-10");
@@ -80,7 +86,8 @@ export default function AddCompanyDialog() {
                 name: cName,
                 email: cEmail,
                 phone: cPhone,
-                ntn: cNtnInc,
+                ntn: cNtn,
+                inc: cInc,
                 source: cSource,
                 gst: cGST,
                 city: cRtoCity,
@@ -91,7 +98,9 @@ export default function AddCompanyDialog() {
                 address: cAddress,
                 electricity: cElectricityRefNo,
                 pactivity: cPrincipalActivity,
-                bank: cBankAccount,
+                bankName: cBankName,
+                bankAccountNo : cBankAccount,
+                branchCode:cBankCode,
                 gDate: cDateGST,
             });
 
@@ -108,7 +117,10 @@ export default function AddCompanyDialog() {
             <Button variant="contained" onClick={handleClickOpen} startIcon={<AddBusiness />}>
                 Company
             </Button>
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={open} onClose={handleClose}
+                fullWidth={fullWidth}
+                maxWidth={maxWidth}
+            >
                 <DialogTitle>Add New Company</DialogTitle>
                 <DialogContent>
                     {/* <DialogContentText>
@@ -141,10 +153,17 @@ export default function AddCompanyDialog() {
                         />
                         <TextField
                             id="ntn"
-                            label="NTN / Inc #"
+                            label="NTN #"
                             type="name"
                             variant="standard"
-                            onChange={(e) => setCNtnInc(e.target.value)}
+                            onChange={(e) => setCNtn(e.target.value)}
+                        />
+                        <TextField
+                            id="inc"
+                            label="Inc #"
+                            type="name"
+                            variant="standard"
+                            onChange={(e) => setCInc(e.target.value)}
                         />
                         <TextField
                             id="gst"
@@ -188,13 +207,33 @@ export default function AddCompanyDialog() {
                             variant="standard"
                             onChange={(e) => setCAddress(e.target.value)}
                         />
+                        <Divider style={{marginTop:'22px'}}>
+                                <Chip label="Banking Details" />
+                            </Divider>
                         <TextField
-                            id="bank"
-                            label="Bank Account"
+                            id="bankName"
+                            label="Bank Name"
+                            type="name"
+                            variant="standard"
+                            onChange={(e) => setCBankName(e.target.value)}
+                        />
+                          <TextField
+                            id="bankAcc"
+                            label="Account No #"
                             type="name"
                             variant="standard"
                             onChange={(e) => setCBankAccount(e.target.value)}
                         />
+                          <TextField
+                            id="bankCode"
+                            label="Branch Code"
+                            type="name"
+                            variant="standard"
+                            onChange={(e) => setCBankCode(e.target.value)}
+                        /><br/>
+                        <Divider style={{marginBottom:'16px',marginTop:'10px'}}>
+                                
+                            </Divider>
                         <TextField
                             id="contactDate"
                             label="Contact Date"
