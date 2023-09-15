@@ -5,6 +5,7 @@ import productsReducer from "../reducers/products";
 import counterReducer from "../reducers/counter";
 import clientReducer from "../reducers/clients";
 import configReducer from "../reducers/config";
+import proposalReducer from "../reducers/proposal";
 
 const store = configureStore({
     // reducer: rootReducer,
@@ -14,6 +15,7 @@ const store = configureStore({
         counter: counterReducer,
         clients: clientReducer,
         config: configReducer,
+        proposal: proposalReducer,
     },
 });
 

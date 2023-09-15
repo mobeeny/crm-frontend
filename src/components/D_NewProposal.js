@@ -16,17 +16,16 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
-
-
-
+import { getDocs } from "firebase/firestore";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setproductDetails } from "../redux/reducers/proposal";
 
 
 export default function AddProposalDialog(props) {
     // const username = useSelector((state) => state.config.username);
     const [fullWidth, setFullWidth] = React.useState(true);
     const [maxWidth, setMaxWidth] = React.useState('lg');
-    const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
     const [open, setOpen] = React.useState();
     const [proposalNo, setProposalNo] = useState(0);
     const [clientName, setClientName] = useState("");
@@ -47,6 +46,9 @@ export default function AddProposalDialog(props) {
     const [showTextFieldProduct2, setShowTextFieldProduct2] = useState(false);
     const [showDatePickerProduct2, setShowDatePickerProduct2] = useState(false);
     const [textFieldValueProduct2, setTextFieldValueProduct2] = useState('');
+
+
+
 
 
     const [data, setData] = useState([
@@ -92,26 +94,29 @@ export default function AddProposalDialog(props) {
     const onSubmitClient = async () => {
         console.log("Auth UID:", auth);
 
-        try {
-            await addDoc(clientCollectionRef, {
-                number: proposalNo,
-                Client: clientName,
-                product: selectedProduct,
-                email: uEmail,
-                description: productDescription,
-                work: scopeOfWork,
-                reqs: preReqs,
-                fulfilment: fulfilment,
-                data: data,
-                discount: discount,
-                terms: termsAndConditions,
 
-            });
-            setOpen(false);
+    };
+
+
+    const productCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/products&services");
+    const productDetails = useSelector((state) => state.proposal.productDetails);
+    const dispatch = useDispatch()
+    const getProduct = async () => {
+        // Read the Data
+        // Set the Movie List
+        try {
+            const data = await getDocs(productCollectionRef);
+            const filteredData = data.docs.map((doc) => ({ ...doc.data() }));
+            dispatch(setproductDetails(filteredData));
         } catch (err) {
             console.error(err);
         }
     };
+
+    useEffect(() => {
+        getProduct();
+    }, []);
+
 
     return (
         <div>
@@ -119,12 +124,12 @@ export default function AddProposalDialog(props) {
                 Proposal
             </Button>
             <Dialog open={open} onClose={handleClose}
-                PaperProps={{
-                    style: {
-                        minHeight: '800px', // Adjust the height as needed
-                        // You can also use a percentage of the viewport height
-                    },
-                }}
+                // PaperProps={{
+                //     style: {
+                //         minHeight: '800px', // Adjust the height as needed
+                //         // You can also use a percentage of the viewport height
+                //     },
+                // }}
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}>
                 <DialogTitle>Add New proposal</DialogTitle>
@@ -158,16 +163,17 @@ export default function AddProposalDialog(props) {
                         />
                         <TextField
                             style={{ width: '35%', marginRight: '15%' }}
-                            select  // This indicates that this TextField is a dropdown (select) component
+                            select
                             label="Select Product"
-                            value={selectedProduct}
                             onChange={(e) => setSelectedProduct(e.target.value)}
                             variant="standard"
                         >
                             <MenuItem value="None">None</MenuItem>
-                            <MenuItem value="option1">Option 1</MenuItem>
-                            <MenuItem value="option2">Option 2</MenuItem>
-                            <MenuItem value="option3">Option 3</MenuItem>
+                            {productDetails.map((product) => (
+                                <MenuItem key={product.name} value={product.name}>
+                                    {product.name}
+                                </MenuItem>
+                            ))}
                         </TextField>
                         <TextField style={{ width: '40%' }}
                             id="email"
@@ -350,7 +356,7 @@ export default function AddProposalDialog(props) {
                             id="discount"
                             label="Discount"
                             type="number"
-                            variant="standard"  
+                            variant="standard"
                             onChange={(e) => setDiscount(e.target.value)}
                         />
                         <Textarea
@@ -371,7 +377,7 @@ export default function AddProposalDialog(props) {
                             rows={3}
                             id="terms"
                             variant="standard"
-                           label='Terms and Conditions'
+                            label='Terms and Conditions'
                             onChange={(e) => setTermsAndConditions(e.target.value)}
                         />
 
