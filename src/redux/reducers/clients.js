@@ -8,7 +8,7 @@ const clientSlice = createSlice({
         selectedUserCompaniesIds: [],
         selectedUserCompanies: [],
         selectedCompany: {},
-        newCompanyDirectors: [],
+        companyContacts: [],
     },
     reducers: {
         setClient(state, action) {
@@ -43,12 +43,12 @@ const clientSlice = createSlice({
         removeProduct(state, action) {
             // logic to remove a product from the store
         },
-        setDirectorsNewCompany(state, action) {
-            const clientId = action.payload;
-            state.newCompanyDirectors.push(clientId);
+        setCompanyContacts(state, action) {
+            const clientRelation = action.payload;
+            state.companyContacts.push(clientRelation);
         },
         clearDirectorsNewCompany(state, action) {
-            state.newCompanyDirectors = [];
+            state.companyContacts = [];
         },
         // other product-related actions
     },
@@ -61,7 +61,7 @@ export const {
     setSelectedUserCompanies,
     setUpdatedClient,
     setClient,
-    setDirectorsNewCompany,
+    setCompanyContacts,
     clearDirectorsNewCompany,
 } = clientSlice.actions;
 

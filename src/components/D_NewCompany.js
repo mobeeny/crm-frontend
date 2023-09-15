@@ -28,7 +28,7 @@ export default function AddCompanyDialog() {
 
     const [cName, setCName] = useState("");
     const [cEmail, setCEmail] = useState("");
-    const cContacts = useSelector((state) => state.clients.newCompanyDirectors);
+    const cContacts = useSelector((state) => state.clients.companyContacts);
     const [cNtn, setCNtn] = useState("");
     const [cInc, setCInc] = useState("");
     const [cGST, setCGST] = useState("");
@@ -82,7 +82,7 @@ export default function AddCompanyDialog() {
 
     const onSubmitClient = async () => {
         try {
-            const newCompanyRef = await addDoc(clientCollectionRef, {
+            const companyData = {
                 name: cName,
                 email: cEmail,
                 phone: cPhone,
@@ -102,7 +102,9 @@ export default function AddCompanyDialog() {
                 bankAccountNo : cBankAccount,
                 branchCode:cBankCode,
                 gDate: cDateGST,
-            });
+            };
+            
+            const newCompanyRef = await addDoc(clientCollectionRef, companyData);
 
             await updateClientsCompanyField(newCompanyRef.id);
             // setOpen(false);

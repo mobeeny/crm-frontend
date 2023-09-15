@@ -8,18 +8,21 @@ import ListItemText from "@mui/material/ListItemText";
 import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, addDoc, query, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
-import { setDirectorsNewCompany } from "../redux/reducers/clients";
+import { setCompanyContacts } from "../redux/reducers/clients";
 import { Avatar, Card, CardActions, CardContent, CardHeader, Chip, IconButton, Typography } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { Stack } from "@mui/system";
-import  ResponsiveDialog from './D_ClientRole'
+import ResponsiveDialog from './D_ClientRole'
 import D_ClientRole from "./D_ClientRole";
 
 const SelectUser_AddCompanySearch = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
-
     const [selectedResults, setSelectedResults] = useState([]);
+    const [showDialog, setShowDialog] = useState(false); // State to control dialog visibility
+    const [selectedClient,setSelectedClient]=useState({})
+
+
 
     // const username = useSelector((state) => state.config.username);
     const dispatch = useDispatch();
@@ -55,7 +58,7 @@ const SelectUser_AddCompanySearch = () => {
     };
 
     const addselectedResults = (clientId) => {
-        
+
         setSelectedResults((prevContacts) => [...prevContacts, clientId]);
         console.log("Directors: ", selectedResults);
     };
@@ -72,9 +75,12 @@ const SelectUser_AddCompanySearch = () => {
         // Do whatever you want with the userId, e.g., store it in state, perform an action, etc.
         console.log("Clicked user ID:", client);
 
-        addselectedResults(client);
-        dispatch(setDirectorsNewCompany(client.id));
-        setSearchResults([]);
+        // addselectedResults(client);
+        // dispatch(setCompanyContacts(client.id));
+        setSearchResults([]);//Clear the search suggestion list
+        setShowDialog(true);
+        setSelectedClient(client)
+  
     };
 
     return (
@@ -92,17 +98,18 @@ const SelectUser_AddCompanySearch = () => {
             />
 
             {searchResults.length > 0 && searchQuery.length > 0 && (
-             <>
-             <List dense>
-                    {searchResults.map((client) => (
-                        <ListItemButton key={client.id} onClick={() => handleUserClick(client)}>
-                            <ListItemText primary={client.name} />
-                        </ListItemButton>
-                    ))}
-                </List>
-                <D_ClientRole/>
+                <>
+                    <List dense>
+                        {searchResults.map((client) => (
+                            <ListItemButton key={client.id} onClick={() => handleUserClick(client)}>
+                                <ListItemText primary={client.name} />
+                            </ListItemButton>
+                        ))}
+                    </List>
                 </>
             )}
+           <D_ClientRole  open = {showDialog} setShowDialog = {setShowDialog } client={selectedClient} /> {/* Render the dialog when showDialog is true */}
+
             <Stack direction="row" spacing={1}>
                 {selectedResults.map((client) => (
                     // <ListItemButton key={client.id}>
