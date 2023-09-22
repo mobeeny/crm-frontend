@@ -98,13 +98,14 @@ const GeneralSettings = () => {
                 <Typography>Profile Picture</Typography>
                 <Box display="flex" justifyContent="center" alignItems="center">
                     <Stack spacing={2}>
-                        <Avatar
-                            sx={{ width: 180, height: 180 }}
+                        <img
+                            width={300}
                             src={
                                 userData.profilePicture !== ""
                                     ? userData.profilePicture
                                     : null
                             }
+                            alt="logo"
                         />
                         <Stack spacing={2} direction="row">
                             <input

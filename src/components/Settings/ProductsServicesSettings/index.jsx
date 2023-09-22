@@ -64,7 +64,7 @@ const ProductsServicesSettings = () => {
                 <AddProduct />
             ) : (
                 <>
-                    <Grid item sx={{ maxWidth: 420, overflow: "auto" }}>
+                    <Grid item md={2} sx={{ overflow: "auto" }}>
                         <List
                             subheader={
                                 <ListSubheader
@@ -93,33 +93,29 @@ const ProductsServicesSettings = () => {
                             ))}
                         </List>
                     </Grid>
-                    <Grid item>
+                    <Grid item md={0.1}>
                         <Divider
                             orientation="vertical"
                             variant="middle"
-                            sx={{ height: "80vh" }}
+                            sx={{ height: "100%" }}
                             flexItem
                         />
                     </Grid>
-                    <Grid item ml={2}>
-                        <Stack spacing={2}>
-                            <Button
-                                variant="contained"
-                                size="small"
-                                sx={{ width: "200px" }}
-                                onClick={() => addProductService()}
-                            >
-                                Add Product/Service
-                            </Button>
+                    <Grid item ml={2} md={9.5}>
+                        <Button
+                            variant="contained"
+                            size="small"
+                            sx={{ width: "200px", marginBottom: 2 }}
+                            onClick={() => addProductService()}
+                        >
+                            Add Product/Service
+                        </Button>
 
-                            {selectedProduct.id !== "" ? (
-                                <ProductDetail
-                                    selectedProduct={selectedProduct}
-                                />
-                            ) : (
-                                <Typography>No product selected.</Typography>
-                            )}
-                        </Stack>
+                        {selectedProduct.id !== "" ? (
+                            <ProductDetail selectedProduct={selectedProduct} />
+                        ) : (
+                            <Typography>No product selected.</Typography>
+                        )}
                     </Grid>
                 </>
             )}
