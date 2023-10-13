@@ -20,85 +20,82 @@ import { getDocs } from "firebase/firestore";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setproductDetails } from "../redux/reducers/proposal";
+import {
+
+    Card,
+    Grid,
+    IconButton,
+    Stack,
+
+    Typography,
+} from "@mui/material";
+import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
+import ClientField from "./ClientField";
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { Fragment } from "react";
+import PDFFile from "./Settings/PropsalSettings/PDFFile";
 
 
 export default function AddProposalDialog(props) {
-    // const username = useSelector((state) => state.config.username);
-    const [fullWidth, setFullWidth] = React.useState(true);
-    const [maxWidth, setMaxWidth] = React.useState('lg');
+
+    const productCollectionRef = collection(
+        db,
+        instancesRef + auth.currentUser.uid + "/products&services"
+    );
+
+
+
+
+
+    const [quotation, setQuotation] = useState(
+        {
+            id: [],
+            productName: [],
+            subtitle: "",
+            client: "",
+            company: "",
+            description: [],
+            scope: [],
+            pre_reqs: [],
+            fulfilment: [],
+            timeline: [],
+            charges: [],
+            payments: [],
+            terms: []
+
+        }
+    );
+
     const [open, setOpen] = React.useState();
-    const [proposalNo, setProposalNo] = useState(0);
-    const [clientName, setClientName] = useState("");
-    const [uEmail, setUEmail] = useState("");
-    const [selectedProduct, setSelectedProduct] = useState("");
-    const [productDescription, setProductDescription] = useState("");
-    const [scopeOfWork, setScopeOfWork] = useState("");
-    const [preReqs, setPreReqs] = useState("");
-    const [fulfilment, setFulfilment] = useState("");
-    const [discount, setDiscount] = useState("2023-05-10");
-    const [termsAndConditions, setTermsAndConditions] = useState("");
-    // For Product 1
-    const [showTextFieldProduct1, setShowTextFieldProduct1] = useState(false);
-    const [showDatePickerProduct1, setShowDatePickerProduct1] = useState(false);
-    const [textFieldValueProduct1, setTextFieldValueProduct1] = useState('');
 
-    // For Product 2
-    const [showTextFieldProduct2, setShowTextFieldProduct2] = useState(false);
-    const [showDatePickerProduct2, setShowDatePickerProduct2] = useState(false);
-    const [textFieldValueProduct2, setTextFieldValueProduct2] = useState('');
-
-
-
-
-
-    const [data, setData] = useState([
-        { id: 1, task: '', cost: '0' },
-        { id: 2, task: '', cost: '0' },
-        { id: 3, task: '', cost: '0' },
-    ]);
-
-    const
-        handleTaskChange = (id, value) => {
-            const updatedData = data.map(item =>
-                item.id === id ? { ...item, task: value } : item
-            );
-            setData(updatedData);
-        };
-
-    const handleCostChange = (id, value) => {
-        const updatedData = data.map(item =>
-            item.id === id ? { ...item, cost: value } : item
-        );
-        setData(updatedData);
-    };
-
-
-    const handleTextFieldChangeProduct1 = (event) => {
-        setTextFieldValueProduct1(event.target.value);
-    };
-
-
-
-    const handleTextFieldChangeProduct2 = (event) => {
-        setTextFieldValueProduct2(event.target.value);
-    };
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
     const handleClose = () => {
         setOpen(false);
     };
 
     const onSubmitClient = async () => {
+      
         console.log("Auth UID:", auth);
-
-
+        console.log(quotation.productName)
+        console.log(quotation.subtitle)
+        console.log(quotation.client)
+        console.log(quotation.company)
+        console.log(quotation.description)
+        console.log(quotation.scope)
+        console.log(quotation.pre_reqs)
+        console.log(quotation.fulfilment)
+        console.log(quotation.timeline)
+        console.log(quotation.terms)
     };
 
 
-    const productCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/products&services");
     const productDetails = useSelector((state) => state.proposal.productDetails);
     const dispatch = useDispatch()
     const getProduct = async () => {
@@ -106,7 +103,9 @@ export default function AddProposalDialog(props) {
         // Set the Movie List
         try {
             const data = await getDocs(productCollectionRef);
-            const filteredData = data.docs.map((doc) => ({ ...doc.data() }));
+
+            const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+            console.log(filteredData)
             dispatch(setproductDetails(filteredData));
         } catch (err) {
             console.error(err);
@@ -118,280 +117,351 @@ export default function AddProposalDialog(props) {
     }, []);
 
 
+    const handleCheckboxChange = (productId) => {
+        if (quotation.id.includes(productId)) {
+            setQuotation({
+                ...quotation,
+                id: quotation.id.filter((product) => product !== productId),
+                productName: quotation.productName.filter((product, index) => index !== quotation.id.indexOf(productId)), // Remove corresponding product name
+            });
+        } else {
+            const selectedProduct = productDetails.find((product) => product.id === productId);
+            if (selectedProduct) {
+                setQuotation({
+                    ...quotation,
+                    id: [...quotation.id, productId],
+                    productName: [...quotation.productName, selectedProduct.name], // Add product name
+                });
+            }
+        }
+        console.log(quotation.id)
+
+    };
+
+
+    const s = () => {
+        console.log(quotation.client)
+    }
+
+
+    const updateClientInQuotation = (clientValue) => {
+        setQuotation((quotation) => ({
+            ...quotation,
+            client: clientValue,
+        }));
+    };
+
+
     return (
         <div>
-            <Button variant="contained" onClick={handleClickOpen} startIcon={<DescriptionIcon />}>
-                Proposal
-            </Button>
-            <Dialog open={open} onClose={handleClose}
-                // PaperProps={{
-                //     style: {
-                //         minHeight: '800px', // Adjust the height as needed
-                //         // You can also use a percentage of the viewport height
-                //     },
-                // }}
-                fullWidth={fullWidth}
-                maxWidth={maxWidth}>
-                <DialogTitle>Add New proposal</DialogTitle>
-                <DialogContent>
-                    {/* <DialogContentText>
-                        
-                    </DialogContentText> */}
-                    <Box
-                        component="form"
-                        sx={{
-                            "& .MuiTextField-root": { m: 3 },
-                        }}
-                        noValidate
-                        autoComplete="off"
-                    >
-                        <TextField style={{ width: '35%', marginRight: '15%' }}
-                            autoFocus
-                            id="proposalNo"
-                            label="Proposal Number"
-                            type="number"
-                            variant="standard"
-                            onChange={(e) => setProposalNo(e.target.value)}
-                        />
-                        <TextField style={{ width: '40%' }} // No margin here
-                            autoFocus
-                            id="clientName"
-                            label="Client Name"
-                            type="name"
-                            variant="standard"
-                            onChange={(e) => setClientName(e.target.value)}
-                        />
+            <Card sx={{ width: "65vw", minHeight: "70vh", p: 5 }}>
+                <Typography variant="h5">Make Proposal</Typography>
+
+                <Grid container mt={1} spacing={6}>
+                    <Grid item md={6}>
                         <TextField
-                            style={{ width: '35%', marginRight: '15%' }}
+                            sx={{ width: '45ch' }}
                             select
-                            label="Select Product"
-                            onChange={(e) => setSelectedProduct(e.target.value)}
+                            label="Select Products"
                             variant="standard"
+                            value={quotation.id}
+                            onChange={(e) => setQuotation({ ...quotation, id: e.target.value })}
+                            SelectProps={{
+                                multiple: true, // Allow multiple selections
+                                renderValue: (selected) => {
+                                    const selectedNames = selected.map((id) => {
+                                        const selectedProduct = productDetails.find((product) => product.id === id);
+                                        return selectedProduct ? selectedProduct.name : '';
+                                    });
+                                    return selectedNames.join(', ');
+                                }, // Display selected items as comma-separated text
+                            }}
                         >
-                            <MenuItem value="None">None</MenuItem>
                             {productDetails.map((product) => (
-                                <MenuItem key={product.name} value={product.name}>
-                                    {product.name}
+                                <MenuItem key={product.id} value={product.id}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={quotation.id.includes(product.id)}
+                                                onChange={() => handleCheckboxChange(product.id)}
+                                            />
+                                        }
+                                        label={product.name}
+                                    />
                                 </MenuItem>
                             ))}
                         </TextField>
-                        <TextField style={{ width: '40%' }}
-                            id="email"
-                            label="Email Address"
-                            type="email"
-                            variant="standard"
-                            onChange={(e) => setUEmail(e.target.value)}
-                        />
-                        <Textarea style={{ width: '35%', marginRight: '15%' }}
-                            multiline
-                            rows={3}
-                            id="productDescription"
-                            label="Product Description"
-                            type="name"
-                            variant="standard"
-                            onChange={(e) => setProductDescription(e.target.value)}
-                        />
-                        <Textarea style={{ width: '40%' }}
-                            multiline
-                            rows={3}
-                            id="scopeOfWork"
-                            label="Scope Of Work"
-                            type="name"
-                            variant="standard"
-                            onChange={(e) => setScopeOfWork(e.target.value)}
-                        />
-                        <TextField style={{ width: '35%', marginRight: '15%' }}
+                    </Grid>
+
+                    <Grid item md={6}>
+                        <TextField  // No margin here
+                            sx={{ width: '45ch' }}
                             autoFocus
-                            id="pre_reqs"
-                            label='Pre_reqs from client'
+                            id="Subtitle"
+                            label="Proposal Subtitle"
+                            variant="standard"
+                            onChange={(e) => setQuotation({ ...quotation, subtitle: e.target.value })}
+
+                        />
+                    </Grid>
+
+                    <Grid item md={6}>
+                        <ClientField updateClientInQuotation={updateClientInQuotation} />
+
+                    </Grid>
+
+                    <Grid item md={6}>
+                        <TextField
+                            style={{ width: '45ch' }}
+                            id="company"
+                            label="Client Company"
                             type="name"
                             variant="standard"
-                            onChange={(e) => setPreReqs(e.target.value)}
+                            onChange={(e) => setQuotation({ ...quotation, company: e.target.value })}
                         />
-                        <TextField style={{ width: '40%' }} // No margin here
-                            autoFocus
-                            id="fulfilment"
-                            label="Fulfilment by E-axon"
-                            type="name"
-                            variant="standard"
-                            onChange={(e) => setFulfilment(e.target.value)}
-                        />
-                        <h3 style={{ marginLeft: '20px' }}>Project Timeline : </h3>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <InputLabel style={{ marginRight: '20px', marginLeft: '2%' }}>
-                                <b>Product 1 : </b>
-                            </InputLabel>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={showTextFieldProduct1}
+                    </Grid>
 
-                                        onChange={() => {
-                                            setShowTextFieldProduct1(true);
-                                            setShowDatePickerProduct1(false);
-                                        }}
-                                    />
-                                }
-                                label="Add Text Manually"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={showDatePickerProduct1}
-                                        onChange={() => {
-                                            setShowTextFieldProduct1(false);
-                                            setShowDatePickerProduct1(true);
-                                        }}
-                                    />
-                                }
-                                label="Select By Date"
-                            />
-                            {showTextFieldProduct1 && (
-                                <TextField
-                                    style={{ width: '40%' }}
-                                    label="Describe about Product"
-                                    variant="outlined"
-                                    value={textFieldValueProduct1}
-                                    onChange={handleTextFieldChangeProduct1}
-                                />
-                            )}
-                            {showDatePickerProduct1 && (
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DemoContainer components={['DatePicker']}>
-                                        <DatePicker label="Basic date picker" />
-                                    </DemoContainer>
-                                </LocalizationProvider>
-                            )}
-                        </div>
+                    <Grid item xs={6} >
+                        <Typography gutterBottom><b>Product Description :</b></Typography>
+                        <Stack
 
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <InputLabel style={{ marginRight: '20px', marginLeft: '2%' }}>
-                                <b>Product 2 : </b>
-                            </InputLabel>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={showTextFieldProduct2}
-                                        onChange={() => {
-                                            setShowTextFieldProduct2(true);
-                                            setShowDatePickerProduct2(false);
-                                        }}
-                                    />
-                                }
-                                label="Add Text Manually"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={showDatePickerProduct2}
-                                        onChange={() => {
-                                            setShowTextFieldProduct2(false);
-                                            setShowDatePickerProduct2(true);
-                                        }}
-                                    />
-                                }
-                                label="Select By Date"
-                            />
-                            {showTextFieldProduct2 && (
-                                <TextField
-                                    style={{ width: '40%' }}
-                                    label="Describe about Product"
-                                    variant="outlined"
-                                    value={textFieldValueProduct2}
-                                    onChange={handleTextFieldChangeProduct2}
-                                />
-                            )}
-                            {showDatePickerProduct2 && (
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DemoContainer components={['DatePicker']}>
-                                        <DatePicker label="Basic date picker" />
-                                    </DemoContainer>
-                                </LocalizationProvider>
-                            )}
-                        </div>
-                        <h3 style={{ marginLeft: '20px', width: '40%' }}>Charges : </h3>
-                        <div style={{ margin: '20px' }}>
-                            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                                <thead>
-                                    <tr >
-                                        <th style={{ border: '3px solid #ddd', textAlign: 'left', backgroundColor: '#f2f2f2', paddingLeft: '2%' }}>S.NO</th>
-                                        <th style={{ border: '3px solid #ddd', textAlign: 'left', backgroundColor: '#f2f2f2', paddingLeft: '2%' }}>Task</th>
-                                        <th style={{ border: '3px solid #ddd', textAlign: 'left', backgroundColor: '#f2f2f2', paddingLeft: '2%' }}>Cost(pkr)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {data.map(item => (
-                                        <tr key={item.id}>
-                                            <td style={{ border: '1px solid #ddd', textAlign: 'center', Width: '10px' }}>{item.id}</td>
-                                            <td style={{ border: '1px solid #ddd', textAlign: 'left', width: '70%' }}>
-                                                <TextField style={{ width: '90%' }} // No margin here
-                                                    autoFocus
-                                                    id="task"
-                                                    label="Enter Task"
-                                                    type="name"
-                                                    variant="standard"
-                                                    onChange={handleTaskChange}
+                            spacing={2}
+                            sx={{
+                                borderRadius: "10px",
 
-                                                />
-                                            </td>
-                                            <td style={{ border: '1px solid #ddd', textAlign: 'left', width: '20%' }}>
-                                                <TextField style={{ width: '80%', marginRight: '15%' }}
-                                                    autoFocus
-                                                    id="cost"
-                                                    label='0'
-                                                    type="number"
-                                                    variant="standard"
-                                                    onChange={handleCostChange}
-
-                                                />
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <TextField style={{ width: '35%', marginRight: '15%' }}
-                            autoFocus
-                            id="discount"
-                            label="Discount"
-                            type="number"
-                            variant="standard"
-                            onChange={(e) => setDiscount(e.target.value)}
-                        />
-                        <Textarea
-                            style={{
-                                width: '60%',
-                                border: '2px solid #ccc',
-                                borderRadius: '5px', // Add rounded corners
-                                padding: '10px', // More padding for better spacing
-                                boxSizing: 'border-box',
-                                fontSize: '14px', // Adjust font size
-                                fontFamily: 'Arial, sans-serif', // Change font family if desired
-                                resize: 'vertical', // Allow vertical resizing
-                                outline: 'none', // Remove default outline
-                                transition: 'border-color 0.2s',
                             }}
-                            autoFocus
-                            multiline
-                            rows={3}
-                            id="terms"
-                            variant="standard"
-                            label='Terms and Conditions'
-                            onChange={(e) => setTermsAndConditions(e.target.value)}
-                        />
+                        >
+                            {quotation.productName.map((productName) => (
+                                <TextField sx={{ width: "45ch" }}
+                                    key={productName}
+                                    label={productName}
+                                    onChange={(e) => setQuotation({
+                                        ...quotation, description: [...quotation.description, e.target.value]
+                                    })}
+                                    variant="standard"
+
+                                />
+                            ))}
+                        </Stack>
+                    </Grid>
+
+                    <Grid item md={6}>
+                        <Typography gutterBottom><b>Scope Of Work</b></Typography>
+                        <Stack
+
+                            spacing={2}
+                            sx={{
+                                borderRadius: "10px",
+
+                            }}
+                        >
+                            {quotation.productName.map((productName) => (
+                                <TextField sx={{ width: "45ch" }}
+                                    key={productName}
+                                    label={productName}
+                                    onChange={(e) => setQuotation({ ...quotation, scope: e.target.value })}
+                                    variant="standard"
+
+                                />
+                            ))}
+                        </Stack>
+                    </Grid>
+
+                    <Grid item md={6}>
+                        <Typography gutterBottom ><b>Fulfilment By Client</b></Typography>
+                        <Stack
+
+                            spacing={2}
+                            sx={{
+                                borderRadius: "10px",
+
+                            }}
+                        >
+                            {quotation.productName.map((productName) => (
+                                <TextField sx={{ width: "45ch" }}
+                                    key={productName}
+                                    label={productName}
+                                    onChange={(e) => setQuotation({ ...quotation, fulfilment: e.target.value })}
+                                    variant="standard"
+
+                                />
+                            ))}
+                        </Stack>
+                    </Grid>
+
+                    <Grid item md={6}>
+                        <Typography gutterBottom><b>Pre_Reqs from Client</b></Typography>
+                        <Stack
+
+                            spacing={2}
+                            sx={{
+                                borderRadius: "10px",
+
+                            }}
+                        >
+                            {quotation.productName.map((productName) => (
+                                <TextField sx={{ width: "45ch" }}
+                                    key={productName}
+                                    label={productName}
+                                    onChange={(e) => setQuotation({ ...quotation, pre_reqs: e.target.value })}
+                                    variant="standard"
+
+                                />
+                            ))}
+                        </Stack>
+                    </Grid>
+
+                    <Grid item md={6}>
+                        <Typography gutterBottom><b>Project Timeline</b></Typography>
+                        <Stack
+
+                            spacing={2}
+                            sx={{
+                                borderRadius: "10px",
+
+                            }}
+                        >
+                            {quotation.productName.map((productName) => (
+                                <TextField sx={{ width: "45ch" }}
+                                    key={productName}
+                                    label={productName}
+                                    onChange={(e) => setQuotation({ ...quotation, timeline: e.target.value })}
+                                    variant="standard"
+
+                                />
+                            ))}
+                        </Stack>
+                    </Grid>
+                    <Grid item md={6}>
+                        <Typography gutterBottom><b>Terms and Conditions</b></Typography>
+                        <Stack
+
+                            spacing={2}
+
+                            sx={{
+                                borderRadius: "10px",
+
+                            }}
+                        >
+                            {quotation.productName.map((productName) => (
+                                <TextField sx={{ width: "45ch" }}
+                                    key={productName}
+                                    label={productName}
+                                    variant="standard"
+                                    onChange={(e) => setQuotation({ ...quotation, terms: e.target.value })}
+                                />
+                            ))}
+                        </Stack>
+                    </Grid>
+                    <Grid md={12} sx={{ m: 5 }}>
+                        <Typography gutterBottom><b>Charges </b></Typography>
+                        <TableContainer component={Paper} sx={{ maxWidth: 1200, }}>
+                            <Table aria-label="spanning table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell><b>Sr. No</b></TableCell>
+                                        <TableCell><b>Task</b></TableCell>
+                                        <TableCell align="right"><b>Price</b></TableCell>
+                                    </TableRow>
+
+                                </TableHead>
+                                <TableBody>
+                                    {quotation.productName.map((productName, index) => (
+                                        <Fragment key={index}>
+                                            <TableRow>
+                                                <TableCell colSpan={3} align="center" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '30ch' }}>
+                                                    <b>{productName}</b>
+                                                </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                                <TableCell>1</TableCell>
+                                                <TableCell contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '20ch' }}>Sample</TableCell>
+                                                <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '10ch' }}>$100.00</TableCell>
+                                            </TableRow>
+                                        </Fragment>
+                                    ))}
+                                    <TableRow>
+                                        <TableCell></TableCell>
+                                        <TableCell ><b>Included</b></TableCell>
+                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '20ch' }}>Sample</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell></TableCell>
+                                        <TableCell ><b>Excluded</b></TableCell>
+                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '20ch' }}>Sample</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell></TableCell>
+                                        <TableCell align="right">Discount</TableCell>
+                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '10ch' }}>$100.00</TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell></TableCell>
+                                        <TableCell align="right">Price</TableCell>
+                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '10ch' }}>$100.00</TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Grid>
+
+                    <Grid md={12} sx={{ m: 5, marginTop: 2 }}>
+                        <Typography gutterBottom><b>Payment Terms</b></Typography>
+                        <TableContainer component={Paper} sx={{ maxWidth: 1200, }}>
+                            <Table aria-label="spanning table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell><b>Sr. No</b></TableCell>
+                                        <TableCell><b>Task</b></TableCell>
+                                        <TableCell align="right"><b>Due %</b></TableCell>
+                                        <TableCell align="right"><b>Amount%</b></TableCell>
+                                    </TableRow>
+
+                                </TableHead>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell>1</TableCell>
+                                        <TableCell contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '20ch' }}>Sample</TableCell>
+                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '10ch' }}>$100.00</TableCell>
+                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '10ch' }} >$100</TableCell>
+
+                                    </TableRow>
 
 
-                    </Box>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" onClick={onSubmitClient}>
-                        Update
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </Grid>
 
-        </div>
+                    <Grid
+                        item
+                        xs={12}
+                        sx={{
+                            marginTop: 5,
+                            marginLeft: 2,
+                            padding: "24px",
+                            backgroundColor: "#fbfbfb",
+
+                        }}
+                    >
+                        <Stack
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="space-between"
+                        >
+                            <Typography variant="info" fontSize="12px" color="grey">
+                                *Make sure to save all changes
+                            </Typography>
+                            <Stack spacing={2} direction="row">
+                                <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+                                <Button variant="contained" onClick={onSubmitClient}>
+                                    Update
+                                </Button>
+                            </Stack>
+                        </Stack>
+                    </Grid>
+                </Grid>
+            </Card>
+        </div >
     );
 }

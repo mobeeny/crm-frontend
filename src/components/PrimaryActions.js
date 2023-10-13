@@ -6,7 +6,7 @@ function PrimaryActions() {
 
     return (
         <div>
-            <h2>Primary Actions</h2>
+            <h2>Create a Project</h2>
             < AddProposalDialog/>
         </div>
     );
