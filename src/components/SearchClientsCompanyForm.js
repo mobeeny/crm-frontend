@@ -48,12 +48,17 @@ const SelectUser_AddCompanySearch = (props) => {
             const usersRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
             const q = query(usersRef, where("name", ">=", squery), where("name", "<=", squery + "\uf8ff"));
             const snapshot = await getDocs(q);
+            console.log("User :", results);
 
             results = snapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data(),
             }));
-            //   console.log("User :", results);
+              console.log("User :", results);
+
+            results.push({id:0,name:"Create New"})
+
+
             setSearchResults(results);
         } catch (error) {
             console.error("Error fetching search results:", error);

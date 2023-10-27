@@ -30,10 +30,10 @@ export default function D_ClientRole(props) {
   const handleClose = () => {
     props.setShowDialog(false)
   };
-  const handleSave = () =>{
+  const handleSave = () => {
 
-    
-    dispatch(setCompanyContacts({ id: props.client.id, title:title,remarks:remarks,status:checked }))
+
+    dispatch(setCompanyContacts({ id: props.client.id, title: title, remarks: remarks, status: checked }))
     props.setShowDialog(false)
 
   }
@@ -49,9 +49,18 @@ export default function D_ClientRole(props) {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle style={{ marginLeft: '0' }}>Enter Role for {props.client.name}</DialogTitle>
+        <DialogTitle style={{ marginLeft: '0' }}>Enter Role for {props.client.id == 0 ?"New Person":props.client.name}</DialogTitle>
 
         <div style={{ margin: '3%', marginTop: 0 }}>
+           {props.client.id==0?
+          <TextField
+            style={{ width: '100%', marginBottom: '20px' }}
+            id="name"
+            label="Name "
+            type="name"
+            variant="standard"
+            onChange={(e) => setTitle(e.target.value)}
+          />:null}
           <TextField
             style={{ width: '100%', marginBottom: '20px' }}
             id="ntn"
