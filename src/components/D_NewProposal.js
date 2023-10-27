@@ -66,8 +66,19 @@ export default function AddProposalDialog(props) {
             pre_reqs: [],
             fulfilment: [],
             timeline: [],
-            charges: [],
-            payments: [],
+            charges: {
+                task: [],
+                prices: [],
+                included: "",
+                excluded: "",
+                discount: 0,
+                total: 0
+            },
+            payments: {
+                task: [],
+                due: [],
+                amount: []
+            },
             terms: []
 
         }
@@ -81,7 +92,7 @@ export default function AddProposalDialog(props) {
     };
 
     const onSubmitClient = async () => {
-      
+
         console.log("Auth UID:", auth);
         console.log(quotation.productName)
         console.log(quotation.subtitle)
@@ -93,6 +104,8 @@ export default function AddProposalDialog(props) {
         console.log(quotation.fulfilment)
         console.log(quotation.timeline)
         console.log(quotation.terms)
+        console.log(quotation.charges)
+        console.log(quotation.payments)
     };
 
 
@@ -222,7 +235,7 @@ export default function AddProposalDialog(props) {
                     </Grid>
 
                     <Grid item xs={6} >
-                        <Typography gutterBottom><b>Product Description :</b></Typography>
+                        <Typography gutterBottom><b>Product Description</b></Typography>
                         <Stack
 
                             spacing={2}
@@ -231,13 +244,15 @@ export default function AddProposalDialog(props) {
 
                             }}
                         >
-                            {quotation.productName.map((productName) => (
+                            {quotation.productName.map((productName, index) => (
                                 <TextField sx={{ width: "45ch" }}
                                     key={productName}
                                     label={productName}
-                                    onChange={(e) => setQuotation({
-                                        ...quotation, description: [...quotation.description, e.target.value]
-                                    })}
+                                    onChange={(e) => {
+                                        const newQuotation = { ...quotation };
+                                        newQuotation.description[index] = e.target.value;
+                                        setQuotation(newQuotation);
+                                    }}
                                     variant="standard"
 
                                 />
@@ -255,11 +270,15 @@ export default function AddProposalDialog(props) {
 
                             }}
                         >
-                            {quotation.productName.map((productName) => (
+                            {quotation.productName.map((productName, index) => (
                                 <TextField sx={{ width: "45ch" }}
                                     key={productName}
                                     label={productName}
-                                    onChange={(e) => setQuotation({ ...quotation, scope: e.target.value })}
+                                    onChange={(e) => {
+                                        const newQuotation = { ...quotation };
+                                        newQuotation.scope[index] = e.target.value;
+                                        setQuotation(newQuotation);
+                                    }}
                                     variant="standard"
 
                                 />
@@ -277,11 +296,15 @@ export default function AddProposalDialog(props) {
 
                             }}
                         >
-                            {quotation.productName.map((productName) => (
+                            {quotation.productName.map((productName, index) => (
                                 <TextField sx={{ width: "45ch" }}
                                     key={productName}
                                     label={productName}
-                                    onChange={(e) => setQuotation({ ...quotation, fulfilment: e.target.value })}
+                                    onChange={(e) => {
+                                        const newQuotation = { ...quotation };
+                                        newQuotation.fulfilment[index] = e.target.value;
+                                        setQuotation(newQuotation);
+                                    }}
                                     variant="standard"
 
                                 />
@@ -299,11 +322,15 @@ export default function AddProposalDialog(props) {
 
                             }}
                         >
-                            {quotation.productName.map((productName) => (
+                            {quotation.productName.map((productName, index) => (
                                 <TextField sx={{ width: "45ch" }}
                                     key={productName}
                                     label={productName}
-                                    onChange={(e) => setQuotation({ ...quotation, pre_reqs: e.target.value })}
+                                    onChange={(e) => {
+                                        const newQuotation = { ...quotation };
+                                        newQuotation.pre_reqs[index] = e.target.value;
+                                        setQuotation(newQuotation);
+                                    }}
                                     variant="standard"
 
                                 />
@@ -321,11 +348,15 @@ export default function AddProposalDialog(props) {
 
                             }}
                         >
-                            {quotation.productName.map((productName) => (
+                            {quotation.productName.map((productName, index) => (
                                 <TextField sx={{ width: "45ch" }}
                                     key={productName}
                                     label={productName}
-                                    onChange={(e) => setQuotation({ ...quotation, timeline: e.target.value })}
+                                    onChange={(e) => {
+                                        const newQuotation = { ...quotation };
+                                        newQuotation.timeline[index] = e.target.value;
+                                        setQuotation(newQuotation);
+                                    }}
                                     variant="standard"
 
                                 />
@@ -343,67 +374,106 @@ export default function AddProposalDialog(props) {
 
                             }}
                         >
-                            {quotation.productName.map((productName) => (
+                            {quotation.productName.map((productName, index) => (
                                 <TextField sx={{ width: "45ch" }}
                                     key={productName}
                                     label={productName}
                                     variant="standard"
-                                    onChange={(e) => setQuotation({ ...quotation, terms: e.target.value })}
-                                />
+                                    onChange={(e) => {
+                                        const newQuotation = { ...quotation };
+                                        newQuotation.terms[index] = e.target.value;
+                                        setQuotation(newQuotation);
+                                    }} />
                             ))}
                         </Stack>
                     </Grid>
                     <Grid md={12} sx={{ m: 5 }}>
-                        <Typography gutterBottom><b>Charges </b></Typography>
-                        <TableContainer component={Paper} sx={{ maxWidth: 1200, }}>
+                        <Typography gutterBottom><b>Charges</b></Typography>
+                        <TableContainer component={Paper} sx={{ maxWidth: 1200 }}>
                             <Table aria-label="spanning table">
                                 <TableHead>
                                     <TableRow>
                                         <TableCell><b>Sr. No</b></TableCell>
-                                        <TableCell><b>Task</b></TableCell>
-                                        <TableCell align="right"><b>Price</b></TableCell>
+                                        <TableCell sx={{ width: '3fr' }} align="center"><b>Task</b></TableCell>
+                                        <TableCell align="right" sx={{ width: '1fr' }}><b>Price</b></TableCell>
                                     </TableRow>
-
                                 </TableHead>
                                 <TableBody>
                                     {quotation.productName.map((productName, index) => (
                                         <Fragment key={index}>
                                             <TableRow>
-                                                <TableCell colSpan={3} align="center" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '30ch' }}>
+                                                <TableCell colSpan={3} align="center" sx={{ overflowWrap: 'break-word', maxWidth: '30ch' }}>
                                                     <b>{productName}</b>
                                                 </TableCell>
                                             </TableRow>
                                             <TableRow>
                                                 <TableCell>1</TableCell>
-                                                <TableCell contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '20ch' }}>Sample</TableCell>
-                                                <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '10ch' }}>$100.00</TableCell>
+                                                <TableCell contentEditable sx={{ overflowWrap: 'break-word', width: '3fr', maxWidth: '30ch', minWidth: '30ch' }}
+                                                    onInput={(e) => {
+                                                        const newQuotation = { ...quotation };
+                                                        newQuotation.charges.task[index] = e.target.innerText;
+                                                        setQuotation(newQuotation);
+                                                    }}>
+                                                    sample
+                                                </TableCell>
+                                                <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', width: '1fr', maxWidth: '10ch', minWidth: '10ch' }} onInput={(e) => {
+                                                    const newQuotation = { ...quotation };
+                                                    newQuotation.charges.prices[index] = e.target.innerText;
+                                                    setQuotation(newQuotation);
+                                                }}> price</TableCell>
                                             </TableRow>
                                         </Fragment>
                                     ))}
                                     <TableRow>
                                         <TableCell></TableCell>
-                                        <TableCell ><b>Included</b></TableCell>
-                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '20ch' }}>Sample</TableCell>
+                                        <TableCell sx={{ width: '1fr' }}><b>Included</b></TableCell>
+                                        <TableCell sx={{ width: '1fr' }} contentEditable onInput={(e) => {
+                                            const newQuotation = { ...quotation };
+                                            newQuotation.charges.included = e.target.innerText;
+                                            setQuotation(newQuotation);
+                                        }}>
+                                            {quotation.charges.included}
+                                        </TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell></TableCell>
-                                        <TableCell ><b>Excluded</b></TableCell>
-                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '20ch' }}>Sample</TableCell>
+                                        <TableCell sx={{ width: '1fr' }}><b>Excluded</b></TableCell>
+                                        <TableCell sx={{ width: '1fr' }} contentEditable onInput={(e) => {
+                                            const newQuotation = { ...quotation };
+                                            newQuotation.charges.excluded = e.target.innerText;
+                                            setQuotation(newQuotation);
+                                        }}>
+                                            {quotation.charges.excluded}
+                                        </TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell></TableCell>
-                                        <TableCell align="right">Discount</TableCell>
-                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '10ch' }}>$100.00</TableCell>
+                                        <TableCell align="right" sx={{ width: '3fr' }}><b>Discount</b></TableCell>
+                                        <TableCell contentEditable sx={{ width: '1fr' }} onInput={(e) => {
+                                            const newQuotation = { ...quotation };
+                                            newQuotation.charges.discount = e.target.innerText;
+                                            setQuotation(newQuotation);
+                                        }}>
+                                            {quotation.charges.discount}
+                                        </TableCell>
                                     </TableRow>
                                     <TableRow>
                                         <TableCell></TableCell>
-                                        <TableCell align="right">Price</TableCell>
-                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '10ch' }}>$100.00</TableCell>
+                                        <TableCell align="right" sx={{ width: '3fr' }}><b>Total</b></TableCell>
+                                        <TableCell contentEditable sx={{ width: '1fr' }} onInput={(e) => {
+                                            const newQuotation = { ...quotation };
+                                            newQuotation.charges.total = e.target.innerText;
+                                            setQuotation(newQuotation);
+                                        }}>
+                                            {quotation.charges.total}
+                                        </TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>
                         </TableContainer>
                     </Grid>
+
+
 
                     <Grid md={12} sx={{ m: 5, marginTop: 2 }}>
                         <Typography gutterBottom><b>Payment Terms</b></Typography>
@@ -421,9 +491,15 @@ export default function AddProposalDialog(props) {
                                 <TableBody>
                                     <TableRow>
                                         <TableCell>1</TableCell>
-                                        <TableCell contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '20ch' }}>Sample</TableCell>
-                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '10ch' }}>$100.00</TableCell>
-                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '10ch' }} >$100</TableCell>
+                                        <TableCell
+                                            onInput={(e,) => {
+                                                const newQuotation = { ...quotation };
+                                                newQuotation.payments.task = e.target.innerText;
+                                                setQuotation(newQuotation);
+                                            }}
+                                            contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '20ch', minWidth: "20ch" }}>Sample</TableCell>
+                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '10ch', minWidth: "10ch" }}>$100.00</TableCell>
+                                        <TableCell align="right" contentEditable sx={{ overflowWrap: 'break-word', maxWidth: '10ch', minWidth: "10ch" }} >$100</TableCell>
 
                                     </TableRow>
 

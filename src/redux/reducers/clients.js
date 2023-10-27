@@ -44,8 +44,8 @@ const clientSlice = createSlice({
             // logic to remove a product from the store
         },
         setCompanyContacts(state, action) {
-            const clientRelation = action.payload;
-            state.companyContacts.push(clientRelation);
+            const clientObject = action.payload;
+            state.companyContacts.push(clientObject);
         },
         clearDirectorsNewCompany(state, action) {
             state.companyContacts = [];

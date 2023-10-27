@@ -12,17 +12,20 @@ import { setCompanyContacts } from "../redux/reducers/clients";
 import { Avatar, Card, CardActions, CardContent, CardHeader, Chip, IconButton, Typography } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { Stack } from "@mui/system";
-import ResponsiveDialog from './D_ClientRole'
+
 import D_ClientRole from "./D_ClientRole";
 
-const SelectUser_AddCompanySearch = () => {
+const SelectUser_AddCompanySearch = (props) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [selectedResults, setSelectedResults] = useState([]);
     const [showDialog, setShowDialog] = useState(false); // State to control dialog visibility
-    const [selectedClient,setSelectedClient]=useState({})
+    const [selectedClient, setSelectedClient] = useState({})
+    const [selectedUser, setSelectedUser] = useState()
+    const [showChip, setShowChip] = useState(false)
 
 
+    const companyContacts = useSelector((state) => state.clients.companyContacts);
 
     // const username = useSelector((state) => state.config.username);
     const dispatch = useDispatch();
@@ -71,17 +74,32 @@ const SelectUser_AddCompanySearch = () => {
         }
     }, [searchQuery]);
 
+
+    // Do whatever you want with the userId, e.g., store it in state, perform an action, etc.
     const handleUserClick = (client) => {
-        // Do whatever you want with the userId, e.g., store it in state, perform an action, etc.
-        console.log("Clicked user ID:", client);
 
         // addselectedResults(client);
         // dispatch(setCompanyContacts(client.id));
-        setSearchResults([]);//Clear the search suggestion list
+        setSelectedClient(client);
+        setSearchQuery(""); // Update the search query with the client's name
+        setSearchResults([]); // Clear the search suggestion list
         setShowDialog(true);
-        setSelectedClient(client)
-  
     };
+
+
+    const listContainerStyles = {
+        position: "absolute",
+        width: "80%",
+        maxHeight: "200px", // Adjust the max-height as needed
+        overflowY: "auto",
+        border: "1px solid #ccc",
+        borderTop: "none",
+        backgroundColor: "#fff",
+        borderRadius: "0 0 5px 5px",
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+        zIndex: "1",
+    };
+
 
     return (
         <div>
@@ -98,53 +116,27 @@ const SelectUser_AddCompanySearch = () => {
             />
 
             {searchResults.length > 0 && searchQuery.length > 0 && (
-                <>
-                    <List dense>
+                < div style={listContainerStyles}>
+                    <List dense >
                         {searchResults.map((client) => (
                             <ListItemButton key={client.id} onClick={() => handleUserClick(client)}>
                                 <ListItemText primary={client.name} />
                             </ListItemButton>
                         ))}
                     </List>
-                </>
+                </div>
             )}
-           <D_ClientRole  open = {showDialog} setShowDialog = {setShowDialog } client={selectedClient} /> {/* Render the dialog when showDialog is true */}
-
+            <D_ClientRole open={showDialog} setShowDialog={setShowDialog} client={selectedClient} /> {/* Render the dialog when showDialog is true */}
             <Stack direction="row" spacing={1}>
-                {selectedResults.map((client) => (
-                    // <ListItemButton key={client.id}>
-                    //     <ListItemText primary={client.name} />
-                    // </ListItemButton>
-
-                    // <Card sx={{ maxWidth: 300 }}>
-                    //     <CardHeader
-                    //         action={
-                    //             <IconButton aria-label="settings">
-                    //                 <HighlightOffIcon />
-                    //             </IconButton>
-                    //         }
-                    //         subheader={
-                    //             <>
-                    //                 <Typography paragraph color="text.secondary">
-                    //                     {client.name}
-                    //                 </Typography>
-                    //                 <Typography paragraph color="text.secondary">
-                    //                     {client.email}
-                    //                 </Typography>
-                    //             </>
-                    //         }
-                    //     />
-                    // </Card>
-
-                    <Chip
-                        label={client.name}
-                        variant="outlined"
-                        avatar={<Avatar>{client.name.charAt(0)}</Avatar>}
-                        onClick={handleClickChip}
-                        onDelete={handleDeleteChip}
-                    />
+                {companyContacts.map((client) => (
+                <Chip
+                    label={selectedClient.name}
+                    variant="outlined"
+                    onDelete={() => setSelectedClient(false)}
+                    avatar={<Avatar>{selectedClient.name ? selectedClient.name.charAt(0) : ""}</Avatar>}
+                />
                 ))}
-            </Stack>
+                </Stack>
         </div>
     );
 };

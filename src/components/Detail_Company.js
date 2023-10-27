@@ -68,6 +68,19 @@ function DetailCompany() {
                     >
                         <TextField
                             autoFocus
+                            id="id"
+                            label="Company Id"
+                            type="number"
+                            variant="standard"
+                            value={currentCompany.companySid}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                // shrink: !!currentUser.name
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            autoFocus
                             id="name"
                             label="Company Name"
                             type="name"

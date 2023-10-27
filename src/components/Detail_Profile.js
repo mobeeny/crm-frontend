@@ -61,6 +61,19 @@ function Profile() {
                             </InputLabel> */}
                         <TextField
                             autoFocus
+                            id="id"
+                            label="ID"
+                            type="number"
+                            variant="standard"
+                            value={currentClient.clientSid}
+                            onChange={handleInputChange}
+                            InputLabelProps={{
+                                // shrink: !!currentUser.name
+                                shrink: true,
+                            }}
+                        />
+                        <TextField
+                            autoFocus
                             id="name"
                             label="Name"
                             type="name"

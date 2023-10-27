@@ -14,7 +14,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { useState } from 'react';
 import { setCompanyContacts } from '../redux/reducers/clients';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 export default function D_ClientRole(props) {
@@ -26,10 +26,13 @@ export default function D_ClientRole(props) {
   const [remarks, setRemarks] = React.useState('')
   const [checked, setChecked] = React.useState(true);
 
+
   const handleClose = () => {
     props.setShowDialog(false)
   };
   const handleSave = () =>{
+
+    
     dispatch(setCompanyContacts({ id: props.client.id, title:title,remarks:remarks,status:checked }))
     props.setShowDialog(false)
 

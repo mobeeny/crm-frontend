@@ -10,13 +10,16 @@ import { useEffect, useState } from "react";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { Box } from "@mui/material";
 import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
-import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { getDoc, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
+import { FieldValue } from "firebase/firestore";
+
 
 export default function AddClientDialog() {
     // const username = useSelector((state) => state.config.username);
 
     const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
+
 
     const [open, setOpen] = React.useState();
     const [uName, setUName] = useState("");
@@ -34,6 +37,7 @@ export default function AddClientDialog() {
 
     const [uDateIssue, setUDateIssue] = useState("2023-05-10");
     const [uDateExpiry, setUDateExpiry] = useState("2023-05-10");
+    const [clientSid, setClientSid] = useState(0)
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -44,30 +48,56 @@ export default function AddClientDialog() {
     };
 
     const onSubmitClient = async () => {
-        console.log("Auth UID:", auth);
-
         try {
-            await addDoc(clientCollectionRef, {
-                name: uName,
-                fname: uFname,
-                address: uAddress,
-                email: uEmail,
-                phone: uPhone,
-                cof: uCareOf,
-                source: uSource,
-                cnic: uCNIC,
-                city: uCity,
-                cDate: uDateContact,
-                bDate: uDateBirth,
-                iDate: uDateIssue,
-                eDate: uDateExpiry,
-                notes: uNotes,
-            });
-            setOpen(false);
+            const docRef = doc(db, instancesRef + auth.currentUser.uid + "/systemData/" + "sequenceIds");
+            console.log("DocRef: ", docRef);
+
+            try {
+                const sIds = await getDoc(docRef);
+                if (sIds.exists()) {
+                    console.log("Current clientSid:", sIds.data());
+                    // Get the current clientSid value
+                    const currentSid = sIds.data().clientSid;
+                    // Increment the clientSid value by 1
+                    const updatedSid = currentSid + 1;
+
+                    // Update the document with the new clientSid value
+                    await updateDoc(docRef, { clientSid: updatedSid });
+
+                    // Include the updated clientSid in the data object
+                    await addDoc(clientCollectionRef, {
+                        name: uName,
+                        fname: uFname,
+                        address: uAddress,
+                        email: uEmail,
+                        phone: uPhone,
+                        cof: uCareOf,
+                        source: uSource,
+                        cnic: uCNIC,
+                        city: uCity,
+                        cDate: uDateContact,
+                        bDate: uDateBirth,
+                        iDate: uDateIssue,
+                        eDate: uDateExpiry,
+                        notes: uNotes,
+                        clientSid: updatedSid, // Include the updated clientSid here
+                    });
+                } else {
+                    console.log("Document does not exist.");
+                    // Handle the case where the document doesn't exist, if necessary.
+                }
+            } catch (error) {
+                console.error("Error fetching document:", error);
+                // Handle any errors that may occur during the retrieval process.
+            }
+
+            // Close the dialog
+            handleClose();
         } catch (err) {
             console.error(err);
         }
     };
+
 
     return (
         <div>

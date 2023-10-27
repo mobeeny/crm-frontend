@@ -10,11 +10,11 @@ import { useEffect, useState } from "react";
 import { Box, Chip } from "@mui/material";
 import AddBusiness from "@mui/icons-material/AddBusiness";
 import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
-import { getDocs, collection, writeBatch, arrayUnion, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { getDoc, collection, writeBatch, arrayUnion, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
 import SearchClientsCompanyForm from "./SearchClientsCompanyForm";
 import { clearDirectorsNewCompany } from "../redux/reducers/clients";
-import {Divider,Root} from "@mui/material";
+import { Divider, Root } from "@mui/material";
 
 export default function AddCompanyDialog() {
     const [fullWidth, setFullWidth] = React.useState(true);
@@ -45,6 +45,7 @@ export default function AddCompanyDialog() {
     const [cDateContact, setCDateContact] = useState("2023-05-10");
     const [cDateRegistration, setCDateRegistration] = useState("2023-05-10");
     const [cDateGST, setCDateGST] = useState("2023-05-10");
+    const [companySid, setCompanySid] = useState(0)
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -61,10 +62,10 @@ export default function AddCompanyDialog() {
             const batch = writeBatch(db);
             console.log("COMPANY: Clients: ", cContacts);
             // Loop through each client id in cContacts and update the "company" field
-            cContacts.forEach((clientId) => {
-                const clientRef = doc(db, instancesRef + auth.currentUser.uid + "/client/" + clientId);
+            cContacts.forEach((clientObject) => {
+                const clientRef = doc(db, instancesRef + auth.currentUser.uid + "/client/" + clientObject.id);
                 batch.update(clientRef, { company: arrayUnion(companyId) });
-                console.log("COMPANY: LOOP: ", clientRef, clientId, companyId);
+                console.log("COMPANY: LOOP: ", clientRef, clientObject, companyId);
             });
 
             // Commit the batched write to update all documents at once
@@ -80,8 +81,35 @@ export default function AddCompanyDialog() {
         console.log("New Directors: ", cContacts);
     }, [cContacts]);
 
-    const onSubmitClient = async () => {
+    const onSubmitCompany = async () => {
+        let updatedSid; // Define updatedSid variable
+
         try {
+            // Get the document reference for the sequenceIds
+            const docRef = doc(db, instancesRef + auth.currentUser.uid + "/systemData/" + "sequenceIds");
+            console.log("DocRef: ", docRef);
+
+            try {
+                const sIds = await getDoc(docRef);
+                if (sIds.exists()) {
+                    console.log("Current companySid:", sIds.data());
+                    // Get the current companySid value
+                    const currentSid = sIds.data().companySid;
+                    // Increment the companySid value by 1
+                    updatedSid = currentSid + 1; // Assign the value to updatedSid
+
+                    // Update the document with the new companySid value
+                    await updateDoc(docRef, { companySid: updatedSid });
+                } else {
+                    console.log("Document does not exist.");
+                    // Handle the case where the document doesn't exist, if necessary.
+                }
+            } catch (error) {
+                console.error("Error fetching document:", error);
+                // Handle any errors that may occur during the retrieval process.
+            }
+
+            // Create the company data object with the updated companySid
             const companyData = {
                 name: cName,
                 email: cEmail,
@@ -99,20 +127,25 @@ export default function AddCompanyDialog() {
                 electricity: cElectricityRefNo,
                 pactivity: cPrincipalActivity,
                 bankName: cBankName,
-                bankAccountNo : cBankAccount,
-                branchCode:cBankCode,
+                bankAccountNo: cBankAccount,
+                branchCode: cBankCode,
                 gDate: cDateGST,
+                companySid: updatedSid, // Include the updated companySid here
             };
-            
+
+            // Add the company data to Firestore
             const newCompanyRef = await addDoc(clientCollectionRef, companyData);
 
+            // Update the clients' company field for all selected clients in cContacts array
             await updateClientsCompanyField(newCompanyRef.id);
-            // setOpen(false);
+
+            // Close the dialog
             handleClose();
         } catch (err) {
             console.error(err);
         }
     };
+
 
     return (
         <div>
@@ -209,9 +242,9 @@ export default function AddCompanyDialog() {
                             variant="standard"
                             onChange={(e) => setCAddress(e.target.value)}
                         />
-                        <Divider style={{marginTop:'22px'}}>
-                                <Chip label="Banking Details" />
-                            </Divider>
+                        <Divider style={{ marginTop: '22px' }}>
+                            <Chip label="Banking Details" />
+                        </Divider>
                         <TextField
                             id="bankName"
                             label="Bank Name"
@@ -219,23 +252,23 @@ export default function AddCompanyDialog() {
                             variant="standard"
                             onChange={(e) => setCBankName(e.target.value)}
                         />
-                          <TextField
+                        <TextField
                             id="bankAcc"
                             label="Account No #"
                             type="name"
                             variant="standard"
                             onChange={(e) => setCBankAccount(e.target.value)}
                         />
-                          <TextField
+                        <TextField
                             id="bankCode"
                             label="Branch Code"
                             type="name"
                             variant="standard"
                             onChange={(e) => setCBankCode(e.target.value)}
-                        /><br/>
-                        <Divider style={{marginBottom:'16px',marginTop:'10px'}}>
-                                
-                            </Divider>
+                        /><br />
+                        <Divider style={{ marginBottom: '16px', marginTop: '10px' }}>
+
+                        </Divider>
                         <TextField
                             id="contactDate"
                             label="Contact Date"
@@ -279,7 +312,7 @@ export default function AddCompanyDialog() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" onClick={onSubmitClient}>
+                    <Button variant="contained" onClick={onSubmitCompany}>
                         Add Company
                     </Button>
                 </DialogActions>
