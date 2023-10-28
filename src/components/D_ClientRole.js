@@ -25,6 +25,8 @@ export default function D_ClientRole(props) {
   const [title, setTitle] = React.useState('')
   const [remarks, setRemarks] = React.useState('')
   const [checked, setChecked] = React.useState(true);
+  const [name,setName] = useState("")
+
 
 
   const handleClose = () => {
@@ -32,8 +34,9 @@ export default function D_ClientRole(props) {
   };
   const handleSave = () => {
 
-
-    dispatch(setCompanyContacts({ id: props.client.id, title: title, remarks: remarks, status: checked }))
+   
+    
+    dispatch(setCompanyContacts(props.client.id==0?{ id: props.client.id, title: title, remarks: remarks, name:name, status: checked }:{ id: props.client.id, title: title, remarks: remarks, status: checked }))
     props.setShowDialog(false)
 
   }
@@ -59,11 +62,11 @@ export default function D_ClientRole(props) {
             label="Name "
             type="name"
             variant="standard"
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
           />:null}
           <TextField
             style={{ width: '100%', marginBottom: '20px' }}
-            id="ntn"
+            id="title"
             label="Title"
             type="name"
             variant="standard"
@@ -71,7 +74,7 @@ export default function D_ClientRole(props) {
           />
           <TextField
             style={{ width: '100%', marginBottom: '20px' }}
-            id="inc"
+            id="remarks"
             label="Remarks/Info"
             type="name"
             variant="standard"
