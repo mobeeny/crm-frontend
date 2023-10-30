@@ -32,6 +32,25 @@ import { auth, db } from "../config/firebase";
 import { useSelector, useDispatch } from "react-redux";
 // import { resetState } from "../redux/reducers/config";
 import { Link } from "react-router-dom";
+import Backdrop from '@mui/material/Backdrop';
+import SpeedDial from '@mui/material/SpeedDial';
+import SpeedDialIcon from '@mui/material/SpeedDialIcon';
+import SpeedDialAction from '@mui/material/SpeedDialAction';
+import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import PrintIcon from '@mui/icons-material/Print';
+import ShareIcon from '@mui/icons-material/Share';
+
+
+const actions = [
+    { icon: <FileCopyIcon />, name: 'Copy' },
+    { icon: <SaveIcon />, name: 'Save' },
+    { icon: <PrintIcon />, name: 'Print' },
+    { icon: <ShareIcon />, name: 'Share' },
+];
+
+
+
 
 const drawerWidth = 150;
 
@@ -108,6 +127,12 @@ export default function Layout() {
     const [anchorElUser, setAnchorElUser] = React.useState(null);
     const dispatch = useDispatch();
 
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [isSpeedDialOpen, setIsSpeedDialOpen] =  React.useState(false); // New state for SpeedDial
+
+
+
     const sx_ListItemButton = {
         minHeight: 48,
         justifyContent: open ? "initial" : "center",
@@ -135,6 +160,15 @@ export default function Layout() {
     };
     const handleDrawerClose = () => {
         setOpen(false);
+    };
+
+    const handleMouseEnterSpeedDial = () => {
+        setIsSpeedDialOpen(true);
+    };
+
+    // Handle SpeedDial close on mouse leave
+    const handleMouseLeaveSpeedDial = () => {
+        setIsSpeedDialOpen(false);
     };
 
     return (
@@ -192,10 +226,10 @@ export default function Layout() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                <ListItem key={"dashboard"} disablePadding sx={sx_ListItem}>
+                    <ListItem key={"dashboard"} disablePadding sx={sx_ListItem}>
                         <ListItemButton component={Link} to={`/dashboard`} sx={sx_ListItemButton}>
                             <ListItemIcon sx={sx_ListItemIcon}>
-                             <DescriptionIcon/>
+                                <DescriptionIcon />
                             </ListItemIcon>
                             <ListItemText primary={"dashboard"} sx={sx_ListItemText} />
                         </ListItemButton>
@@ -237,6 +271,28 @@ export default function Layout() {
                     </ListItem>
                 </List>
             </Drawer>
+
+            <Backdrop open={open} />
+            <div onMouseEnter={handleMouseEnterSpeedDial}
+                onMouseLeave={handleMouseLeaveSpeedDial}>
+                <SpeedDial
+                    ariaLabel="SpeedDial tooltip example"
+                    sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                    icon={<SpeedDialIcon />}
+                    
+                    open={isSpeedDialOpen}
+                >
+                    {actions.map((action) => (
+                        <SpeedDialAction
+                            key={action.name}
+                            icon={action.icon}
+                            tooltipTitle={action.name}
+                            tooltipOpen
+                            onClick={handleClose}
+                        />
+                    ))}
+                </SpeedDial>
+            </div>
             {/* <ListLayout /> */}
             {/* <Divider orientation="vertical" variant="middle" flexItem /> */}
 
