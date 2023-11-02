@@ -13,9 +13,13 @@ import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDoc, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
 import { FieldValue } from "firebase/firestore";
+import { setClientDialog } from "../redux/reducers/dialogFlags";
 
 
-export default function AddClientDialog() {
+
+
+
+export default function AddClientDialog(props) {
     // const username = useSelector((state) => state.config.username);
 
     const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
@@ -39,12 +43,17 @@ export default function AddClientDialog() {
     const [uDateExpiry, setUDateExpiry] = useState("2023-05-10");
     const [clientSid, setClientSid] = useState(0)
 
+    const dispatch = useDispatch();
+    const clientDialogOpen = useSelector((state) => state.dialogs.clientDialogOpen);
+
+
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
-        setOpen(false);
+        // props.setShowDialog(false);
+        dispatch(setClientDialog(false))
     };
 
     const onSubmitClient = async () => {
@@ -101,10 +110,9 @@ export default function AddClientDialog() {
 
     return (
         <div>
-            <Button variant="contained" onClick={handleClickOpen} startIcon={<PersonAddAltIcon />}>
-                Client
-            </Button>
-            <Dialog open={open} onClose={handleClose}>
+
+            <Dialog open={clientDialogOpen}
+                onClose={handleClose}>
                 <DialogTitle>Add New Client</DialogTitle>
                 <DialogContent>
                     {/* <DialogContentText>

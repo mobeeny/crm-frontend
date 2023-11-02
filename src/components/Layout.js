@@ -40,14 +40,22 @@ import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import PrintIcon from '@mui/icons-material/Print';
 import ShareIcon from '@mui/icons-material/Share';
+import ProfileIcon from "@mui/icons-material/Person2";
+import CompanyIcon from "@mui/icons-material/Business";
+import AddClientDialog from "./D_NewClient";
+import { setClientDialog, setCompanyDialog, setProjectDialog, setQuotationDialog, setInvoiceDialog, setPaymentDialog } from "../redux/reducers/dialogFlags";
+import AddCompanyDialog from "./D_NewCompany";
+import TaskIcon from "@mui/icons-material/TaskAlt";
+import AddProjectDialog from "./D_NewProjects";
+import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
+import AddQuotationDialog from './D_NewQuotations'
+import AddInvoiceDialog from "./D_NewInvoices";
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import AddPaymentDialog from "./D_NewPayments";
 
 
-const actions = [
-    { icon: <FileCopyIcon />, name: 'Copy' },
-    { icon: <SaveIcon />, name: 'Save' },
-    { icon: <PrintIcon />, name: 'Print' },
-    { icon: <ShareIcon />, name: 'Share' },
-];
+
 
 
 
@@ -129,7 +137,12 @@ export default function Layout() {
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [isSpeedDialOpen, setIsSpeedDialOpen] =  React.useState(false); // New state for SpeedDial
+    const [isSpeedDialOpen, setIsSpeedDialOpen] = React.useState(false); // New state for SpeedDial
+    // const [showClientDialog, setShowClientDialog] = React.useState(false)
+    // const [, setShowDialog]clientDialogOpen = React.useState(false); // State to control dialog visibility
+
+
+
 
 
 
@@ -170,6 +183,10 @@ export default function Layout() {
     const handleMouseLeaveSpeedDial = () => {
         setIsSpeedDialOpen(false);
     };
+
+    // const handleClientDialoge = () => {
+    //     setShowClientDialog(true);
+    // }
 
     return (
         <Box sx={{ display: "flex" }}>
@@ -226,14 +243,7 @@ export default function Layout() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    <ListItem key={"dashboard"} disablePadding sx={sx_ListItem}>
-                        <ListItemButton component={Link} to={`/dashboard`} sx={sx_ListItemButton}>
-                            <ListItemIcon sx={sx_ListItemIcon}>
-                                <DescriptionIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={"dashboard"} sx={sx_ListItemText} />
-                        </ListItemButton>
-                    </ListItem>
+                    
                     <ListItem key={"main"} disablePadding sx={sx_ListItem}>
                         <ListItemButton component={Link} to={`/main`} sx={sx_ListItemButton}>
                             <ListItemIcon sx={sx_ListItemIcon}>
@@ -272,26 +282,77 @@ export default function Layout() {
                 </List>
             </Drawer>
 
-            <Backdrop open={open} />
+
             <div onMouseEnter={handleMouseEnterSpeedDial}
                 onMouseLeave={handleMouseLeaveSpeedDial}>
                 <SpeedDial
                     ariaLabel="SpeedDial tooltip example"
                     sx={{ position: 'absolute', bottom: 16, right: 16 }}
                     icon={<SpeedDialIcon />}
-                    
+                    style={{ margin: "3%" }}
                     open={isSpeedDialOpen}
                 >
-                    {actions.map((action) => (
-                        <SpeedDialAction
-                            key={action.name}
-                            icon={action.icon}
-                            tooltipTitle={action.name}
-                            tooltipOpen
-                            onClick={handleClose}
-                        />
-                    ))}
+
+                    <SpeedDialAction
+                        key={"client"}
+                        icon={<ProfileIcon />}
+                        tooltipTitle={"Client"}
+                        tooltipOpen
+                        onClick={() => dispatch(setClientDialog(true))}
+                    />
+                    <AddClientDialog />
+                    
+
+                    <SpeedDialAction
+                        key={"project"}
+                        icon={<TaskIcon />}
+                        tooltipTitle={"Project"}
+                        tooltipOpen
+                        onClick={() => dispatch(setProjectDialog(true))}
+                    />
+                    <AddProjectDialog />
+
+                  
+
+                    <SpeedDialAction
+                        key={"invoice"}
+                        icon={<ReceiptIcon />}
+                        tooltipTitle={"Invoice"}
+                        tooltipOpen
+                        onClick={() => dispatch(setInvoiceDialog(true))}
+                    />
+                    <AddInvoiceDialog />
+
+                    <SpeedDialAction
+                        key={"payment"}
+                        icon={<AttachMoneyIcon />}
+                        tooltipTitle={"Payment"}
+                        tooltipOpen
+                        onClick={() => dispatch(setPaymentDialog(true))}
+                    />
+                    <AddPaymentDialog />
+
+                    <SpeedDialAction
+                        key={"company"}
+                        icon={<CompanyIcon />}
+                        tooltipTitle={"Company"}
+                        tooltipOpen
+                        onClick={() => dispatch(setCompanyDialog(true))}
+                    />
+                    <AddCompanyDialog />
+
+                    <SpeedDialAction
+                        key={"Quotation"}
+                        icon={<FormatQuoteIcon />}
+                        tooltipTitle={"Quotation"}
+                        tooltipOpen
+                        onClick={() => dispatch(setQuotationDialog(true))}
+                    />
+                    <AddQuotationDialog />
+
                 </SpeedDial>
+
+
             </div>
             {/* <ListLayout /> */}
             {/* <Divider orientation="vertical" variant="middle" flexItem /> */}

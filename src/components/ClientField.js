@@ -93,7 +93,7 @@ const ClientField = (props) => {
     return (
         <div style={{ position: "relative" }}>
             <TextField
-                sx={{ width: '45ch' }} // Remove marginTop
+                autoFocus 
                 type="text"
                 value={searchQuery}
                 onChange={handleClientChange }
@@ -109,7 +109,7 @@ const ClientField = (props) => {
                     position: "absolute",
                     marginTop: 0,
                    
-                    width: '45ch',
+                
                     overflowY: "auto",
                     background: "#fff",
                     boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
