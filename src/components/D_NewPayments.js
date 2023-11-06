@@ -17,130 +17,40 @@ import { setPaymentDialog } from "../redux/reducers/dialogFlags";
 export default function AddPaymentDialog() {
     const [fullWidth, setFullWidth] = React.useState(true);
     const [maxWidth, setMaxWidth] = React.useState('sm');
+    const [invoice,setInvoice] =useState();
+    const [date,setDate] = useState();
+    const [PaymentMethod,setPaymentMethod]=useState();
+    const [transaction,setTransaction]=useState()
+    const [amount,setAmount]=useState()
+
     // const username = useSelector((state) => state.config.username);
     const dispatch = useDispatch();
-    const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/company");
-
-
-    const [cName, setCName] = useState("");
-    const [cEmail, setCEmail] = useState("");
-    const cContacts = useSelector((state) => state.clients.companyContacts);
-    const [cNtn, setCNtn] = useState("");
-    const [cInc, setCInc] = useState("");
-    const [cGST, setCGST] = useState("");
-    const [cPhone, setCPhone] = useState("");
-    const [cRtoCity, setCRtoCity] = useState("");
-    const [cNotes, setCNotes] = useState("");
-    const [cSource, setCSource] = useState("");
-    const [cAddress, setCAddress] = useState("");
-    const [cElectricityRefNo, setCElectricityRefNo] = useState("");
-    const [cPrincipalActivity, setCPrincipalActivity] = useState("");
-    const [cBankName, setCBankName] = useState("");
-    const [cBankAccount, setCBankAccount] = useState("");
-    const [cBankCode, setCBankCode] = useState("");
-    const [cDateContact, setCDateContact] = useState("2023-05-10");
-    const [cDateRegistration, setCDateRegistration] = useState("2023-05-10");
-    const [cDateGST, setCDateGST] = useState("2023-05-10");
-
+    const paymentCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/Payment");
     const paymentDialogOpen= useSelector((state)=>state.dialogs.paymentDialogOpen)
 
-    // const handleClickOpen = () => {
-    //     setOpen(true);
-    // };
+   
+    
+  
 
     const handleClose = () => {
        dispatch(setPaymentDialog(false));
     };
-
-    const updateClientsCompanyField = async (companyId) => {
-        try {
-            const batch = writeBatch(db);
-            console.log("COMPANY: Clients: ", cContacts);
-            // Loop through each client id in cContacts and update the "company" field
-            cContacts.forEach((clientObject) => {
-                const clientRef = doc(db, instancesRef + auth.currentUser.uid + "/client/" + clientObject.id);
-                batch.update(clientRef, { company: arrayUnion(companyId) });
-                console.log("COMPANY: LOOP: ", clientRef, clientObject, companyId);
-            });
-
-            // Commit the batched write to update all documents at once
-            await batch.commit();
-
-            console.log("Company field updated for all clients in cContacts array.");
-        } catch (error) {
-            console.error("Error updating company field:", error);
+    
+    const onSubmitPayment = async ()=> {
+        try{
+            await addDoc(paymentCollectionRef,{
+                invoice:invoice,
+                date:date,
+                PaymentMethod:PaymentMethod,
+                transaction:transaction,
+                amount:amount
+            })
         }
-    };
-
-    useEffect(() => {
-        console.log("New Directors: ", cContacts);
-    }, [cContacts]);
-
-    const onSubmitCompany = async () => {
-        let updatedSid; // Define updatedSid variable
-
-        try {
-            // Get the document reference for the sequenceIds
-            const docRef = doc(db, instancesRef + auth.currentUser.uid + "/systemData/" + "sequenceIds");
-            console.log("DocRef: ", docRef);
-
-            try {
-                const sIds = await getDoc(docRef);
-                if (sIds.exists()) {
-                    console.log("Current companySid:", sIds.data());
-                    // Get the current companySid value
-                    const currentSid = sIds.data().companySid;
-                    // Increment the companySid value by 1
-                    updatedSid = currentSid + 1; // Assign the value to updatedSid
-
-                    // Update the document with the new companySid value
-                    await updateDoc(docRef, { companySid: updatedSid });
-                } else {
-                    console.log("Document does not exist.");
-                    // Handle the case where the document doesn't exist, if necessary.
-                }
-            } catch (error) {
-                console.error("Error fetching document:", error);
-                // Handle any errors that may occur during the retrieval process.
-            }
-
-            // Create the company data object with the updated companySid
-            const companyData = {
-                name: cName,
-                email: cEmail,
-                phone: cPhone,
-                ntn: cNtn,
-                inc: cInc,
-                source: cSource,
-                gst: cGST,
-                city: cRtoCity,
-                cDate: cDateContact,
-                rDate: cDateRegistration,
-                notes: cNotes,
-                contacts: cContacts,
-                address: cAddress,
-                electricity: cElectricityRefNo,
-                pactivity: cPrincipalActivity,
-                bankName: cBankName,
-                bankAccountNo: cBankAccount,
-                branchCode: cBankCode,
-                gDate: cDateGST,
-                companySid: updatedSid, // Include the updated companySid here
-            };
-
-            // Add the company data to Firestore
-            const newCompanyRef = await addDoc(clientCollectionRef, companyData);
-
-            // Update the clients' company field for all selected clients in cContacts array
-            await updateClientsCompanyField(newCompanyRef.id);
-
-            // Close the dialog
-            handleClose();
-        } catch (err) {
-            console.error(err);
+        catch(error){
+            console.log("error in writing payment Data")
         }
-    };
-
+        handleClose();
+     }
 
     return (
         <div>
@@ -168,7 +78,7 @@ export default function AddPaymentDialog() {
                             label="Invoice #"
                             type="name"
                             variant="standard"
-                            onChange={(e) => setCName(e.target.value)}
+                            onChange={(e) => setInvoice(e.target.value)}
                         />
 
                         <TextField
@@ -176,35 +86,35 @@ export default function AddPaymentDialog() {
                             label="Date"
                             type="name"
                             variant="standard"
-                            onChange={(e) => setCEmail(e.target.value)}
+                            onChange={(e) => setDate(e.target.value)}
                         />
                         <TextField
                             id="paymentMethod"
                             label="Payment Method#"
                             type="name"
                             variant="standard"
-                            onChange={(e) => setCNtn(e.target.value)}
+                            onChange={(e) => setPaymentMethod(e.target.value)}
                         />
                         <TextField
                             id="transactionId"
                             label="Transacation Id #"
                             type="name"
                             variant="standard"
-                            onChange={(e) => setCInc(e.target.value)}
+                            onChange={(e) => setTransaction(e.target.value)}
                         />
                         <TextField
                             id="amount"
                             label="Amount #"
                             fullWidth
                             variant="standard"
-                            onChange={(e) => setCGST(e.target.value)}
+                            onChange={(e) => setAmount(e.target.value)}
                         />
                        
                     </Box>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" onClick={onSubmitCompany}>
+                    <Button variant="contained" onClick={onSubmitPayment}>
                         Add Payment
                     </Button>
                 </DialogActions>

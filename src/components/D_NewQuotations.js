@@ -245,7 +245,7 @@ export default function AddQuotaionDialog() {
                             <ClientField updateClientInQuotation={updateClientInQuotation} />
                         </Stack>
 
-
+                        
                         {quotation.productName.length > 0 ? <Typography style={{ fontSize: 18 }}>Product Description</Typography> : null}
                         {quotation.productName.map((productName, index) => (
                             <TextField
@@ -264,7 +264,7 @@ export default function AddQuotaionDialog() {
 
 
 
-                        {quotation.productName.length > 0 ? <Typography style={{ fontSize: 18 }}>Scope Of Work</Typography> : null}
+                        {quotation.productName.length > 0 ? <Typography style={{ fontSize: 18,  }}>Scope Of Work</Typography> : null}
 
                         {quotation.productName.map((productName, index) => (
                             <TextField sx={{ width: "45ch" }}

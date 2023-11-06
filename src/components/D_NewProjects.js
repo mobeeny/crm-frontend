@@ -8,143 +8,60 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { useEffect, useState } from "react";
 import { Box, Chip } from "@mui/material";
 import { auth, db, instancesRef } from "../config/firebase";
-import { getDoc, collection, writeBatch, arrayUnion, addDoc,  doc, updateDoc } from "firebase/firestore";
+import { getDoc, collection, writeBatch, arrayUnion, addDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
 import SearchClientsCompanyForm from "./SearchClientsCompanyForm";
-import { Divider,  } from "@mui/material";
+import { Divider, } from "@mui/material";
 import { setCompanyDialog, setProjectDialog } from "../redux/reducers/dialogFlags";
 
 export default function AddProjectDialog() {
     const [fullWidth, setFullWidth] = React.useState(true);
     const [maxWidth, setMaxWidth] = React.useState('sm');
     // const username = useSelector((state) => state.config.username);
+    const [projectTitle, setProjectTitle] = useState();
+    const [productInvolved, setProductInvolved] = useState();
+    const [client, setClient] = useState();
+    const [company, setCompany] = useState();
+    const [projectTimeline, setProjectTimeline] = useState();
+    const [dueAmount, setDueAmount] = useState();
+    const [paidAmount, setPaidAmount] = useState();
+
+
+
+    const projectCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/project");
+
+    const projectDialogOpen = useSelector((state) => state.dialogs.projectDialogOpen);
     const dispatch = useDispatch();
-    const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/company");
 
-
-    const [cName, setCName] = useState("");
-    const [cEmail, setCEmail] = useState("");
-    const cContacts = useSelector((state) => state.clients.companyContacts);
-    const [cNtn, setCNtn] = useState("");
-    const [cInc, setCInc] = useState("");
-    const [cGST, setCGST] = useState("");
-    const [cPhone, setCPhone] = useState("");
-    const [cRtoCity, setCRtoCity] = useState("");
-    const [cNotes, setCNotes] = useState("");
-    const [cSource, setCSource] = useState("");
-    const [cAddress, setCAddress] = useState("");
-    const [cElectricityRefNo, setCElectricityRefNo] = useState("");
-    const [cPrincipalActivity, setCPrincipalActivity] = useState("");
-    const [cBankName, setCBankName] = useState("");
-    const [cBankAccount, setCBankAccount] = useState("");
-    const [cBankCode, setCBankCode] = useState("");
-    const [cDateContact, setCDateContact] = useState("2023-05-10");
-    const [cDateRegistration, setCDateRegistration] = useState("2023-05-10");
-    const [cDateGST, setCDateGST] = useState("2023-05-10");
-
-    const projectDialogOpen = useSelector((state)=>state.dialogs.projectDialogOpen)
 
     // const handleClickOpen = () => {
     //     setOpen(true);
     // };
 
     const handleClose = () => {
-       dispatch(setProjectDialog(false));
+        dispatch(setProjectDialog(false));
     };
 
-    const updateClientsCompanyField = async (companyId) => {
+    const onSubmitProject = async () => {
         try {
-            const batch = writeBatch(db);
-            console.log("COMPANY: Clients: ", cContacts);
-            // Loop through each client id in cContacts and update the "company" field
-            cContacts.forEach((clientObject) => {
-                const clientRef = doc(db, instancesRef + auth.currentUser.uid + "/client/" + clientObject.id);
-                batch.update(clientRef, { company: arrayUnion(companyId) });
-                console.log("COMPANY: LOOP: ", clientRef, clientObject, companyId);
-            });
-
-            // Commit the batched write to update all documents at once
-            await batch.commit();
-
-            console.log("Company field updated for all clients in cContacts array.");
+            await addDoc(projectCollectionRef, {
+                title: projectTitle,
+                productInvolved: productInvolved,
+                client: client,
+                company: company,
+                projectTimeline: projectTimeline,
+                dueAmount: dueAmount,
+                paidAmount: paidAmount
+            })
         } catch (error) {
-            console.error("Error updating company field:", error);
+            console.log("error in writing data")
         }
-    };
-
-    useEffect(() => {
-        console.log("New Directors: ", cContacts);
-    }, [cContacts]);
-
-    const onSubmitCompany = async () => {
-        let updatedSid; // Define updatedSid variable
-
-        try {
-            // Get the document reference for the sequenceIds
-            const docRef = doc(db, instancesRef + auth.currentUser.uid + "/systemData/" + "sequenceIds");
-            console.log("DocRef: ", docRef);
-
-            try {
-                const sIds = await getDoc(docRef);
-                if (sIds.exists()) {
-                    console.log("Current companySid:", sIds.data());
-                    // Get the current companySid value
-                    const currentSid = sIds.data().companySid;
-                    // Increment the companySid value by 1
-                    updatedSid = currentSid + 1; // Assign the value to updatedSid
-
-                    // Update the document with the new companySid value
-                    await updateDoc(docRef, { companySid: updatedSid });
-                } else {
-                    console.log("Document does not exist.");
-                    // Handle the case where the document doesn't exist, if necessary.
-                }
-            } catch (error) {
-                console.error("Error fetching document:", error);
-                // Handle any errors that may occur during the retrieval process.
-            }
-
-            // Create the company data object with the updated companySid
-            const companyData = {
-                name: cName,
-                email: cEmail,
-                phone: cPhone,
-                ntn: cNtn,
-                inc: cInc,
-                source: cSource,
-                gst: cGST,
-                city: cRtoCity,
-                cDate: cDateContact,
-                rDate: cDateRegistration,
-                notes: cNotes,
-                contacts: cContacts,
-                address: cAddress,
-                electricity: cElectricityRefNo,
-                pactivity: cPrincipalActivity,
-                bankName: cBankName,
-                bankAccountNo: cBankAccount,
-                branchCode: cBankCode,
-                gDate: cDateGST,
-                companySid: updatedSid, // Include the updated companySid here
-            };
-
-            // Add the company data to Firestore
-            const newCompanyRef = await addDoc(clientCollectionRef, companyData);
-
-            // Update the clients' company field for all selected clients in cContacts array
-            await updateClientsCompanyField(newCompanyRef.id);
-
-            // Close the dialog
-            handleClose();
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
+        handleClose();
+    }
 
     return (
         <div>
-            
+
             <Dialog open={projectDialogOpen} onClose={handleClose}
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
@@ -168,7 +85,7 @@ export default function AddProjectDialog() {
                             label="Project Title"
                             type="name"
                             variant="standard"
-                            onChange={(e) => setCName(e.target.value)}
+                            onChange={(e) => setProjectTitle(e.target.value)}
                         />
 
                         <TextField
@@ -176,49 +93,49 @@ export default function AddProjectDialog() {
                             label="Product Involved"
                             type="name"
                             variant="standard"
-                            onChange={(e) => setCNtn(e.target.value)}
+                            onChange={(e) => setProductInvolved(e.target.value)}
                         />
                         <TextField
                             id="client"
                             label="Client"
                             type="name"
                             variant="standard"
-                            onChange={(e) => setCInc(e.target.value)}
+                            onChange={(e) => setClient(e.target.value)}
                         />
                         <TextField
                             id="company"
                             label="Company"
                             fullWidth
                             variant="standard"
-                            onChange={(e) => setCGST(e.target.value)}
+                            onChange={(e) => setCompany(e.target.value)}
                         />
                         <TextField
                             id="projectTimeline"
                             label="Project Timeline"
                             type="phone"
                             variant="standard"
-                            onChange={(e) => setCPhone(e.target.value)}
+                            onChange={(e) => setProjectTimeline(e.target.value)}
                         />
                         <TextField
                             id="dueAmount"
-                            label="Total Amount Due"
+                            label="Amount Due"
                             type="name"
                             variant="standard"
-                            onChange={(e) => setCRtoCity(e.target.value)}
+                            onChange={(e) => setDueAmount(e.target.value)}
                         />
                         <TextField
                             id="paidAmount"
                             label="Paid Amount"
                             type="name"
                             variant="standard"
-                            onChange={(e) => setCElectricityRefNo(e.target.value)}
+                            onChange={(e) => setPaidAmount(e.target.value)}
                         />
-                       
+
                     </Box>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" onClick={onSubmitCompany}>
+                    <Button variant="contained" onClick={onSubmitProject}>
                         Add Project
                     </Button>
                 </DialogActions>
