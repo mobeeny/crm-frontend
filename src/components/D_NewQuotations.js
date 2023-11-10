@@ -1,46 +1,22 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import Textarea from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DescriptionIcon from '@mui/icons-material/Description';
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import { Box, InputLabel } from "@mui/material";
 import { auth, db, instancesRef } from "../config/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { Checkbox, MenuItem, FormControlLabel } from '@mui/material';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { getDocs } from "firebase/firestore";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setproductDetails } from "../redux/reducers/proposal";
-import {
-
-    Card,
-    Grid,
-    IconButton,
-    Stack,
-
-    Typography,
-} from "@mui/material";
-import Chip from '@mui/material/Chip';
-import Divider from '@mui/material/Divider';
+import {  Stack, Typography,} from "@mui/material";
 import ClientField from "./ClientField";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 import { Fragment } from "react";
-import PDFFile from "./Settings/PropsalSettings/PDFFile";
 import { setQuotationDialog } from "../redux/reducers/dialogFlags";
 
 
@@ -54,10 +30,6 @@ export default function AddQuotaionDialog() {
         db,
         instancesRef + auth.currentUser.uid + "/products&services"
     );
-
-
-
-
 
     const [quotation, setQuotation] = useState(
         {
@@ -154,14 +126,7 @@ export default function AddQuotaionDialog() {
             }
         }
         console.log(quotation.id)
-
     };
-
-
-    const s = () => {
-        console.log(quotation.client)
-    }
-
 
     const updateClientInQuotation = (clientValue) => {
         setQuotation((quotation) => ({
@@ -178,7 +143,7 @@ export default function AddQuotaionDialog() {
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
             >
-                <DialogTitle>Add New Project</DialogTitle>
+                <DialogTitle>Add New Quotation</DialogTitle>
                 <DialogContent>
                     <Box
                         component="form"

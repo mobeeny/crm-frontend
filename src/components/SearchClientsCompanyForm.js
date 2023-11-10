@@ -38,8 +38,8 @@ const SelectUser_AddCompanySearch = (props) => {
         console.info("You clicked the Chip.");
     };
 
-    const handleDeleteChip = () => {
-        console.info("You clicked the delete icon.");
+    const handleDeleteChip = (clientId) => {
+        setSelectedResults((prevContacts) => prevContacts.filter(client => client.id !== clientId));
     };
 
     const fetchSearchResults = async (squery) => {

@@ -14,6 +14,7 @@ import SearchClientsCompanyForm from "./SearchClientsCompanyForm";
 import { Divider, } from "@mui/material";
 import { setCompanyDialog, setProjectDialog } from "../redux/reducers/dialogFlags";
 
+
 export default function AddProjectDialog() {
     const [fullWidth, setFullWidth] = React.useState(true);
     const [maxWidth, setMaxWidth] = React.useState('sm');
@@ -102,6 +103,7 @@ export default function AddProjectDialog() {
                             variant="standard"
                             onChange={(e) => setClient(e.target.value)}
                         />
+                       
                         <TextField
                             id="company"
                             label="Company"

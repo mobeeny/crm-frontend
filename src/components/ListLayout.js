@@ -44,7 +44,7 @@ export default function ListLayout() {
     return (
         <div>
             <Grid container direction="column" maxWidth={420}>
-                <Grid item sx={{ textAlign: "right", margin: 2 }}>
+                <Grid item sx={{ textAlign: "right", }}>
                     <Stack direction="row" spacing={2}>
                         <AddClientDialog />
                         <AddCompanyDialog />

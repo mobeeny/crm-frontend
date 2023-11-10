@@ -53,9 +53,11 @@ import AddInvoiceDialog from "./D_NewInvoices";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import AddPaymentDialog from "./D_NewPayments";
-
-
-
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import { useState } from "react";
+import { Popover } from "@mui/material";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 
 
@@ -188,24 +190,150 @@ export default function Layout() {
     //     setShowClientDialog(true);
     // }
 
+
+
+    const [anchorClient, setAnchorClient] = useState(null);
+    const [anchorCompany, setAnchorCompany] = useState(null);
+    const [anchorProject, setAnchorProject] = useState(null);
+
+
+
+
+  
+
+    const handleCloseMenu = () => {
+        setAnchorClient(null);
+    };
+
+    const openMenu = Boolean(anchorClient);
+    const openMenu1 = Boolean(anchorCompany);
+    const openMenu2 = Boolean(anchorProject);
+
+    
+
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />
             <AppBar open={open}>
                 <Toolbar>
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="start"
-                        sx={{
-                            marginRight: 5,
-                            ...(open && { display: "none" }),
-                        }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                    <img src="./logo.png" style={{ maxWidth: "5%", marginRight: "5ch", marginLeft: "2ch" }} />
                     <Typography variant="h6" noWrap component="div"></Typography>
+                    <div>
+                        <Tabs centered>
+                            <Tab
+                                onClick={(event) => setAnchorClient(event.currentTarget)}
+                                style={{
+                                    textTransform: 'none',
+                                    color: 'white',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold',
+                                    padding: '10px',
+                                    fontFamily: 'Roboto, sans-serif',
+                                   
+                                    alignItems: 'center', // Vertically center the content
+                                    flexDirection:"row"
+                                }}
+                                label={
+                                    <>
+                                        Clients
+                                        <ArrowDropDownIcon/>
+                                    </>
+                                }
+                            />
+                            <Tab
+                            onClick={(event) => setAnchorCompany(event.currentTarget)}
+                                style={{
+                                    textTransform: 'none',
+                                    color: 'white',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold',
+                                    padding: '10px',
+                                    fontFamily: 'Roboto, sans-serif',
+                                    alignItems: 'center', // Vertically center the content
+                                    flexDirection:"row"
+                                }}
+                                label={
+                                    <>
+                                        Companies
+                                        <ArrowDropDownIcon/>
+                                    </>
+                                }
+                            />
+                            <Tab
+                            onClick={(event) => setAnchorProject(event.currentTarget)}
+                       
+                                style={{
+                                    textTransform: 'none',
+                                    color: 'white',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold',
+                                    padding: '10px',
+                                    fontFamily: 'Roboto, sans-serif',
+                                    alignItems: 'center', // Vertically center the content
+                                    flexDirection:"row"
+                                }}
+                                label={
+                                    <>
+                                        Projects
+                                        <ArrowDropDownIcon/>
+                                    </>
+                                }
+                            />
+                        </Tabs>
+
+                        <Popover
+                            open={openMenu}
+                            anchorEl={anchorClient}
+                            onClose={()=>setAnchorClient(null)}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                            }}
+                        >
+                            <ListItemButton to={`/clients`}>All clients </ListItemButton>
+                           
+                        </Popover>
+
+                        <Popover
+                            open={openMenu1}
+                            anchorEl={anchorCompany}
+                            onClose={() => setAnchorCompany(null)}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                            }}
+                        >
+                            <MenuItem  onClick={handleCloseMenu}>All Companies</MenuItem>
+                           
+                        </Popover>
+
+                        <Popover
+                            open={openMenu2}
+                            anchorEl={anchorProject}
+                            onClose={() => setAnchorProject(null)}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                            }}
+                        >
+                            <MenuItem onClick={handleCloseMenu}>All projects</MenuItem>
+                          
+                        </Popover>
+                    </div>
+
+
                     <Box sx={{ flexGrow: 0, marginLeft: "auto" }}>
                         <Tooltip title="Open settings">
                             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -235,7 +363,7 @@ export default function Layout() {
                     </Box>
                 </Toolbar>
             </AppBar>
-            <Drawer variant="permanent" open={open}>
+            <Drawer variant="permanent" open={open} sx={{marginRight:0,paddingRight:0}}>
                 <DrawerHeader>
                     <IconButton onClick={handleDrawerClose}>
                         <ChevronLeftIcon />
@@ -243,7 +371,7 @@ export default function Layout() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-                    
+
                     <ListItem key={"main"} disablePadding sx={sx_ListItem}>
                         <ListItemButton component={Link} to={`/main`} sx={sx_ListItemButton}>
                             <ListItemIcon sx={sx_ListItemIcon}>
@@ -301,7 +429,7 @@ export default function Layout() {
                         onClick={() => dispatch(setClientDialog(true))}
                     />
                     <AddClientDialog />
-                    
+
 
                     <SpeedDialAction
                         key={"project"}
@@ -312,7 +440,7 @@ export default function Layout() {
                     />
                     <AddProjectDialog />
 
-                  
+
 
                     <SpeedDialAction
                         key={"invoice"}
