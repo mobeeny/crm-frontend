@@ -8,7 +8,7 @@ function HomeComponent() {
     return (
         <>
             <Layout />
-            <Box sx={{ display: "flex", marginLeft: 10, marginTop: 8 }}>
+            <Box sx={{ display: "flex", marginLeft: 8, marginTop: 8 }}>
                 <Outlet />
             </Box>
         </>
