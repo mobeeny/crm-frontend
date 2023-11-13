@@ -26,9 +26,7 @@ export default function AddQuotaionDialog() {
     const [fullWidth, setFullWidth] = React.useState(true);
 
 
-    const productCollectionRef = collection(
-        db,
-        instancesRef + auth.currentUser.uid + "/products&services"
+    const productCollectionRef = collection(  db,instancesRef + auth.currentUser.uid + "/products&services"
     );
 
     const [quotation, setQuotation] = useState(

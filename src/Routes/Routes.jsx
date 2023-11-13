@@ -6,6 +6,7 @@ import ClientsComponent from "../components/ClientsHome";
 import Settings from "../components/Settings";
 import PrimaryActions from "../components/PrimaryActions";
 import ClientList from "../components/ClientsLIst";
+import CompanyList from "../components/CompanyList";
 
 function Index(props) {
   return useRoutes([
@@ -29,6 +30,14 @@ function Index(props) {
         {
           path: "clients",
           element: <ClientList/>,
+        },
+        {
+          path: "company",
+          element: <CompanyList/>,
+        },
+        {
+          path: "quotation",
+          element: <CompanyList/>,
         },
       ], 
     },

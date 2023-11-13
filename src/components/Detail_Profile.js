@@ -63,7 +63,6 @@ function Profile() {
                             autoFocus
                             id="id"
                             label="ID"
-                            type="number"
                             variant="standard"
                             value={currentClient.clientSid}
                             onChange={handleInputChange}

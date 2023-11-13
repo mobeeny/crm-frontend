@@ -15,7 +15,7 @@ import { Stack } from "@mui/system";
 
 import D_ClientRole from "./D_ClientRole";
 
-const SelectUser_AddCompanySearch = (props) => {
+const SearchClientField = (props) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [selectedResults, setSelectedResults] = useState([]);
@@ -23,6 +23,7 @@ const SelectUser_AddCompanySearch = (props) => {
     const [selectedClient, setSelectedClient] = useState({})
     const [selectedUser, setSelectedUser] = useState()
     const [showChip, setShowChip] = useState(false)
+    const [name,setName] = useState("")
 
 
     const companyContacts = useSelector((state) => state.clients.companyContacts);
@@ -83,6 +84,7 @@ const SelectUser_AddCompanySearch = (props) => {
 
     // Do whatever you want with the userId, e.g., store it in state, perform an action, etc.
     const handleUserClick = (client) => {
+        dispatch(setCompanyContacts(name))
 
         // addselectedResults(client);
         // dispatch(setCompanyContacts(client.id));
@@ -132,7 +134,6 @@ const SelectUser_AddCompanySearch = (props) => {
                     </List>
                 </div>
             )}
-            <D_ClientRole open={showDialog} setShowDialog={setShowDialog} client={selectedClient} /> {/* Render the dialog when showDialog is true */}
             <Stack direction="row" spacing={1}>
                 {companyContacts.map((client) => (
                     <Chip
@@ -147,4 +148,4 @@ const SelectUser_AddCompanySearch = (props) => {
     );
 };
 
-export default SelectUser_AddCompanySearch;
+export default SearchClientField;

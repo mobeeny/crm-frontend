@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import SearchClientsCompanyForm from "./SearchClientsCompanyForm";
 import { Divider, } from "@mui/material";
 import { setCompanyDialog, setProjectDialog } from "../redux/reducers/dialogFlags";
+import SearchClientField from "./SearchClientField";
 
 
 export default function AddProjectDialog() {
@@ -96,42 +97,36 @@ export default function AddProjectDialog() {
                             variant="standard"
                             onChange={(e) => setProductInvolved(e.target.value)}
                         />
-                        <TextField
-                            id="client"
-                            label="Client"
-                            type="name"
-                            variant="standard"
-                            onChange={(e) => setClient(e.target.value)}
-                        />
-                       
-                        <TextField
-                            id="company"
-                            label="Company"
-                            fullWidth
-                            variant="standard"
-                            onChange={(e) => setCompany(e.target.value)}
-                        />
-                        <TextField
-                            id="projectTimeline"
-                            label="Project Timeline"
-                            type="phone"
-                            variant="standard"
-                            onChange={(e) => setProjectTimeline(e.target.value)}
-                        />
-                        <TextField
-                            id="dueAmount"
-                            label="Amount Due"
-                            type="name"
-                            variant="standard"
-                            onChange={(e) => setDueAmount(e.target.value)}
-                        />
-                        <TextField
-                            id="paidAmount"
-                            label="Paid Amount"
-                            type="name"
-                            variant="standard"
-                            onChange={(e) => setPaidAmount(e.target.value)}
-                        />
+                        <SearchClientField/>
+
+                            <TextField
+                                id="company"
+                                label="Company"
+                                fullWidth
+                                variant="standard"
+                                onChange={(e) => setCompany(e.target.value)}
+                            />
+                            <TextField
+                                id="projectTimeline"
+                                label="Project Timeline"
+                                type="phone"
+                                variant="standard"
+                                onChange={(e) => setProjectTimeline(e.target.value)}
+                            />
+                            <TextField
+                                id="dueAmount"
+                                label="Amount Due"
+                                type="name"
+                                variant="standard"
+                                onChange={(e) => setDueAmount(e.target.value)}
+                            />
+                            <TextField
+                                id="paidAmount"
+                                label="Paid Amount"
+                                type="name"
+                                variant="standard"
+                                onChange={(e) => setPaidAmount(e.target.value)}
+                            />
 
                     </Box>
                 </DialogContent>

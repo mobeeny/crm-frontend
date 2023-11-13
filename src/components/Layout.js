@@ -58,7 +58,8 @@ import Tab from '@mui/material/Tab';
 import { useState } from "react";
 import { Popover } from "@mui/material";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-
+import AddQuotaionDialog from "./D_NewQuotations";
+import { setSpeedDialDialog } from "../redux/reducers/dialogFlags";
 
 
 
@@ -139,7 +140,8 @@ export default function Layout() {
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [isSpeedDialOpen, setIsSpeedDialOpen] = React.useState(false); // New state for SpeedDial
+    const speedDialDialogOpen = useSelector((state) => state.dialogs.speedDialDialogOpen);
+
     // const [showClientDialog, setShowClientDialog] = React.useState(false)
     // const [, setShowDialog]clientDialogOpen = React.useState(false); // State to control dialog visibility
 
@@ -178,12 +180,12 @@ export default function Layout() {
     };
 
     const handleMouseEnterSpeedDial = () => {
-        setIsSpeedDialOpen(true);
+        dispatch(setSpeedDialDialog(true));
     };
 
     // Handle SpeedDial close on mouse leave
     const handleMouseLeaveSpeedDial = () => {
-        setIsSpeedDialOpen(false);
+        dispatch(setSpeedDialDialog(false));
     };
 
     // const handleClientDialoge = () => {
@@ -195,11 +197,13 @@ export default function Layout() {
     const [anchorClient, setAnchorClient] = useState(null);
     const [anchorCompany, setAnchorCompany] = useState(null);
     const [anchorProject, setAnchorProject] = useState(null);
+    const [anchorQuotation, setAnchorQuotation] = useState(null);
 
 
 
 
-  
+
+
 
     const handleCloseMenu = () => {
         setAnchorClient(null);
@@ -208,15 +212,16 @@ export default function Layout() {
     const openMenu = Boolean(anchorClient);
     const openMenu1 = Boolean(anchorCompany);
     const openMenu2 = Boolean(anchorProject);
+    const openMenu3 = Boolean(anchorQuotation);
 
-    
+
 
     return (
         <Box sx={{ display: "flex" }}>
             <CssBaseline />
             <AppBar open={open}>
                 <Toolbar>
-                    <img src="./logo.png" style={{ maxWidth: "5%", marginRight: "5ch", marginLeft: "2ch" }} />
+                    <img src="./logo.png" style={{ maxWidth: "120px", marginRight: "5ch", marginLeft: "2ch" }} />
                     <Typography variant="h6" noWrap component="div"></Typography>
                     <div>
                         <Tabs centered>
@@ -229,19 +234,19 @@ export default function Layout() {
                                     fontWeight: 'bold',
                                     padding: '10px',
                                     fontFamily: 'Roboto, sans-serif',
-                                   
+
                                     alignItems: 'center', // Vertically center the content
-                                    flexDirection:"row"
+                                    flexDirection: "row"
                                 }}
                                 label={
                                     <>
                                         Clients
-                                        <ArrowDropDownIcon/>
+                                        <ArrowDropDownIcon />
                                     </>
                                 }
                             />
                             <Tab
-                            onClick={(event) => setAnchorCompany(event.currentTarget)}
+                                onClick={(event) => setAnchorCompany(event.currentTarget)}
                                 style={{
                                     textTransform: 'none',
                                     color: 'white',
@@ -250,18 +255,18 @@ export default function Layout() {
                                     padding: '10px',
                                     fontFamily: 'Roboto, sans-serif',
                                     alignItems: 'center', // Vertically center the content
-                                    flexDirection:"row"
+                                    flexDirection: "row"
                                 }}
                                 label={
                                     <>
                                         Companies
-                                        <ArrowDropDownIcon/>
+                                        <ArrowDropDownIcon />
                                     </>
                                 }
                             />
                             <Tab
-                            onClick={(event) => setAnchorProject(event.currentTarget)}
-                       
+                                onClick={(event) => setAnchorProject(event.currentTarget)}
+
                                 style={{
                                     textTransform: 'none',
                                     color: 'white',
@@ -270,12 +275,32 @@ export default function Layout() {
                                     padding: '10px',
                                     fontFamily: 'Roboto, sans-serif',
                                     alignItems: 'center', // Vertically center the content
-                                    flexDirection:"row"
+                                    flexDirection: "row"
                                 }}
                                 label={
                                     <>
                                         Projects
-                                        <ArrowDropDownIcon/>
+                                        <ArrowDropDownIcon />
+                                    </>
+                                }
+                            />
+                            <Tab
+                                onClick={(event) => setAnchorQuotation(event.currentTarget)}
+
+                                style={{
+                                    textTransform: 'none',
+                                    color: 'white',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold',
+                                    padding: '10px',
+                                    fontFamily: 'Roboto, sans-serif',
+                                    alignItems: 'center', // Vertically center the content
+                                    flexDirection: "row"
+                                }}
+                                label={
+                                    <>
+                                        Quotation
+                                        <ArrowDropDownIcon />
                                     </>
                                 }
                             />
@@ -284,7 +309,7 @@ export default function Layout() {
                         <Popover
                             open={openMenu}
                             anchorEl={anchorClient}
-                            onClose={()=>setAnchorClient(null)}
+                            onClose={() => setAnchorClient(null)}
                             anchorOrigin={{
                                 vertical: 'bottom',
                                 horizontal: 'center',
@@ -295,7 +320,7 @@ export default function Layout() {
                             }}
                         >
                             <ListItemButton to={`/clients`}>All clients </ListItemButton>
-                           
+
                         </Popover>
 
                         <Popover
@@ -311,8 +336,8 @@ export default function Layout() {
                                 horizontal: 'center',
                             }}
                         >
-                            <MenuItem  onClick={handleCloseMenu}>All Companies</MenuItem>
-                           
+                            <ListItemButton to={`/company`}>All Companies </ListItemButton>
+
                         </Popover>
 
                         <Popover
@@ -329,7 +354,24 @@ export default function Layout() {
                             }}
                         >
                             <MenuItem onClick={handleCloseMenu}>All projects</MenuItem>
-                          
+
+                        </Popover>
+                        <Popover
+                            open={openMenu3}
+                            anchorEl={anchorQuotation}
+                            onClose={() => setAnchorQuotation(null)}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'center',
+                            }}
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'center',
+                            }}
+                        >
+                            <ListItemButton to={`/quotaion`}>All Quotations </ListItemButton>
+                            <ListItemButton onClick={() => dispatch(setQuotationDialog(true))}>Create New Quotation </ListItemButton>
+                            <AddQuotationDialog /> {/* Add this line if you want to render the dialog immediately */}
                         </Popover>
                     </div>
 
@@ -363,7 +405,7 @@ export default function Layout() {
                     </Box>
                 </Toolbar>
             </AppBar>
-            <Drawer variant="permanent" open={open} sx={{marginRight:0,paddingRight:0}}>
+            <Drawer variant="permanent" open={open} sx={{ marginRight: 0, paddingRight: 0 }}>
                 <DrawerHeader>
                     <IconButton onClick={handleDrawerClose}>
                         <ChevronLeftIcon />
@@ -418,7 +460,7 @@ export default function Layout() {
                     sx={{ position: 'absolute', bottom: 16, right: 16 }}
                     icon={<SpeedDialIcon />}
                     style={{ margin: "3%" }}
-                    open={isSpeedDialOpen}
+                    open={speedDialDialogOpen}
                 >
 
                     <SpeedDialAction

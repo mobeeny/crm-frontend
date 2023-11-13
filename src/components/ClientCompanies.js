@@ -24,6 +24,7 @@ import {
     setClient,
 } from "../redux/reducers/clients";
 
+
 export default function ClientCompanies() {
     // const username = useSelector((state) => state.config.username);
     const currentCompany = useSelector((state) => state.config.selectedCompany);

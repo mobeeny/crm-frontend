@@ -1,46 +1,57 @@
 import React from 'react'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
+import { getDocs } from 'firebase/firestore';
+import { db, instancesRef, auth, } from '../config/firebase';
+import { collection } from 'firebase/firestore';
+import client from '../data/clients';
+import { useEffect } from 'react';
+import { setClient } from '../redux/reducers/clients';
+import { useDispatch, useSelector } from "react-redux";
 
 const columns = [
-    { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'Name', headerName: ' Name', width: 330 },
-    { field: 'email', headerName: 'Email', width: 330 },
+    { field: 'id', headerName: 'ID', flex: 1  },
+    { field: 'Name', headerName: ' Name', flex: 2, },
+    { field: 'email', headerName: 'Email', flex: 2 },
     {
         field: 'Contact',
         headerName: 'Contact',
-    
-        width: 330,
-        
+
+        flex: 2
+
     },
-    {
-        field: 'company',
-        headerName: 'Company',
-     
-        width: 330,
-        
-    }
+    
 
 ];
 
-const rows = [
-    { id: 1, email: 'Snow', Name: 'Jon', Contact: 35,company:"abc" },
-    { id: 2, email: 'Lannister', Name: 'Cersei', Contact: 42 ,company:"abc"},
-    { id: 3, email: 'Lannister', Name: 'Jaime', Contact: 45,company:"abc" },
-    { id: 4, email: 'Stark', Name: 'Arya', Contact: 16,company:"abc" },
-    { id: 5, email: 'Targaryen', Name: 'Daenerys', Contact: null },
-    { id: 6, email: 'Melisandre', Name: null, Contact: 150,company:"abc" },
-    { id: 7, email: 'Clifford', Name: 'Ferrara', Contact: 44,company:"abc" },
-    { id: 8, email: 'Frances', Name: 'Rossini', Contact: 36,company:"abc" },
-    { id: 9, email: 'Roxie', Name: 'Harvey', Contact: 65,company:"abc" },
-];
+
 
 export default function ClientsLIst() {
 
+    const clientsRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
+    const clientList = useSelector((state) => state.clients.client);
+    const dispatch = useDispatch();
+
+    const getClient = async () => {
+        //Read the Data
+        //Set the Movie List
+        try {
+            const data = await getDocs(clientsRef);
+            const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+            dispatch(setClient(filteredData));
+        } catch (err) {
+            console.error(err);
+        }
+    };
+    useEffect(() => {
+        getClient();
+    }, []);
 
     return (
-        <div style={{ height: 400, width: '100%',margin:"1%"}}>
+        <div style={{ height: 400, width: '100%', margin: "1%" }}>
+            {console.log("Data", clientList)}
+
             <DataGrid
-                rows={rows}
+                rows={clientList?.map((client) => ({ id: client.clientSid, email: client.email, Name: client.name, Contact: client.phone,}))}
                 columns={columns}
                 initialState={{
                     pagination: {
@@ -50,6 +61,7 @@ export default function ClientsLIst() {
                 pageSizeOptions={[5, 10]}
                 checkboxSelection
             />
+
         </div>
     )
 }
