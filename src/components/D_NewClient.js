@@ -41,15 +41,10 @@ export default function AddClientDialog(props) {
 
     const [uDateIssue, setUDateIssue] = useState("2023-05-10");
     const [uDateExpiry, setUDateExpiry] = useState("2023-05-10");
-    const [clientSid, setClientSid] = useState(0)
 
     const dispatch = useDispatch();
     const clientDialogOpen = useSelector((state) => state.dialogs.clientDialogOpen);
 
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
 
     const handleClose = () => {
         // props.setShowDialog(false);

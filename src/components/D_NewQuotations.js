@@ -18,7 +18,7 @@ import {  Stack, Typography,} from "@mui/material";
 import ClientField from "./ClientField";
 import { Fragment } from "react";
 import { setQuotationDialog } from "../redux/reducers/dialogFlags";
-
+import { getDoc,doc,updateDoc } from "firebase/firestore";
 
 export default function AddQuotaionDialog() {
 
@@ -26,8 +26,8 @@ export default function AddQuotaionDialog() {
     const [fullWidth, setFullWidth] = React.useState(true);
 
 
-    const productCollectionRef = collection(  db,instancesRef + auth.currentUser.uid + "/products&services"
-    );
+    const productCollectionRef = collection(  db,instancesRef + auth.currentUser.uid + "/products&services");
+    const quotationCollectionRef = collection(  db,instancesRef + auth.currentUser.uid + "/quotation");
 
     const [quotation, setQuotation] = useState(
         {
@@ -69,19 +69,53 @@ export default function AddQuotaionDialog() {
 
     const onSubmitClient = async () => {
 
-        console.log("Auth UID:", auth);
-        console.log("product Name", quotation.productName)
-        console.log("subtitle", quotation.subtitle)
-        console.log("client", quotation.client)
-        console.log("company", quotation.company)
-        console.log("description", quotation.description)
-        console.log(quotation.scope)
-        console.log(quotation.pre_reqs)
-        console.log(quotation.fulfilment)
-        console.log(quotation.timeline)
-        console.log(quotation.terms)
-        console.log(quotation.charges)
-        console.log(quotation.payments)
+        try {
+            const docRef = doc(db, instancesRef + auth.currentUser.uid + "/systemData/" + "sequenceIds");
+            console.log("DocRef: ", docRef);
+
+            try {
+                const sIds = await getDoc(docRef);
+                if (sIds.exists()) {
+                    console.log("Current quotationtSid:", sIds.data());
+                    // Get the current clientSid value
+                    const currentSid = sIds.data().quotationSid;
+                    // Increment the clientSid value by 1
+                    const updatedSid = currentSid + 1;
+
+                    // Update the document with the new clientSid value
+                    await updateDoc(docRef, { quotationSid: updatedSid });
+
+                    // Include the updated clientSid in the data object
+                    await addDoc(quotationCollectionRef, {
+                        productId:quotation.id,
+                        productName:quotation.productName,
+                        subtitle:quotation.subtitle,
+                        client:quotation.client,
+                        company:quotation.company,
+                        description:quotation.description,
+                        scope:quotation.scope,
+                        pre_reqs:quotation.pre_reqs,
+                        fulfilment:quotation.fulfilment,
+                        timeline:quotation.timeline,
+                        charges:quotation.charges,
+                        payments:quotation.payments,
+                        terms:quotation.terms,
+                        quotationSid:updatedSid,
+                    });
+                } else {
+                    console.log("Document does not exist.");
+                    // Handle the case where the document doesn't exist, if necessary.
+                }
+            } catch (error) {
+                console.error("Error fetching document:", error);
+                // Handle any errors that may occur during the retrieval process.
+            }
+
+            // Close the dialog
+            handleClose();
+        } catch (err) {
+            console.error(err);
+        }
     };
 
 
