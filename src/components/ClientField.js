@@ -12,8 +12,6 @@ import { setCompanyContacts } from "../redux/reducers/clients";
 import { Avatar, Card, CardActions, CardContent, CardHeader, Chip, IconButton, Typography } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { Stack } from "@mui/system";
-import ResponsiveDialog from './D_ClientRole'
-import D_ClientRole from "./D_ClientRole";
 
 const ClientField = (props) => {
     const [searchQuery, setSearchQuery] = useState("");

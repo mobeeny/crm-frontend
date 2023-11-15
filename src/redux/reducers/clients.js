@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const clientSlice = createSlice({
     name: "clients",
     initialState: {
-        client: [],
+        clients: [],
         selectedClient: {},
         selectedUserCompaniesIds: [],
         selectedUserCompanies: [],
@@ -11,8 +11,8 @@ const clientSlice = createSlice({
         companyContacts: [],
     },
     reducers: {
-        setClient(state, action) {
-            state.client = action.payload;
+        setClients(state, action) {
+            state.clients = action.payload;
         },
         setSelectedClient(state, action) {
             state.selectedClient = action.payload;
@@ -60,7 +60,7 @@ export const {
     setSelectedUserCompaniesIds,
     setSelectedUserCompanies,
     setUpdatedClient,
-    setClient,
+    setClients,
     setCompanyContacts,
     clearDirectorsNewCompany,
 } = clientSlice.actions;

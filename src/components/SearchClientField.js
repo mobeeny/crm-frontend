@@ -13,7 +13,6 @@ import { Avatar, Card, CardActions, CardContent, CardHeader, Chip, IconButton, T
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { Stack } from "@mui/system";
 
-import D_ClientRole from "./D_ClientRole";
 
 const SearchClientField = (props) => {
     const [searchQuery, setSearchQuery] = useState("");

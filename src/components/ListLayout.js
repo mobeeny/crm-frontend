@@ -16,13 +16,13 @@ import AddCompanyDialog from "./D_NewCompany";
 import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedClient, setSelectedUserCompaniesIds, setClient } from "../redux/reducers/clients";
+import { setSelectedClient, setSelectedUserCompaniesIds, setClients } from "../redux/reducers/clients";
 
 export default function ListLayout() {
     // const username = useSelector((state) => state.config.username);
 
     const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
-    const clientList = useSelector((state) => state.clients.client);
+    const clientList = useSelector((state) => state.clients.clients);
     const dispatch = useDispatch();
 
     const getClient = async () => {
@@ -31,7 +31,7 @@ export default function ListLayout() {
         try {
             const data = await getDocs(clientCollectionRef);
             const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-            dispatch(setClient(filteredData));
+            dispatch(setClients(filteredData));
         } catch (err) {
             console.error(err);
         }

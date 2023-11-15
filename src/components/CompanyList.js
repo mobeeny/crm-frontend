@@ -6,13 +6,9 @@ import { collection } from 'firebase/firestore';
 import client from '../data/clients';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import {
-    setSelectedClient,
-    setSelectedCompany,
-    setSelectedUserCompaniesIds,
-    setSelectedUserCompanies,
-    setClient,
-} from "../redux/reducers/clients";
+import {setSelectedUserCompanies,setClient,} from "../redux/reducers/clients";
+import { setCompanies } from '../redux/reducers/companies';
+
 const columns = [
     { field: 'id', headerName: 'ID', flex: 1, headerClassName: 'bold-header' },
     {
@@ -44,8 +40,7 @@ const styles = {
 export default function CompanyList() {
 
     const companyRef = collection(db, instancesRef + auth.currentUser.uid + "/company");
-    const companiesList = useSelector((state) => state.clients.selectedUserCompanies);
-    
+    const companiesList = useSelector((state) => state.companies.companies);
     const dispatch = useDispatch();
 
     const getCompany = async () => {
@@ -54,8 +49,8 @@ export default function CompanyList() {
         try {
             const data = await getDocs(companyRef);
             const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-            
-            dispatch(setSelectedUserCompanies(filteredData));
+            dispatch(setCompanies(filteredData));
+
         } catch (err) {
             console.error(err);
         }
@@ -63,6 +58,8 @@ export default function CompanyList() {
     useEffect(() => {
         getCompany();
     }, []);
+
+     
 
     return (
         <div style={{ height: "auto", width: '98%', margin: "1%" }}>

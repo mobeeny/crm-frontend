@@ -5,7 +5,7 @@ import { db, instancesRef, auth, } from '../config/firebase';
 import { collection } from 'firebase/firestore';
 import client from '../data/clients';
 import { useEffect } from 'react';
-import { setClient } from '../redux/reducers/clients';
+import { setClients } from '../redux/reducers/clients';
 import { useDispatch, useSelector } from "react-redux";
 
 const columns = [
@@ -28,7 +28,7 @@ const columns = [
 export default function ClientsLIst() {
 
     const clientsRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
-    const clientList = useSelector((state) => state.clients.client);
+    const clientList = useSelector((state) => state.clients.clients);
     const dispatch = useDispatch();
 
     const getClient = async () => {
@@ -37,7 +37,7 @@ export default function ClientsLIst() {
         try {
             const data = await getDocs(clientsRef);
             const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-            dispatch(setClient(filteredData));
+            dispatch(setClients(filteredData));
         } catch (err) {
             console.error(err);
         }

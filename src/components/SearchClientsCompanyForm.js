@@ -8,24 +8,23 @@ import ListItemText from "@mui/material/ListItemText";
 import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, addDoc, query, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
-import { setCompanyContacts } from "../redux/reducers/clients";
+import { setCompanyContacts } from "../redux/reducers/companyCrud";
 import { Avatar, Card, CardActions, CardContent, CardHeader, Chip, IconButton, Typography } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { Stack } from "@mui/system";
-
-import D_ClientRole from "./D_ClientRole";
+import D_ContactRole from "./D_ContactRole";
 
 const SelectUser_AddCompanySearch = (props) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [selectedResults, setSelectedResults] = useState([]);
     const [showDialog, setShowDialog] = useState(false); // State to control dialog visibility
-    const [selectedClient, setSelectedClient] = useState({})
+    const [selectedContact, setSelectedContact] = useState({})
     const [selectedUser, setSelectedUser] = useState()
     const [showChip, setShowChip] = useState(false)
 
 
-    const companyContacts = useSelector((state) => state.clients.companyContacts);
+    const companyContacts = useSelector((state) => state.companyCrud.companyContacts);
 
     // const username = useSelector((state) => state.config.username);
     const dispatch = useDispatch();
@@ -85,8 +84,8 @@ const SelectUser_AddCompanySearch = (props) => {
     const handleUserClick = (client) => {
 
         // addselectedResults(client);
-        // dispatch(setCompanyContacts(client.id));
-        setSelectedClient(client);
+        dispatch(setCompanyContacts(client.id));
+        setSelectedContact(client);
         setSearchQuery(""); // Update the search query with the client's name
         setSearchResults([]); // Clear the search suggestion list
         setShowDialog(true);
@@ -132,14 +131,14 @@ const SelectUser_AddCompanySearch = (props) => {
                     </List>
                 </div>
             )}
-            <D_ClientRole open={showDialog} setShowDialog={setShowDialog} client={selectedClient} /> {/* Render the dialog when showDialog is true */}
+            <D_ContactRole open={showDialog} setShowDialog={setShowDialog} contact={selectedContact} /> {/* Render the dialog when showDialog is true */}
             <Stack direction="row" spacing={1}>
                 {companyContacts.map((client) => (
                     <Chip
-                        label={selectedClient.name}
+                        label={selectedContact.name}
                         variant="outlined"
-                        onDelete={() => setSelectedClient(false)}
-                        avatar={<Avatar>{selectedClient.name ? selectedClient.name.charAt(0) : ""}</Avatar>}
+                        onDelete={() => setSelectedContact(false)}
+                        avatar={<Avatar>{selectedContact.name ? selectedContact.name.charAt(0) : ""}</Avatar>}
                     />
                 ))}
             </Stack>

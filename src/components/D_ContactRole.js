@@ -13,11 +13,10 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { useState } from 'react';
-import { setCompanyContacts } from '../redux/reducers/clients';
 import { useDispatch, useSelector } from 'react-redux';
+import { setCompanyContacts } from '../redux/reducers/companyCrud';
 
-
-export default function D_ClientRole(props) {
+export default function D_ContactRole(props) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [maxWidth, setMaxWidth] = React.useState('sm');
@@ -36,7 +35,7 @@ export default function D_ClientRole(props) {
 
    
     
-    dispatch(setCompanyContacts(props.client.id==0?{ id: props.client.id, title: title, remarks: remarks, name:name, status: checked }:{ id: props.client.id, title: title, remarks: remarks, status: checked }))
+    dispatch(setCompanyContacts(props.contact.id==0?{ id: props.contact.id, title: title, remarks: remarks, name:name, status: checked }:{ id: props.contact.id, title: title, remarks: remarks, status: checked }))
     props.setShowDialog(false)
 
   }
@@ -52,10 +51,10 @@ export default function D_ClientRole(props) {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle style={{ marginLeft: '0' }}>Enter Role for {props.client.id == 0 ?"New Person":props.client.name}</DialogTitle>
+        <DialogTitle style={{ marginLeft: '0' }}>Enter Role for {props.contact.id == 0 ?"New Person":props.contact.name}</DialogTitle>
 
         <div style={{ margin: '3%', marginTop: 0 }}>
-           {props.client.id==0?
+           {props.contact.id==0?
           <TextField
             style={{ width: '100%', marginBottom: '20px' }}
             id="name"
