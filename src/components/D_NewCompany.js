@@ -168,8 +168,9 @@ export default function AddCompanyDialog() {
                         noValidate
                         autoComplete="off"
                     >
-                        <Stack direction={"row"}>
+                       
                             <TextField
+                                    
                                 autoFocus
                                 id="name"
                                 label="Company Name"
@@ -178,7 +179,7 @@ export default function AddCompanyDialog() {
                                 onChange={(e) => setCName(e.target.value)}
                             />
                             <SearchClientsCompanyForm />
-                        </Stack>
+                       
                         <TextField
                             id="email"
                             label="Company Email"
@@ -280,7 +281,7 @@ export default function AddCompanyDialog() {
                         <TextField
                             id="notes"
                             label="Notes"
-                           
+                            type="date"
                             variant="standard"
                             onChange={(e) => setCNotes(e.target.value)}
                         />

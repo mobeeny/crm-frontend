@@ -8,7 +8,6 @@ import ListItemText from "@mui/material/ListItemText";
 import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, addDoc, query, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
-import { setCompanyContacts } from "../redux/reducers/clients";
 import { Avatar, Card, CardActions, CardContent, CardHeader, Chip, IconButton, Typography } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { Stack } from "@mui/system";
@@ -83,7 +82,7 @@ const SearchClientField = (props) => {
 
     // Do whatever you want with the userId, e.g., store it in state, perform an action, etc.
     const handleUserClick = (client) => {
-        dispatch(setCompanyContacts(name))
+        // dispatch(setCompanyContacts(name))
 
         // addselectedResults(client);
         // dispatch(setCompanyContacts(client.id));

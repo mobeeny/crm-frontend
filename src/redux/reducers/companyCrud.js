@@ -4,14 +4,18 @@ const companyCrudSlice = createSlice({
     name: "companyCrud",
     initialState: {
         companyContacts: [],
+        createContactId:0,
     },
     reducers: {
         setCompanyContacts(state, action) {
-           state.project=action.payload;
-        }
+           state.companyContacts=action.payload;
+        },
+        setCreateContactId(state, action) {
+            state.createContactId=action.payload;
+         }
     },
 });
 
-export const { setCompanyContacts } = companyCrudSlice.actions;
+export const { setCompanyContacts ,setCreateContactId} = companyCrudSlice.actions;
 
 export default companyCrudSlice.reducer;

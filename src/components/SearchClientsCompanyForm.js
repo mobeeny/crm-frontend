@@ -13,6 +13,7 @@ import { Avatar, Card, CardActions, CardContent, CardHeader, Chip, IconButton, T
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import { Stack } from "@mui/system";
 import D_ContactRole from "./D_ContactRole";
+import { setCreateContactId } from "../redux/reducers/companyCrud";
 
 const SelectUser_AddCompanySearch = (props) => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -22,23 +23,21 @@ const SelectUser_AddCompanySearch = (props) => {
     const [selectedContact, setSelectedContact] = useState({})
     const [selectedUser, setSelectedUser] = useState()
     const [showChip, setShowChip] = useState(false)
-
-
     const companyContacts = useSelector((state) => state.companyCrud.companyContacts);
+    const createContactId = useSelector((state) => state.companyCrud.createContactId);
 
-    // const username = useSelector((state) => state.config.username);
+
+
     const dispatch = useDispatch();
     let results = {};
-    // Your Firebase configuration and initialization
-    // firebase.initializeApp(yourConfig);
-    //   const db = firebase.firestore();
 
     const handleClickChip = () => {
         console.info("You clicked the Chip.");
     };
 
-    const handleDeleteChip = (clientId) => {
-        setSelectedResults((prevContacts) => prevContacts.filter(client => client.id !== clientId));
+    const handleDeleteChip = (contactId) => {
+        const updatedCompanyContacts = companyContacts.filter((contact) => contact.id !== contactId);
+        dispatch(setCompanyContacts(updatedCompanyContacts));
     };
 
     const fetchSearchResults = async (squery) => {
@@ -47,28 +46,19 @@ const SelectUser_AddCompanySearch = (props) => {
             const usersRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
             const q = query(usersRef, where("name", ">=", squery), where("name", "<=", squery + "\uf8ff"));
             const snapshot = await getDocs(q);
-            console.log("User :", results);
+
+
 
             results = snapshot.docs.map((doc) => ({
                 id: doc.id,
                 ...doc.data(),
             }));
             console.log("User :", results);
-
-            results.push({ id: 0, name: "Create New" })
-
-
-
+            results.push({ id: createContactId, name: "Create New" })
             setSearchResults(results);
         } catch (error) {
             console.error("Error fetching search results:", error);
         }
-    };
-
-    const addselectedResults = (clientId) => {
-
-        setSelectedResults((prevContacts) => [...prevContacts, clientId]);
-        console.log("Directors: ", selectedResults);
     };
 
     useEffect(() => {
@@ -83,8 +73,6 @@ const SelectUser_AddCompanySearch = (props) => {
     // Do whatever you want with the userId, e.g., store it in state, perform an action, etc.
     const handleUserClick = (client) => {
 
-        // addselectedResults(client);
-        dispatch(setCompanyContacts(client.id));
         setSelectedContact(client);
         setSearchQuery(""); // Update the search query with the client's name
         setSearchResults([]); // Clear the search suggestion list
@@ -133,14 +121,16 @@ const SelectUser_AddCompanySearch = (props) => {
             )}
             <D_ContactRole open={showDialog} setShowDialog={setShowDialog} contact={selectedContact} /> {/* Render the dialog when showDialog is true */}
             <Stack direction="row" spacing={1}>
-                {companyContacts.map((client) => (
-                    <Chip
-                        label={selectedContact.name}
-                        variant="outlined"
-                        onDelete={() => setSelectedContact(false)}
-                        avatar={<Avatar>{selectedContact.name ? selectedContact.name.charAt(0) : ""}</Avatar>}
-                    />
-                ))}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {companyContacts?.map((contact) => (
+                        <Chip
+                            label={contact.name}
+                            variant="outlined"
+                            onDelete={() => handleDeleteChip(contact.id)}
+                            avatar={<Avatar>{contact.name ? contact.name.charAt(0) : ""}</Avatar>}
+                        />
+                    ))}
+                </div>
             </Stack>
         </div>
     );

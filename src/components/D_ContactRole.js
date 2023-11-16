@@ -14,7 +14,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setCompanyContacts } from '../redux/reducers/companyCrud';
+import { setCompanyContacts, setCreateContactId } from '../redux/reducers/companyCrud';
+
 
 export default function D_ContactRole(props) {
   const theme = useTheme();
@@ -24,23 +25,26 @@ export default function D_ContactRole(props) {
   const [title, setTitle] = React.useState('')
   const [remarks, setRemarks] = React.useState('')
   const [checked, setChecked] = React.useState(true);
-  const [name,setName] = useState("")
+  const [name, setName] = useState("")
 
-
+  const companyContacts = useSelector((state) => state.companyCrud.companyContacts) || [];
 
   const handleClose = () => {
     props.setShowDialog(false)
   };
   const handleSave = () => {
 
-   
-    
-    dispatch(setCompanyContacts(props.contact.id==0?{ id: props.contact.id, title: title, remarks: remarks, name:name, status: checked }:{ id: props.contact.id, title: title, remarks: remarks, status: checked }))
+    const contact = props.contact.id < 100 ? { id: props.contact.id, title: title, remarks: remarks, name: name, status: checked } : { id: props.contact.id, title: title, remarks: remarks, name: props.contact.name, status: checked }
+    const updatedCompanyContacts = [...companyContacts, contact];
+    console.log(updatedCompanyContacts)
+    dispatch(setCompanyContacts(updatedCompanyContacts))
+    dispatch(setCreateContactId(props.contact.id+1))
     props.setShowDialog(false)
 
   }
   const dispatch = useDispatch()
 
+  console.log("ID",props.contact.id)
   return (
     <div>
       <Dialog
@@ -51,18 +55,18 @@ export default function D_ContactRole(props) {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle style={{ marginLeft: '0' }}>Enter Role for {props.contact.id == 0 ?"New Person":props.contact.name}</DialogTitle>
+        <DialogTitle style={{ marginLeft: '0' }}>Enter Role for {props.contact.id == 0 ? "New Person" : props.contact.name}</DialogTitle>
 
         <div style={{ margin: '3%', marginTop: 0 }}>
-           {props.contact.id==0?
-          <TextField
-            style={{ width: '100%', marginBottom: '20px' }}
-            id="name"
-            label="Name "
-            type="name"
-            variant="standard"
-            onChange={(e) => setName(e.target.value)}
-          />:null}
+          {props.contact.id <100 ?
+            <TextField
+              style={{ width: '100%', marginBottom: '20px' }}
+              id="name"
+              label="Name "
+              type="name"
+              variant="standard"
+              onChange={(e) => setName(e.target.value)}
+            /> : null}
           <TextField
             style={{ width: '100%', marginBottom: '20px' }}
             id="title"
