@@ -28,6 +28,7 @@ export default function D_ContactRole(props) {
   const [name, setName] = useState("")
 
   const companyContacts = useSelector((state) => state.companyCrud.companyContacts) || [];
+  const createContactId = useSelector((state) => state.companyCrud.createContactId);
 
   const handleClose = () => {
     props.setShowDialog(false)
@@ -38,7 +39,7 @@ export default function D_ContactRole(props) {
     const updatedCompanyContacts = [...companyContacts, contact];
     console.log(updatedCompanyContacts)
     dispatch(setCompanyContacts(updatedCompanyContacts))
-    dispatch(setCreateContactId(props.contact.id+1))
+    dispatch(setCreateContactId(Number(createContactId)+1))
     props.setShowDialog(false)
 
   }
