@@ -79,7 +79,7 @@ const SelectUser_AddCompanySearch = (props) => {
         setShowDialog(true);
     };
     const handleMouseEnter = (id) => {
-        console.log("Mouse Enter: ", id )
+        console.log("Mouse Enter: ", id)
     }
 
 
@@ -115,9 +115,9 @@ const SelectUser_AddCompanySearch = (props) => {
                 < div style={listContainerStyles}>
                     <List dense >
                         {searchResults.map((client) => (
-                            <ListItemButton 
-                            key={client.id} 
-                            onClick={() => handleUserClick(client)} 
+                            <ListItemButton
+                                key={client.id}
+                                onClick={() => handleUserClick(client)}
                             // onMouseEnter={()=>handleMouseEnter(client.id)}
                             >
                                 <ListItemText primary={client.name} />
@@ -136,6 +136,7 @@ const SelectUser_AddCompanySearch = (props) => {
                             onDelete={() => handleDeleteChip(contact.id)}
                             // onMouseEnter={()=> handleMouseEnter(contact.id)}
                             avatar={<Avatar>{contact.name ? contact.name.charAt(0) : ""}</Avatar>}
+                            color={contact.id<100?"primary":undefined}
                         />
                     ))}
                 </div>

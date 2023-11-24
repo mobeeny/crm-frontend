@@ -10,6 +10,7 @@ import dialogFlagsReducer from "../reducers/dialogFlags";
 import projectReducer from "../reducers/project";
 import companiesReducer from "../reducers/companies";
 import companyCrudReducer from "../reducers/companyCrud";
+import selectedCompanyReducer from "../reducers/selectedCompany";
 
 const store = configureStore({
     // reducer: rootReducer,
@@ -24,6 +25,7 @@ const store = configureStore({
         projects:projectReducer,
         companies:companiesReducer,
         companyCrud:companyCrudReducer,
+        selectedCompany:selectedCompanyReducer,
     },
 });
 
