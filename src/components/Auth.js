@@ -30,6 +30,14 @@ export const Auth = () => {
             // Check if the user already exists in the "users" collection
             const usersCollection = collection(db, "users");
             const instancesCollection = collection(db, "instances");
+            
+
+            const newInstanceDoc = doc(instancesCollection, user.uid);
+            const systemDataCollection = collection(newInstanceDoc, "systemData");
+            const sequenceIdsDoc = doc(systemDataCollection, "sequenceIds");
+
+
+
             const userQuery = query(usersCollection, where("email", "==", user.email));
             const querySnapshot = await getDocs(userQuery);
             if (querySnapshot.empty) {
@@ -43,15 +51,23 @@ export const Auth = () => {
                     // You can add more fields as needed
                 };
 
-                const newInstanceDoc = doc(instancesCollection, user.uid);
+                
                 const newInstanceData = {
                     creationDate: new Date().getTime(),
                     email: user.email,
                     // You can add more fields as needed
                 };
+                // const newSysDataDoc = doc(systemDataCollection, "sequenceIds");
+                const newSysData = {
+                    clientSid: 0,
+                    companySid: 0,
+                    quotationSid: 0
+                }
 
                 await addDoc(usersCollection, newUserDoc);
                 await setDoc(newInstanceDoc, newInstanceData);
+                await setDoc(sequenceIdsDoc, newSysData );
+
 
                 console.log("New user document added to Firestore.");
             } else {

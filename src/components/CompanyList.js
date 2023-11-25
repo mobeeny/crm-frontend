@@ -131,8 +131,8 @@ export default function CompanyList() {
     }, []);
 
 
-    const handleCompanySelected = (e) => {
-        const selectedCompanyId = e.row.id;
+    const handleCompanySelected = (id) => {
+        const selectedCompanyId = id;
 
         // If the selected row is already in the selectedRow array, clear the selection
         if (selectedCompanyId1.includes(selectedCompanyId)) {
@@ -150,9 +150,9 @@ export default function CompanyList() {
         <div style={{ height: "auto", width: '98%', margin: "1%" }}>
             {console.log("Data", CompanyList)}
             <EnhancedTableToolbar />
-            <DataGrid onRowClick={(e) => handleCompanySelected(e)}
+            <DataGrid onRowClick={(e, rowData) => handleCompanySelected(rowData.id)}
 
-                rows={companiesList?.map((company) => ({ id: company.companySid, companyName: company.name, ntn: company.ntn, city: company.city, Contact: company.phone, }))}
+                rows={companiesList?.map((company) => ({ id: company.id, sid: company.companySid, companyName: company.name, ntn: company.ntn, city: company.city, Contact: company.phone, }))}
                 columns={columns}
                 initialState={{
                     pagination: {
