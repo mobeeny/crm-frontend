@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const companyCrudSlice = createSlice({
     name: "companyCrud",
     initialState: {
+        companyPrimaryClient:{},
         companyContacts: [],
         createContactId: 0,
        
@@ -14,10 +15,13 @@ const companyCrudSlice = createSlice({
         setCreateContactId(state, action) {
             state.createContactId = action.payload;
         },
+        setcompanyPrimaryClient(state, action) {
+            state.companyPrimaryClient = action.payload;
+        },
        
     },
 });
 
-export const { setCompanyContacts, setCreateContactId,  } = companyCrudSlice.actions;
+export const { setCompanyContacts, setCreateContactId, setcompanyPrimaryClient } = companyCrudSlice.actions;
 
 export default companyCrudSlice.reducer;
