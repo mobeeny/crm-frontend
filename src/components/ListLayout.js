@@ -54,7 +54,7 @@ export default function ListLayout() {
                     <List
                         subheader={
                             <ListSubheader component="div" id="nested-list-subheader">
-                                Client/Projects
+                                Client/Orders
                             </ListSubheader>
                         }
                     >                                  
