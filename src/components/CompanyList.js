@@ -19,10 +19,39 @@ import selectedCompany, { setSelectedCompanyId } from '../redux/reducers/selecte
 import { deleteDoc, doc } from 'firebase/firestore';
 import AddCompanyDialog from './D_NewCompany'
 import { setCompanyDialog } from '../redux/reducers/dialogFlags';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
+
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
+  
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
 
 
 const columns = [
-    { field: 'id', headerName: 'ID', flex: 1, headerClassName: 'bold-header' },
+    { field: 'sid', headerName: 'ID', flex: 1, headerClassName: 'bold-header' },
     {
         field: 'companyName',
         headerName: 'Company Name',
@@ -134,6 +163,7 @@ export default function CompanyList() {
     const handleCompanySelected = (id) => {
         const selectedCompanyId = id;
 
+        console.log("Selected Company: ", selectedCompanyId)
         // If the selected row is already in the selectedRow array, clear the selection
         if (selectedCompanyId1.includes(selectedCompanyId)) {
             dispatch(setSelectedCompanyId([]));
@@ -162,6 +192,33 @@ export default function CompanyList() {
                 pageSizeOptions={[5, 10]}
                 
             />
+            <EnhancedTableToolbar />
+            <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>ID</StyledTableCell>
+            <StyledTableCell align="left">Company Name</StyledTableCell>
+            <StyledTableCell align="left">NTN</StyledTableCell>
+            <StyledTableCell align="left">City</StyledTableCell>
+            <StyledTableCell align="left">Phone</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {companiesList?.map((company) => (
+            <TableRow key={company.companySid} onClick={()=>handleCompanySelected(company.id)}>
+              <TableCell component="th" scope="row">
+                {company.companySid}
+              </TableCell>
+              <StyledTableCell align="left">{company.name}</StyledTableCell>
+              <StyledTableCell align="left">{company.ntn}</StyledTableCell>
+              <StyledTableCell align="left">{company.city}</StyledTableCell>
+              <TableCell align="left">{company.phone}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
 
         </div>
     )
