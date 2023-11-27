@@ -198,6 +198,7 @@ export default function CompanyList() {
                         <TableRow>
                             <StyledTableCell>ID</StyledTableCell>
                             <StyledTableCell align="left">Company Name</StyledTableCell>
+                            <StyledTableCell align="left">Client Name</StyledTableCell>
                             <StyledTableCell align="left">NTN</StyledTableCell>
                             <StyledTableCell align="left">City</StyledTableCell>
                             <StyledTableCell align="left">Phone</StyledTableCell>
@@ -219,7 +220,8 @@ export default function CompanyList() {
                                     <TableCell component="th" scope="row">
                                         {company.companySid}
                                     </TableCell>
-                                    <StyledTableCell  align="left" ><Link to="/details">{company.name}</Link></StyledTableCell>
+                                    <StyledTableCell align="left">{company.name}</StyledTableCell>
+                                    <StyledTableCell align="left">{company.primaryClient.name}</StyledTableCell>
                                     <StyledTableCell align="left">{company.ntn}</StyledTableCell>
                                     <StyledTableCell align="left">{company.city}</StyledTableCell>
                                     <TableCell align="left">{company.phone}</TableCell>

@@ -16,6 +16,7 @@ import SearchClientsCompanyForm from "./SearchClientsCompanyForm";
 import { clearDirectorsNewCompany, setCompanyContacts } from "../redux/reducers/clients";
 import { Divider, Root } from "@mui/material";
 import { setCompanyDialog } from "../redux/reducers/dialogFlags";
+import SetCompanyPrimaryClient from "./SetCompanyPrimaryClient";
 
 export default function AddCompanyDialog() {
     const [fullWidth, setFullWidth] = React.useState(true);
@@ -29,7 +30,8 @@ export default function AddCompanyDialog() {
 
     const [cName, setCName] = useState("");
     const [cEmail, setCEmail] = useState("");
-    const cContacts = useSelector((state) => state.clients.companyContacts);
+    const cPrimaryClient = useSelector((state)=> state.companyCrud.companyPrimaryClient)
+    // const cContacts = useSelector((state) => state.companyCrud.companyContacts);
     const [cNtn, setCNtn] = useState("");
     const [cInc, setCInc] = useState("");
     const [cGST, setCGST] = useState("");
@@ -61,16 +63,20 @@ export default function AddCompanyDialog() {
     const updateClientsCompanyField = async (companyId) => {
         try {
             const batch = writeBatch(db);
-            console.log("COMPANY: Clients: ", cContacts);
+            // console.log("COMPANY: Clients: ", cContacts);
             // Loop through each client id in cContacts and update the "company" field
-            cContacts.forEach((clientObject) => {
-                const clientRef = doc(db, instancesRef + auth.currentUser.uid + "/client/" + clientObject.id);
-                batch.update(clientRef, { company: arrayUnion(companyId) });
-                console.log("COMPANY: LOOP: ", clientRef, clientObject, companyId);
-            });
+            // cContacts.forEach((clientObject) => {
+            //     const clientRef = doc(db, instancesRef + auth.currentUser.uid + "/client/" + clientObject.id);
+            //     batch.update(clientRef, { company: arrayUnion(companyId) });
+            //     console.log("COMPANY: LOOP: ", clientRef, clientObject, companyId);
+            // });
+
+            const clientRef = doc(db, instancesRef + auth.currentUser.uid + "/client/" + cPrimaryClient.id);
+            updateDoc(clientRef, { company: arrayUnion(companyId) } )
+
 
             // Commit the batched write to update all documents at once
-            await batch.commit();
+            // await batch.commit();
 
             console.log("Company field updated for all clients in cContacts array.");
         } catch (error) {
@@ -78,9 +84,9 @@ export default function AddCompanyDialog() {
         }
     };
 
-    useEffect(() => {
-        console.log("New Directors: ", cContacts);
-    }, [cContacts]);
+    // useEffect(() => {
+    //     console.log("New Directors: ", cContacts);
+    // }, [cContacts]);
 
     const onSubmitCompany = async () => {
         let updatedSid; // Define updatedSid variable
@@ -123,7 +129,8 @@ export default function AddCompanyDialog() {
                 cDate: cDateContact,
                 rDate: cDateRegistration,
                 notes: cNotes,
-                contacts: cContacts,
+                // contacts: cContacts,
+                primaryClient: {name: cPrimaryClient.name, id: cPrimaryClient.id},
                 address: cAddress,
                 electricity: cElectricityRefNo,
                 pactivity: cPrincipalActivity,
@@ -178,7 +185,7 @@ export default function AddCompanyDialog() {
                                 variant="standard"
                                 onChange={(e) => setCName(e.target.value)}
                             />
-                            <SearchClientsCompanyForm />
+                            <SetCompanyPrimaryClient />
                        
                         <TextField
                             id="email"
