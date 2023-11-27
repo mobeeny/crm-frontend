@@ -11,6 +11,7 @@ import orderReducer from "../reducers/order";
 import companiesReducer from "../reducers/companies";
 import companyCrudReducer from "../reducers/companyCrud";
 import selectedCompanyReducer from "../reducers/selectedCompany";
+import uiControlsReducer from "../reducers/uiControls";
 
 const store = configureStore({
     // reducer: rootReducer,
@@ -26,6 +27,7 @@ const store = configureStore({
         companies:companiesReducer,
         companyCrud:companyCrudReducer,
         selectedCompany:selectedCompanyReducer,
+        uiControls: uiControlsReducer
     },
 });
 

@@ -13,12 +13,18 @@ import PaymentsIcon from "@mui/icons-material/Paid";
 import Profile from "./Detail_Profile";
 import DataLoader from "./DataLoader";
 import DetailCompany from "./Detail_Company";
+import { useSelector, useDispatch } from "react-redux";
+import { setdetailsSelectedTab } from "../redux/reducers/uiControls";
 
 export default function DetailsLayout() {
-    const [selectedTab, setSelectedTab] = React.useState(0);
+    // const [selectedTab, setSelectedTab] = React.useState(0);
+    const selectedTab = useSelector((state)=>state.uiControls.detailsSelectedTab)
+    const dispatch = useDispatch();
 
     const handleTabChange = (event, newValue) => {
-        setSelectedTab(newValue);
+        // setSelectedTab(newValue);
+        dispatch(setdetailsSelectedTab(newValue))
+        
     };
 
     return (

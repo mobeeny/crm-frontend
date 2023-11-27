@@ -28,7 +28,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import TablePagination from '@mui/material/TablePagination';
-
+import { setdetailsSelectedTab } from '../redux/reducers/uiControls';
+import { useNavigate } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -145,6 +146,7 @@ export default function CompanyList() {
     const companyRef = collection(db, instancesRef + auth.currentUser.uid + "/company");
     const companiesList = useSelector((state) => state.companies.companies);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
 
     const getCompany = async () => {
@@ -187,6 +189,14 @@ export default function CompanyList() {
         setPage(0);
     };
 
+    const handleClick = (path, tabIndex) => {
+        // Dispatch your Redux actions before navigating
+        dispatch(setdetailsSelectedTab(tabIndex))
+        // Navigate to the /clients route
+        navigate(path);
+      };
+    
+
     return (
         <div style={{ height: "auto", width: '98%', margin: "1%" }}>
             {console.log("Data", CompanyList)}
@@ -220,8 +230,8 @@ export default function CompanyList() {
                                     <TableCell component="th" scope="row">
                                         {company.companySid}
                                     </TableCell>
-                                    <StyledTableCell align="left">{company.name}</StyledTableCell>
-                                    <StyledTableCell align="left">{company.primaryClient.name}</StyledTableCell>
+                                    <StyledTableCell align="left" onClick={()=>handleClick("/details", 1)}>{company.name}</StyledTableCell>
+                                    <StyledTableCell align="left" onClick={()=>handleClick("/details", 0)}>{company.primaryClient.name}</StyledTableCell>
                                     <StyledTableCell align="left">{company.ntn}</StyledTableCell>
                                     <StyledTableCell align="left">{company.city}</StyledTableCell>
                                     <TableCell align="left">{company.phone}</TableCell>
