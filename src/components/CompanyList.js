@@ -27,27 +27,28 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
+import TablePagination from '@mui/material/TablePagination';
 
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
+        backgroundColor: theme.palette.common.black,
+        color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
+        fontSize: 14,
     },
-  }));
-  
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
+        backgroundColor: theme.palette.action.hover,
     },
     // hide last border
     '&:last-child td, &:last-child th': {
-      border: 0,
+        border: 0,
     },
-  }));
+}));
 
 
 const columns = [
@@ -82,8 +83,8 @@ function EnhancedTableToolbar() {
 
 
     const handleEdit = () => {
-      dispatch(setCompanyDialog(true))
- 
+        dispatch(setCompanyDialog(true))
+
     };
 
 
@@ -122,7 +123,7 @@ function EnhancedTableToolbar() {
             {selectedCompanyId.length > 0 ? (
                 <Tooltip title="Edit">
                     <IconButton >
-                        <EditIcon  onClick={handleEdit}/>
+                        <EditIcon onClick={handleEdit} />
                     </IconButton>
                 </Tooltip>
             ) : (
@@ -137,7 +138,10 @@ function EnhancedTableToolbar() {
 }
 
 export default function CompanyList() {
-    const selectedCompanyId1= useSelector((state) => state.selectedCompany.selectedCompanyId);
+
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const selectedCompanyId1 = useSelector((state) => state.selectedCompany.selectedCompanyId);
     const companyRef = collection(db, instancesRef + auth.currentUser.uid + "/company");
     const companiesList = useSelector((state) => state.companies.companies);
     const dispatch = useDispatch();
@@ -174,51 +178,66 @@ export default function CompanyList() {
     };
 
 
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
 
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     return (
         <div style={{ height: "auto", width: '98%', margin: "1%" }}>
             {console.log("Data", CompanyList)}
-            <EnhancedTableToolbar />
-            <DataGrid onRowClick={(e, rowData) => handleCompanySelected(rowData.id)}
 
-                rows={companiesList?.map((company) => ({ id: company.id, sid: company.companySid, companyName: company.name, ntn: company.ntn, city: company.city, Contact: company.phone, }))}
-                columns={columns}
-                initialState={{
-                    pagination: {
-                        paginationModel: { page: 0, pageSize: 13 },
-                    },
-                }}
-                pageSizeOptions={[5, 10]}
-                
-            />
             <EnhancedTableToolbar />
             <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>ID</StyledTableCell>
-            <StyledTableCell align="left">Company Name</StyledTableCell>
-            <StyledTableCell align="left">NTN</StyledTableCell>
-            <StyledTableCell align="left">City</StyledTableCell>
-            <StyledTableCell align="left">Phone</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {companiesList?.map((company) => (
-            <TableRow key={company.companySid} onClick={()=>handleCompanySelected(company.id)}>
-              <TableCell component="th" scope="row">
-                {company.companySid}
-              </TableCell>
-              <StyledTableCell align="left">{company.name}</StyledTableCell>
-              <StyledTableCell align="left">{company.ntn}</StyledTableCell>
-              <StyledTableCell align="left">{company.city}</StyledTableCell>
-              <TableCell align="left">{company.phone}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+                <Table sx={{ minWidth: 700 }} aria-label="customized table" >
+                    <TableHead>
+                        <TableRow>
+                            <StyledTableCell>ID</StyledTableCell>
+                            <StyledTableCell align="left">Company Name</StyledTableCell>
+                            <StyledTableCell align="left">NTN</StyledTableCell>
+                            <StyledTableCell align="left">City</StyledTableCell>
+                            <StyledTableCell align="left">Phone</StyledTableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {companiesList
+                            ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // Use slice to get the rows for the current page
+                            .map((company) => (
+                                <TableRow
+                                    key={company.companySid}
+                                    onClick={() => handleCompanySelected(company.id)}
+                                    hover
+                                    style={{
+                                        backgroundColor: selectedCompanyId1.includes(company.id)
+                                            ? 'rgba(173, 216, 230, 0.5)' // Light blue color for selected row
+                                            : 'inherit', // Default background color
+                                    }}>
+                                    <TableCell component="th" scope="row">
+                                        {company.companySid}
+                                    </TableCell>
+                                    <StyledTableCell align="left">{company.name}</StyledTableCell>
+                                    <StyledTableCell align="left">{company.ntn}</StyledTableCell>
+                                    <StyledTableCell align="left">{company.city}</StyledTableCell>
+                                    <TableCell align="left">{company.phone}</TableCell>
+                                </TableRow>
+                            ))}
+                    </TableBody>
+                </Table>
+                <TablePagination
+                    rowsPerPageOptions={[5, 13, 25]}
+                    component="div"
+                    count={companiesList.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+
+                />
+            </TableContainer>
 
         </div>
     )
