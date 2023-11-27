@@ -28,7 +28,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import TablePagination from '@mui/material/TablePagination';
-
+import { Link } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -219,7 +219,7 @@ export default function CompanyList() {
                                     <TableCell component="th" scope="row">
                                         {company.companySid}
                                     </TableCell>
-                                    <StyledTableCell align="left">{company.name}</StyledTableCell>
+                                    <StyledTableCell  align="left" ><Link to="/details">{company.name}</Link></StyledTableCell>
                                     <StyledTableCell align="left">{company.ntn}</StyledTableCell>
                                     <StyledTableCell align="left">{company.city}</StyledTableCell>
                                     <TableCell align="left">{company.phone}</TableCell>
