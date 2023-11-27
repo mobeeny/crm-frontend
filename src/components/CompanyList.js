@@ -6,7 +6,7 @@ import { collection } from 'firebase/firestore';
 import client from '../data/clients';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { setSelectedUserCompanies, setClient, } from "../redux/reducers/clients";
+import { setSelectedUserCompanies, setClient} from "../redux/reducers/clients";
 import { setCompanies } from '../redux/reducers/companies';
 import { alpha } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import selectedCompany, { setSelectedCompanyId } from '../redux/reducers/selectedCompany';
+import  {setSelectedCompany } from '../redux/reducers/selectedCompany';
 import { deleteDoc, doc } from 'firebase/firestore';
 import AddCompanyDialog from './D_NewCompany'
 import { setCompanyDialog } from '../redux/reducers/dialogFlags';
@@ -166,17 +166,10 @@ export default function CompanyList() {
     }, []);
 
 
-    const handleCompanySelected = (id) => {
-        const selectedCompanyId = id;
+    const handleCompanySelected = (company) => {
+        console.log("Selected Company:", company )
+        dispatch(setSelectedCompany(company));
 
-        console.log("Selected Company: ", selectedCompanyId)
-        // If the selected row is already in the selectedRow array, clear the selection
-        if (selectedCompanyId1.includes(selectedCompanyId)) {
-            dispatch(setSelectedCompanyId([]));
-        } else {
-            // If the selected row is not in the selectedRow array, clear the previous selection and select the new row
-            dispatch(setSelectedCompanyId([selectedCompanyId]));
-        }
     };
 
 
@@ -220,7 +213,7 @@ export default function CompanyList() {
                             .map((company) => (
                                 <TableRow
                                     key={company.companySid}
-                                    onClick={() => handleCompanySelected(company.id)}
+                                    onClick={() => handleCompanySelected(company)}
                                     hover
                                     style={{
                                         backgroundColor: selectedCompanyId1.includes(company.id)

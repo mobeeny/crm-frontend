@@ -7,6 +7,7 @@ import Settings from "../components/Settings";
 import PrimaryActions from "../components/PrimaryActions";
 import ClientList from "../components/ClientsLIst";
 import CompanyList from "../components/CompanyList";
+import DetailsLayout from "../components/DetailsLayout";
 
 function Index(props) {
   return useRoutes([
@@ -38,6 +39,10 @@ function Index(props) {
         {
           path: "quotation",
           element: <CompanyList/>,
+        },
+        {
+          path: "details",
+          element: <DetailsLayout/>,
         },
       ], 
     },
