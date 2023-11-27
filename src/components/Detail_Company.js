@@ -17,7 +17,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import ClientCompanies from "./ClientCompanies";
 
 function DetailCompany() {
-    const selectedCompany = useSelector((state) => state.clients.selectedCompany);
+    const selectedCompany = useSelector((state) => state.selectedCompany.selectedCompany);
     let currentCompany = selectedCompany || {};
 
     useEffect(() => {
