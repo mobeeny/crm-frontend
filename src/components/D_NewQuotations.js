@@ -317,7 +317,7 @@ export default function AddQuotaionDialog() {
 
 
 
-                        {quotation.productName.length > 0 ? <Typography style={{ fontSize: 18 }}>Project Timeline</Typography> : null}
+                        {quotation.productName.length > 0 ? <Typography style={{ fontSize: 18 }}>Order Timeline</Typography> : null}
 
                         {quotation.productName.map((productName, index) => (
                             <TextField

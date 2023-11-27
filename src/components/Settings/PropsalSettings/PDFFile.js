@@ -146,7 +146,7 @@ const PDFFile = () => {
                             </div>
 
                             <div className="timeline">
-                                <h3>4 -Timeline of the project</h3>
+                                <h3>4 -Timeline of the order</h3>
                                 <ul>
                                     <li>
                                         <Typography style={{ fontSize: '18px', margin: "1%", wordWrap: 'break-word', overflowWrap: "break-word" }}>Product Title 1:</Typography>

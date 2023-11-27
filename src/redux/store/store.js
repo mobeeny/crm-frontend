@@ -7,7 +7,7 @@ import clientsReducer from "../reducers/clients";
 import configReducer from "../reducers/config";
 import proposalReducer from "../reducers/proposal";
 import dialogFlagsReducer from "../reducers/dialogFlags";
-import projectReducer from "../reducers/project";
+import orderReducer from "../reducers/order";
 import companiesReducer from "../reducers/companies";
 import companyCrudReducer from "../reducers/companyCrud";
 import selectedCompanyReducer from "../reducers/selectedCompany";
@@ -22,7 +22,7 @@ const store = configureStore({
         config: configReducer,
         proposal: proposalReducer,
         dialogs: dialogFlagsReducer,
-        projects:projectReducer,
+        orders:orderReducer,
         companies:companiesReducer,
         companyCrud:companyCrudReducer,
         selectedCompany:selectedCompanyReducer,

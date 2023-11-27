@@ -43,10 +43,10 @@ import ShareIcon from '@mui/icons-material/Share';
 import ProfileIcon from "@mui/icons-material/Person2";
 import CompanyIcon from "@mui/icons-material/Business";
 import AddClientDialog from "./D_NewClient";
-import { setClientDialog, setCompanyDialog, setProjectDialog, setQuotationDialog, setInvoiceDialog, setPaymentDialog } from "../redux/reducers/dialogFlags";
+import { setClientDialog, setCompanyDialog, setOrderDialog, setQuotationDialog, setInvoiceDialog, setPaymentDialog } from "../redux/reducers/dialogFlags";
 import AddCompanyDialog from "./D_NewCompany";
 import TaskIcon from "@mui/icons-material/TaskAlt";
-import AddProjectDialog from "./D_NewProjects";
+import AddOrderDialog from "./D_NewOrders";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
 import AddQuotationDialog from './D_NewQuotations'
 import AddInvoiceDialog from "./D_NewInvoices";
@@ -196,7 +196,7 @@ export default function Layout() {
 
     const [anchorClient, setAnchorClient] = useState(null);
     const [anchorCompany, setAnchorCompany] = useState(null);
-    const [anchorProject, setAnchorProject] = useState(null);
+    const [anchorOrder, setAnchorOrder] = useState(null);
     const [anchorQuotation, setAnchorQuotation] = useState(null);
 
 
@@ -211,7 +211,7 @@ export default function Layout() {
 
     const openMenu = Boolean(anchorClient);
     const openMenu1 = Boolean(anchorCompany);
-    const openMenu2 = Boolean(anchorProject);
+    const openMenu2 = Boolean(anchorOrder);
     const openMenu3 = Boolean(anchorQuotation);
 
 
@@ -265,7 +265,7 @@ export default function Layout() {
                                 }
                             />
                             <Tab
-                                onClick={(event) => setAnchorProject(event.currentTarget)}
+                                onClick={(event) => setAnchorOrder(event.currentTarget)}
 
                                 style={{
                                     textTransform: 'none',
@@ -279,7 +279,7 @@ export default function Layout() {
                                 }}
                                 label={
                                     <>
-                                        Projects
+                                        Orders
                                         <ArrowDropDownIcon />
                                     </>
                                 }
@@ -342,8 +342,8 @@ export default function Layout() {
 
                         <Popover
                             open={openMenu2}
-                            anchorEl={anchorProject}
-                            onClose={() => setAnchorProject(null)}
+                            anchorEl={anchorOrder}
+                            onClose={() => setAnchorOrder(null)}
                             anchorOrigin={{
                                 vertical: 'bottom',
                                 horizontal: 'center',
@@ -353,7 +353,7 @@ export default function Layout() {
                                 horizontal: 'center',
                             }}
                         >
-                            <MenuItem onClick={handleCloseMenu}>All projects</MenuItem>
+                            <MenuItem onClick={handleCloseMenu}>All orders</MenuItem>
 
                         </Popover>
                         <Popover
@@ -474,13 +474,13 @@ export default function Layout() {
 
 
                     <SpeedDialAction
-                        key={"project"}
+                        key={"order"}
                         icon={<TaskIcon />}
-                        tooltipTitle={"Project"}
+                        tooltipTitle={"Order"}
                         tooltipOpen
-                        onClick={() => dispatch(setProjectDialog(true))}
+                        onClick={() => dispatch(setOrderDialog(true))}
                     />
-                    <AddProjectDialog />
+                    <AddOrderDialog />
 
 
 

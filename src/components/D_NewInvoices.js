@@ -20,7 +20,7 @@ export default function AddInvoiceDialog() {
     // const username = useSelector((state) => state.config.username);
 
     const [client, setClient] = useState();
-    const [project, setProject] = useState();
+    const [order, setOrder] = useState();
     const [invoiceDate, setInvoiceDate] = useState();
     const [dueDate, setDueDate] = useState();
     const [total, setTotal] = useState();
@@ -42,7 +42,7 @@ export default function AddInvoiceDialog() {
             await addDoc(invoiceCollectionRef, {
 
                 client: client,
-                project: project,
+                order: order,
                 invoiceDate: invoiceDate,
                 dueDate: dueDate,
                 total: total,
@@ -97,11 +97,11 @@ export default function AddInvoiceDialog() {
 
 
                         <TextField
-                            id="project"
-                            label="Project"
+                            id="order"
+                            label="Order"
                             type="email"
                             variant="standard"
-                            onChange={(e) => setProject(e.target.value)}
+                            onChange={(e) => setOrder(e.target.value)}
                         />
                         <TextField
                             id="date"

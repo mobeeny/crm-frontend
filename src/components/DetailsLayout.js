@@ -6,7 +6,7 @@ import { Alert, Grid } from "@mui/material";
 import PhoneIcon from "@mui/icons-material/Phone";
 import ProfileIcon from "@mui/icons-material/Person2";
 import CompanyIcon from "@mui/icons-material/Business";
-import ProjectIcon from "@mui/icons-material/AccountTree";
+import OrderIcon from "@mui/icons-material/AccountTree";
 import QuoteIcon from "@mui/icons-material/RequestQuote";
 import InvoiceIcon from "@mui/icons-material/Receipt";
 import PaymentsIcon from "@mui/icons-material/Paid";
@@ -36,7 +36,7 @@ export default function DetailsLayout() {
                     >
                         <Tab icon={<ProfileIcon />} label="Profile" />
                         <Tab icon={<CompanyIcon />} label="Company" />
-                        <Tab icon={<ProjectIcon />} label="Projects" />
+                        <Tab icon={<OrderIcon />} label="Orders" />
                         <Tab icon={<QuoteIcon />} label="Quotes" />
                         <Tab icon={<InvoiceIcon />} label="Invoices" />
                         <Tab icon={<PaymentsIcon />} label="Payments" />
@@ -51,7 +51,7 @@ export default function DetailsLayout() {
                     ) : selectedTab == 1 ? (
                         <DetailCompany sx={{ textAlign: "left", margin: 2 }} />
                     ) : selectedTab == 2 ? (
-                        <>Projects</>
+                        <>Orders</>
                     ) : selectedTab == 3 ? (
                         <>Quotes</>
                     ) : selectedTab == 4 ? (

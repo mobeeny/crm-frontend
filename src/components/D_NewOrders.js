@@ -12,27 +12,27 @@ import { getDoc, collection, writeBatch, arrayUnion, addDoc, doc, updateDoc } fr
 import { useSelector, useDispatch } from "react-redux";
 import SearchClientsCompanyForm from "./SearchClientsCompanyForm";
 import { Divider, } from "@mui/material";
-import { setCompanyDialog, setProjectDialog } from "../redux/reducers/dialogFlags";
+import { setCompanyDialog, setOrderDialog } from "../redux/reducers/dialogFlags";
 import SearchClientField from "./SearchClientField";
 
 
-export default function AddProjectDialog() {
+export default function AddOrderDialog() {
     const [fullWidth, setFullWidth] = React.useState(true);
     const [maxWidth, setMaxWidth] = React.useState('sm');
     // const username = useSelector((state) => state.config.username);
-    const [projectTitle, setProjectTitle] = useState();
+    const [orderTitle, setOrderTitle] = useState();
     const [productInvolved, setProductInvolved] = useState();
     const [client, setClient] = useState();
     const [company, setCompany] = useState();
-    const [projectTimeline, setProjectTimeline] = useState();
+    const [orderTimeline, setOrderTimeline] = useState();
     const [dueAmount, setDueAmount] = useState();
     const [paidAmount, setPaidAmount] = useState();
 
 
 
-    const projectCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/project");
+    const orderCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/order");
 
-    const projectDialogOpen = useSelector((state) => state.dialogs.projectDialogOpen);
+    const orderDialogOpen = useSelector((state) => state.dialogs.orderDialogOpen);
     const dispatch = useDispatch();
 
 
@@ -41,17 +41,17 @@ export default function AddProjectDialog() {
     // };
 
     const handleClose = () => {
-        dispatch(setProjectDialog(false));
+        dispatch(setOrderDialog(false));
     };
 
-    const onSubmitProject = async () => {
+    const onSubmitOrder = async () => {
         try {
-            await addDoc(projectCollectionRef, {
-                title: projectTitle,
+            await addDoc(orderCollectionRef, {
+                title: orderTitle,
                 productInvolved: productInvolved,
                 client: client,
                 company: company,
-                projectTimeline: projectTimeline,
+                orderTimeline: orderTimeline,
                 dueAmount: dueAmount,
                 paidAmount: paidAmount
             })
@@ -64,11 +64,11 @@ export default function AddProjectDialog() {
     return (
         <div>
 
-            <Dialog open={projectDialogOpen} onClose={handleClose}
+            <Dialog open={orderDialogOpen} onClose={handleClose}
                 fullWidth={fullWidth}
                 maxWidth={maxWidth}
             >
-                <DialogTitle>Add New Project</DialogTitle>
+                <DialogTitle>Add New Order</DialogTitle>
                 <DialogContent>
                     {/* <DialogContentText>
                         
@@ -83,11 +83,11 @@ export default function AddProjectDialog() {
                     >
                         <TextField
                             autoFocus
-                            id="project"
-                            label="Project Title"
+                            id="order"
+                            label="Order Title"
                             type="name"
                             variant="standard"
-                            onChange={(e) => setProjectTitle(e.target.value)}
+                            onChange={(e) => setOrderTitle(e.target.value)}
                         />
 
                         <TextField
@@ -107,11 +107,11 @@ export default function AddProjectDialog() {
                                 onChange={(e) => setCompany(e.target.value)}
                             />
                             <TextField
-                                id="projectTimeline"
-                                label="Project Timeline"
+                                id="orderTimeline"
+                                label="Order Timeline"
                                 type="phone"
                                 variant="standard"
-                                onChange={(e) => setProjectTimeline(e.target.value)}
+                                onChange={(e) => setOrderTimeline(e.target.value)}
                             />
                             <TextField
                                 id="dueAmount"
@@ -132,8 +132,8 @@ export default function AddProjectDialog() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" onClick={onSubmitProject}>
-                        Add Project
+                    <Button variant="contained" onClick={onSubmitOrder}>
+                        Add Order
                     </Button>
                 </DialogActions>
             </Dialog>

@@ -5,7 +5,7 @@ const dialogFlagSlice = createSlice({
     initialState: {
         clientDialogOpen: false,
         companyDialogOpen: false,
-        projectDialogOpen: false,
+        orderDialogOpen: false,
         quotationDialogOpen: false,
         invoiceDialogOpen: false,
         paymentDialogOpen: false,
@@ -18,8 +18,8 @@ const dialogFlagSlice = createSlice({
         setCompanyDialog(state, action) {
             state.companyDialogOpen = action.payload;
         },
-        setProjectDialog(state, action) {
-            state.projectDialogOpen = action.payload;
+        setOrderDialog(state, action) {
+            state.orderDialogOpen = action.payload;
         },
         setQuotationDialog(state, action) {
             state.quotationDialogOpen = action.payload;
@@ -36,6 +36,6 @@ const dialogFlagSlice = createSlice({
     },
 });
 
-export const { setClientDialog, setCompanyDialog, setProjectDialog, setQuotationDialog, setInvoiceDialog, setPaymentDialog,setSpeedDialDialog } = dialogFlagSlice.actions;
+export const { setClientDialog, setCompanyDialog, setOrderDialog, setQuotationDialog, setInvoiceDialog, setPaymentDialog,setSpeedDialDialog } = dialogFlagSlice.actions;
 
 export default dialogFlagSlice.reducer;
