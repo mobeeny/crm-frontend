@@ -9,21 +9,59 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Alert, Box, FormControl, InputLabel, Snackbar, TextField } from "@mui/material";
-import { setSelectedClient, setUpdatedClient, setSelectedCompany } from "../redux/reducers/clients";
+import { setSelectedCompany, setSelectedCompanyId } from "../redux/reducers/selectedCompany";
 import { db, instancesRef, auth } from "../config/firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { collection, doc, updateDoc, getDoc } from "firebase/firestore";
 import { current } from "@reduxjs/toolkit";
 import SaveIcon from "@mui/icons-material/Save";
 import ClientCompanies from "./ClientCompanies";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
 
 function DetailCompany() {
     const selectedCompany = useSelector((state) => state.selectedCompany.selectedCompany);
+    const selectedCompanyId = useSelector((state) => state.selectedCompany.selectedCompanyId);
+    const selectedClientId = useSelector((state) => state.selectedClient.selectedClientId);
+    const [companyList, setCompanyList] = useState([]);
     let currentCompany = selectedCompany || {};
 
     useEffect(() => {
         currentCompany = selectedCompany || {};
         console.log("CHANGED CURRENT COMPANY: ", currentCompany);
     }, [selectedCompany]);
+
+    const getCompaniesList = async () => {
+        try {
+            const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
+            const childCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/company");
+            const clientDocRef = doc(clientCollectionRef, selectedClientId);
+
+            const itemList = [];
+            const docSnapShot = await getDoc(clientDocRef);
+            if (docSnapShot.exists()) {
+                // dispatch(setSelectedClient(docSnapShot.data()))
+                const childListIds = docSnapShot.data().company;
+
+                for (const childId of childListIds) {
+                    const childDocRef = doc(childCollectionRef, childId);
+                    const childDoc = await getDoc(childDocRef);
+                    itemList.push({
+                        id: childId,
+                        sid: childDoc.data().companySid ? childDoc.data().companySid : "NA",
+                        title: childDoc.data().name,
+                    });
+                }
+                //Set the fetched child list to component's hook
+                setCompanyList(itemList);
+            }
+        } catch (err) {
+            console.log("error", err);
+        }
+    };
+
+    useEffect(() => {
+        getCompaniesList();
+    }, []);
 
     // const username = useSelector((state) => state.config.username);
 
@@ -41,6 +79,11 @@ function DetailCompany() {
         dispatch(setSelectedCompany(currentCompany));
         console.log("CURRENT COMPANY UPDATED:", currentCompany);
     };
+
+    const handleDropDownChange = (e) => {
+        dispatch(setSelectedCompanyId(e.target.value));
+    };
+
     const updateCompanyProfile = async (id) => {
         const companyDoc = doc(db, instancesRef + auth.currentUser.uid + "/company", id);
         await updateDoc(companyDoc, currentCompany);
@@ -48,15 +91,43 @@ function DetailCompany() {
         setToastOpen(true);
     };
 
-    if (!currentCompany) {
-        return null; // Or show a loading indicator, error message, etc.
-    }
+    const getCompanyData = async () => {
+        try {
+            const companyCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/company");
+            const companyDocRef = doc(companyCollectionRef, selectedCompanyId);
+            const docSnapShot = await getDoc(companyDocRef);
+            if (docSnapShot.exists()) {
+                dispatch(setSelectedCompany(docSnapShot.data()));
+            }
+        } catch (err) {
+            console.log("error", err);
+        }
+    };
+
+    useEffect(() => {
+        getCompanyData();
+    }, [selectedCompanyId]);
 
     return (
         <div>
-            <ClientCompanies />
+            {/* <ClientCompanies /> */}
+
             <Card width="100%">
-                <CardMedia sx={{ height: 40 }} image="/static/images/banner1.jpg" title="green iguana" />
+                <CardMedia sx={{ height: 40 }} image="/static/images/banner1.jpg" title="" />
+                <FormControl variant="filled" sx={{ m: 1, minWidth: 320 }}>
+                    <InputLabel id="demo-simple-select-standard-label">Companies</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-standard-label"
+                        id="demo-simple-select-standard"
+                        // value={age}
+                        onChange={handleDropDownChange} //={dispatch(setSelectedCompanyId(company.id))}
+                        label="Age"
+                    >
+                        {companyList.map((company) => (
+                            <MenuItem value={company.id}>{company.sid + " - " + company.title}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
                 <CardContent>
                     <Box
                         component="form"
@@ -116,7 +187,7 @@ function DetailCompany() {
                                 shrink: true,
                             }}
                         />
-                          <TextField
+                        <TextField
                             id="inc"
                             label="Inc #"
                             type="name"
@@ -205,7 +276,7 @@ function DetailCompany() {
                                 shrink: true,
                             }}
                         />
-                         <TextField
+                        <TextField
                             id="bankAcc"
                             label="Account No"
                             type="name"
@@ -216,7 +287,7 @@ function DetailCompany() {
                                 shrink: true,
                             }}
                         />
-                         <TextField
+                        <TextField
                             id="bankCode"
                             label="Branch Code"
                             type="name"
