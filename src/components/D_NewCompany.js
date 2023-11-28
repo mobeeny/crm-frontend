@@ -130,7 +130,7 @@ export default function AddCompanyDialog() {
                 rDate: cDateRegistration,
                 notes: cNotes,
                 // contacts: cContacts,
-                primaryClient: {name: cPrimaryClient.name, id: cPrimaryClient.id},
+                primaryClientId: cPrimaryClient.id,
                 address: cAddress,
                 electricity: cElectricityRefNo,
                 pactivity: cPrincipalActivity,

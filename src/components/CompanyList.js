@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import  {setSelectedCompany } from '../redux/reducers/selectedCompany';
+import  {setSelectedCompany, setSelectedCompanyId } from '../redux/reducers/selectedCompany';
 import { deleteDoc, doc } from 'firebase/firestore';
 import AddCompanyDialog from './D_NewCompany'
 import { setCompanyDialog } from '../redux/reducers/dialogFlags';
@@ -30,6 +30,7 @@ import { styled } from '@mui/material/styles';
 import TablePagination from '@mui/material/TablePagination';
 import { setdetailsSelectedTab } from '../redux/reducers/uiControls';
 import { useNavigate } from 'react-router-dom';
+import { setSelectedClientId } from '../redux/reducers/selectedClient';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -138,7 +139,11 @@ export default function CompanyList() {
 
     const handleCompanySelected = (company) => {
         console.log("Selected Company:", company )
+
+        dispatch(setSelectedCompanyId(company.id))
         dispatch(setSelectedCompany(company));
+        
+        dispatch(setSelectedClientId(company.primaryClientId))
 
     };
 
@@ -171,7 +176,6 @@ export default function CompanyList() {
                         <TableRow>
                             <StyledTableCell>ID</StyledTableCell>
                             <StyledTableCell align="left">Company Name</StyledTableCell>
-                            <StyledTableCell align="left">Client Name</StyledTableCell>
                             <StyledTableCell align="left">NTN</StyledTableCell>
                             <StyledTableCell align="left">City</StyledTableCell>
                             <StyledTableCell align="left">Phone</StyledTableCell>
@@ -194,7 +198,7 @@ export default function CompanyList() {
                                         {company.companySid}
                                     </TableCell>
                                     <StyledTableCell align="left" onClick={()=>handleClick("/details", 1)}>{company.name}</StyledTableCell>
-                                    <StyledTableCell align="left" onClick={()=>handleClick("/details", 0)}>{company.primaryClient.name}</StyledTableCell>
+                                    
                                     <StyledTableCell align="left">{company.ntn}</StyledTableCell>
                                     <StyledTableCell align="left">{company.city}</StyledTableCell>
                                     <TableCell align="left">{company.phone}</TableCell>
