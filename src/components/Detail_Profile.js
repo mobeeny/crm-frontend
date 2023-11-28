@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { increment, decrement } from "../redux/reducers/counter";
 import Card from "@mui/material/Card";
@@ -8,14 +8,17 @@ import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Alert, Box, FormControl, InputLabel, Snackbar, TextField } from "@mui/material";
-import { setSelectedClient, setUpdatedClient } from "../redux/reducers/clients";
+import { setUpdatedClient } from "../redux/reducers/clients";
 import { db, instancesRef, auth } from "../config/firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { current } from "@reduxjs/toolkit";
 import SaveIcon from "@mui/icons-material/Save";
+import { setSelectedClient } from "../redux/reducers/selectedClient";
+
 
 function Profile() {
-    let currentClient = useSelector((state) => state.clients.selectedClient);
+    const selectedClientId = useSelector((state) => state.selectedClient.selectedClientId)
+    let currentClient = useSelector((state) => state.selectedClient.selectedClient);
     // const username = useSelector((state) => state.config.username);
 
     const dispatch = useDispatch();
@@ -39,9 +42,26 @@ function Profile() {
         // getMovies();
     };
 
-    if (!currentClient) {
-        return null; // Or show a loading indicator, error message, etc.
+    // if (!currentClient) {
+    //     return null; // Or show a loading indicator, error message, etc.
+    // }
+
+    const getClientData = async () => {
+        try {
+            const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
+            const clientDocRef = doc(clientCollectionRef, selectedClientId)
+            const docSnapShot = await getDoc(clientDocRef)
+            if (docSnapShot.exists()) {
+                dispatch(setSelectedClient(docSnapShot.data()))
+            }
+        } catch (err) {
+            console.log("error", err)
+        }
     }
+
+    useEffect(() => {
+        getClientData()
+    }, [selectedClientId]);
 
     return (
         <div>

@@ -64,7 +64,7 @@ export default function ListLayout() {
                                     <ListItem
                                         onClick={() => {
                                             console.log("Client Clicked", client, client.name);
-                                            dispatch(setSelectedClient(client));
+                                            // dispatch(setSelectedClient(client));
                                             dispatch(setSelectedUserCompaniesIds(client.company));
                                         }}
                                     >
