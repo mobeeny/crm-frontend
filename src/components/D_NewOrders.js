@@ -11,14 +11,12 @@ import { auth, db, instancesRef } from "../config/firebase";
 import { getDoc, collection, writeBatch, arrayUnion, addDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
 import SearchClientsCompanyForm from "./SearchClientsCompanyForm";
-import { Divider, } from "@mui/material";
+import { Divider } from "@mui/material";
 import { setCompanyDialog, setOrderDialog } from "../redux/reducers/dialogFlags";
-import SearchClientField from "./SearchClientField";
-
 
 export default function AddOrderDialog() {
     const [fullWidth, setFullWidth] = React.useState(true);
-    const [maxWidth, setMaxWidth] = React.useState('sm');
+    const [maxWidth, setMaxWidth] = React.useState("sm");
     // const username = useSelector((state) => state.config.username);
     const [orderTitle, setOrderTitle] = useState();
     const [productInvolved, setProductInvolved] = useState();
@@ -28,13 +26,10 @@ export default function AddOrderDialog() {
     const [dueAmount, setDueAmount] = useState();
     const [paidAmount, setPaidAmount] = useState();
 
-
-
     const orderCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/order");
 
     const orderDialogOpen = useSelector((state) => state.dialogs.orderDialogOpen);
     const dispatch = useDispatch();
-
 
     // const handleClickOpen = () => {
     //     setOpen(true);
@@ -53,21 +48,17 @@ export default function AddOrderDialog() {
                 company: company,
                 orderTimeline: orderTimeline,
                 dueAmount: dueAmount,
-                paidAmount: paidAmount
-            })
+                paidAmount: paidAmount,
+            });
         } catch (error) {
-            console.log("error in writing data")
+            console.log("error in writing data");
         }
         handleClose();
-    }
+    };
 
     return (
         <div>
-
-            <Dialog open={orderDialogOpen} onClose={handleClose}
-                fullWidth={fullWidth}
-                maxWidth={maxWidth}
-            >
+            <Dialog open={orderDialogOpen} onClose={handleClose} fullWidth={fullWidth} maxWidth={maxWidth}>
                 <DialogTitle>Add New Order</DialogTitle>
                 <DialogContent>
                     {/* <DialogContentText>
@@ -97,37 +88,35 @@ export default function AddOrderDialog() {
                             variant="standard"
                             onChange={(e) => setProductInvolved(e.target.value)}
                         />
-                        <SearchClientField/>
 
-                            <TextField
-                                id="company"
-                                label="Company"
-                                fullWidth
-                                variant="standard"
-                                onChange={(e) => setCompany(e.target.value)}
-                            />
-                            <TextField
-                                id="orderTimeline"
-                                label="Order Timeline"
-                                type="phone"
-                                variant="standard"
-                                onChange={(e) => setOrderTimeline(e.target.value)}
-                            />
-                            <TextField
-                                id="dueAmount"
-                                label="Amount Due"
-                                type="name"
-                                variant="standard"
-                                onChange={(e) => setDueAmount(e.target.value)}
-                            />
-                            <TextField
-                                id="paidAmount"
-                                label="Paid Amount"
-                                type="name"
-                                variant="standard"
-                                onChange={(e) => setPaidAmount(e.target.value)}
-                            />
-
+                        <TextField
+                            id="company"
+                            label="Company"
+                            fullWidth
+                            variant="standard"
+                            onChange={(e) => setCompany(e.target.value)}
+                        />
+                        <TextField
+                            id="orderTimeline"
+                            label="Order Timeline"
+                            type="phone"
+                            variant="standard"
+                            onChange={(e) => setOrderTimeline(e.target.value)}
+                        />
+                        <TextField
+                            id="dueAmount"
+                            label="Amount Due"
+                            type="name"
+                            variant="standard"
+                            onChange={(e) => setDueAmount(e.target.value)}
+                        />
+                        <TextField
+                            id="paidAmount"
+                            label="Paid Amount"
+                            type="name"
+                            variant="standard"
+                            onChange={(e) => setPaidAmount(e.target.value)}
+                        />
                     </Box>
                 </DialogContent>
                 <DialogActions>

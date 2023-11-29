@@ -15,9 +15,8 @@ import { current } from "@reduxjs/toolkit";
 import SaveIcon from "@mui/icons-material/Save";
 import { setSelectedClient } from "../redux/reducers/selectedClient";
 
-
 function Profile() {
-    const selectedClientId = useSelector((state) => state.selectedClient.selectedClientId)
+    const selectedClientId = useSelector((state) => state.selectedClient.selectedClientId);
     let currentClient = useSelector((state) => state.selectedClient.selectedClient);
     // const username = useSelector((state) => state.config.username);
 
@@ -37,7 +36,7 @@ function Profile() {
     const updateClientProfile = async (id) => {
         const clientDoc = doc(db, instancesRef + auth.currentUser.uid + "/client", id);
         await updateDoc(clientDoc, currentClient);
-        dispatch(setUpdatedClient());
+        // dispatch(setUpdatedClient());
         setToastOpen(true);
         // getMovies();
     };
@@ -49,18 +48,18 @@ function Profile() {
     const getClientData = async () => {
         try {
             const clientCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
-            const clientDocRef = doc(clientCollectionRef, selectedClientId)
-            const docSnapShot = await getDoc(clientDocRef)
+            const clientDocRef = doc(clientCollectionRef, selectedClientId);
+            const docSnapShot = await getDoc(clientDocRef);
             if (docSnapShot.exists()) {
-                dispatch(setSelectedClient(docSnapShot.data()))
+                dispatch(setSelectedClient(docSnapShot.data()));
             }
         } catch (err) {
-            console.log("error", err)
+            console.log("error", err);
         }
-    }
+    };
 
     useEffect(() => {
-        getClientData()
+        getClientData();
     }, [selectedClientId]);
 
     return (
@@ -261,7 +260,7 @@ function Profile() {
                     >
                         <Button
                             variant="contained"
-                            onClick={() => updateClientProfile(currentClient.id)}
+                            onClick={() => updateClientProfile(selectedClientId)}
                             startIcon={<SaveIcon />}
                         >
                             Save

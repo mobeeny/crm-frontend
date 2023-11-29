@@ -6,14 +6,12 @@ import { getDocs, collection, query, where } from "firebase/firestore";
 // import { setEmail, setUserName } from "./redux/reducers/config";
 import LoginPage from "./components/LoginPage";
 import Layout from "./components/Layout";
-import ListLayout from "./components/ListLayout";
 import { Box, Divider } from "@mui/material";
 import DetailsLayout from "./components/DetailsLayout";
 import Routes from "./Routes/Routes";
 
 // const HomeLayout = () => (
 //     <>
-//         <ListLayout />
 //         <Divider orientation="vertical" variant="middle" flexItem />
 //         <DetailsLayout />
 //     </>

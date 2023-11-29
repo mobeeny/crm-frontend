@@ -14,7 +14,6 @@ import { db, instancesRef, auth } from "../config/firebase";
 import { collection, doc, updateDoc, getDoc } from "firebase/firestore";
 import { current } from "@reduxjs/toolkit";
 import SaveIcon from "@mui/icons-material/Save";
-import ClientCompanies from "./ClientCompanies";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 
@@ -86,6 +85,7 @@ function DetailCompany() {
 
     const updateCompanyProfile = async (id) => {
         const companyDoc = doc(db, instancesRef + auth.currentUser.uid + "/company", id);
+        console.log("UPDATE COMPANY: ", companyDoc);
         await updateDoc(companyDoc, currentCompany);
         // dispatch(setUpdatedClient());
         setToastOpen(true);
@@ -110,8 +110,6 @@ function DetailCompany() {
 
     return (
         <div>
-            {/* <ClientCompanies /> */}
-
             <Card width="100%">
                 <CardMedia sx={{ height: 40 }} image="/static/images/banner1.jpg" title="" />
                 <FormControl variant="filled" sx={{ m: 1, minWidth: 320 }}>
@@ -363,7 +361,7 @@ function DetailCompany() {
                     >
                         <Button
                             variant="contained"
-                            onClick={() => updateCompanyProfile(currentCompany.id)}
+                            onClick={() => updateCompanyProfile(selectedCompanyId)}
                             startIcon={<SaveIcon />}
                         >
                             Save

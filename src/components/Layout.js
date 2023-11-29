@@ -21,47 +21,51 @@ import ClientIcon from "@mui/icons-material/PeopleAlt";
 import SettingsIcon from "@mui/icons-material/Settings";
 import UpdateIcon from "@mui/icons-material/Update";
 import AboutIcon from "@mui/icons-material/Info";
-import DescriptionIcon from '@mui/icons-material/Description';
+import DescriptionIcon from "@mui/icons-material/Description";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import Grid from "@mui/material/Grid";
-import ListLayout from "./ListLayout";
 import DetailsLayout from "./DetailsLayout";
 import MenuItem from "@mui/material/MenuItem";
 import { auth, db } from "../config/firebase";
 import { useSelector, useDispatch } from "react-redux";
 // import { resetState } from "../redux/reducers/config";
 import { Link } from "react-router-dom";
-import Backdrop from '@mui/material/Backdrop';
-import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import SpeedDialAction from '@mui/material/SpeedDialAction';
-import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import PrintIcon from '@mui/icons-material/Print';
-import ShareIcon from '@mui/icons-material/Share';
+import Backdrop from "@mui/material/Backdrop";
+import SpeedDial from "@mui/material/SpeedDial";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import SpeedDialAction from "@mui/material/SpeedDialAction";
+import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
+import SaveIcon from "@mui/icons-material/Save";
+import PrintIcon from "@mui/icons-material/Print";
+import ShareIcon from "@mui/icons-material/Share";
 import ProfileIcon from "@mui/icons-material/Person2";
 import CompanyIcon from "@mui/icons-material/Business";
 import AddClientDialog from "./D_NewClient";
-import { setClientDialog, setCompanyDialog, setOrderDialog, setQuotationDialog, setInvoiceDialog, setPaymentDialog } from "../redux/reducers/dialogFlags";
+import {
+    setClientDialog,
+    setCompanyDialog,
+    setOrderDialog,
+    setQuotationDialog,
+    setInvoiceDialog,
+    setPaymentDialog,
+} from "../redux/reducers/dialogFlags";
 import AddCompanyDialog from "./D_NewCompany";
 import TaskIcon from "@mui/icons-material/TaskAlt";
 import AddOrderDialog from "./D_NewOrders";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
-import AddQuotationDialog from './D_NewQuotations'
+import AddQuotationDialog from "./D_NewQuotations";
 import AddInvoiceDialog from "./D_NewInvoices";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import AddPaymentDialog from "./D_NewPayments";
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import { useState } from "react";
 import { Popover } from "@mui/material";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AddQuotaionDialog from "./D_NewQuotations";
 import { setSpeedDialDialog } from "../redux/reducers/dialogFlags";
-
-
 
 const drawerWidth = 150;
 
@@ -145,11 +149,6 @@ export default function Layout() {
     // const [showClientDialog, setShowClientDialog] = React.useState(false)
     // const [, setShowDialog]clientDialogOpen = React.useState(false); // State to control dialog visibility
 
-
-
-
-
-
     const sx_ListItemButton = {
         minHeight: 48,
         justifyContent: open ? "initial" : "center",
@@ -192,18 +191,10 @@ export default function Layout() {
     //     setShowClientDialog(true);
     // }
 
-
-
     const [anchorClient, setAnchorClient] = useState(null);
     const [anchorCompany, setAnchorCompany] = useState(null);
     const [anchorOrder, setAnchorOrder] = useState(null);
     const [anchorQuotation, setAnchorQuotation] = useState(null);
-
-
-
-
-
-
 
     const handleCloseMenu = () => {
         setAnchorClient(null);
@@ -213,8 +204,6 @@ export default function Layout() {
     const openMenu1 = Boolean(anchorCompany);
     const openMenu2 = Boolean(anchorOrder);
     const openMenu3 = Boolean(anchorQuotation);
-
-
 
     return (
         <Box sx={{ display: "flex" }}>
@@ -228,15 +217,15 @@ export default function Layout() {
                             <Tab
                                 onClick={(event) => setAnchorClient(event.currentTarget)}
                                 style={{
-                                    textTransform: 'none',
-                                    color: 'white',
-                                    fontSize: '16px',
-                                    fontWeight: 'bold',
-                                    padding: '10px',
-                                    fontFamily: 'Roboto, sans-serif',
+                                    textTransform: "none",
+                                    color: "white",
+                                    fontSize: "16px",
+                                    fontWeight: "bold",
+                                    padding: "10px",
+                                    fontFamily: "Roboto, sans-serif",
 
-                                    alignItems: 'center', // Vertically center the content
-                                    flexDirection: "row"
+                                    alignItems: "center", // Vertically center the content
+                                    flexDirection: "row",
                                 }}
                                 label={
                                     <>
@@ -248,14 +237,14 @@ export default function Layout() {
                             <Tab
                                 onClick={(event) => setAnchorCompany(event.currentTarget)}
                                 style={{
-                                    textTransform: 'none',
-                                    color: 'white',
-                                    fontSize: '16px',
-                                    fontWeight: 'bold',
-                                    padding: '10px',
-                                    fontFamily: 'Roboto, sans-serif',
-                                    alignItems: 'center', // Vertically center the content
-                                    flexDirection: "row"
+                                    textTransform: "none",
+                                    color: "white",
+                                    fontSize: "16px",
+                                    fontWeight: "bold",
+                                    padding: "10px",
+                                    fontFamily: "Roboto, sans-serif",
+                                    alignItems: "center", // Vertically center the content
+                                    flexDirection: "row",
                                 }}
                                 label={
                                     <>
@@ -266,16 +255,15 @@ export default function Layout() {
                             />
                             <Tab
                                 onClick={(event) => setAnchorOrder(event.currentTarget)}
-
                                 style={{
-                                    textTransform: 'none',
-                                    color: 'white',
-                                    fontSize: '16px',
-                                    fontWeight: 'bold',
-                                    padding: '10px',
-                                    fontFamily: 'Roboto, sans-serif',
-                                    alignItems: 'center', // Vertically center the content
-                                    flexDirection: "row"
+                                    textTransform: "none",
+                                    color: "white",
+                                    fontSize: "16px",
+                                    fontWeight: "bold",
+                                    padding: "10px",
+                                    fontFamily: "Roboto, sans-serif",
+                                    alignItems: "center", // Vertically center the content
+                                    flexDirection: "row",
                                 }}
                                 label={
                                     <>
@@ -286,16 +274,15 @@ export default function Layout() {
                             />
                             <Tab
                                 onClick={(event) => setAnchorQuotation(event.currentTarget)}
-
                                 style={{
-                                    textTransform: 'none',
-                                    color: 'white',
-                                    fontSize: '16px',
-                                    fontWeight: 'bold',
-                                    padding: '10px',
-                                    fontFamily: 'Roboto, sans-serif',
-                                    alignItems: 'center', // Vertically center the content
-                                    flexDirection: "row"
+                                    textTransform: "none",
+                                    color: "white",
+                                    fontSize: "16px",
+                                    fontWeight: "bold",
+                                    padding: "10px",
+                                    fontFamily: "Roboto, sans-serif",
+                                    alignItems: "center", // Vertically center the content
+                                    flexDirection: "row",
                                 }}
                                 label={
                                     <>
@@ -311,16 +298,15 @@ export default function Layout() {
                             anchorEl={anchorClient}
                             onClose={() => setAnchorClient(null)}
                             anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'center',
+                                vertical: "bottom",
+                                horizontal: "center",
                             }}
                             transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'center',
+                                vertical: "top",
+                                horizontal: "center",
                             }}
                         >
                             <ListItemButton to={`/clients`}>All clients </ListItemButton>
-
                         </Popover>
 
                         <Popover
@@ -328,16 +314,15 @@ export default function Layout() {
                             anchorEl={anchorCompany}
                             onClose={() => setAnchorCompany(null)}
                             anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'center',
+                                vertical: "bottom",
+                                horizontal: "center",
                             }}
                             transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'center',
+                                vertical: "top",
+                                horizontal: "center",
                             }}
                         >
                             <ListItemButton to={`/company`}>All Companies </ListItemButton>
-
                         </Popover>
 
                         <Popover
@@ -345,36 +330,36 @@ export default function Layout() {
                             anchorEl={anchorOrder}
                             onClose={() => setAnchorOrder(null)}
                             anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'center',
+                                vertical: "bottom",
+                                horizontal: "center",
                             }}
                             transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'center',
+                                vertical: "top",
+                                horizontal: "center",
                             }}
                         >
                             <MenuItem onClick={handleCloseMenu}>All orders</MenuItem>
-
                         </Popover>
                         <Popover
                             open={openMenu3}
                             anchorEl={anchorQuotation}
                             onClose={() => setAnchorQuotation(null)}
                             anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'center',
+                                vertical: "bottom",
+                                horizontal: "center",
                             }}
                             transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'center',
+                                vertical: "top",
+                                horizontal: "center",
                             }}
                         >
                             <ListItemButton to={`/quotaion`}>All Quotations </ListItemButton>
-                            <ListItemButton onClick={() => dispatch(setQuotationDialog(true))}>Create New Quotation </ListItemButton>
+                            <ListItemButton onClick={() => dispatch(setQuotationDialog(true))}>
+                                Create New Quotation{" "}
+                            </ListItemButton>
                             <AddQuotationDialog /> {/* Add this line if you want to render the dialog immediately */}
                         </Popover>
                     </div>
-
 
                     <Box sx={{ flexGrow: 0, marginLeft: "auto" }}>
                         <Tooltip title="Open settings">
@@ -413,7 +398,6 @@ export default function Layout() {
                 </DrawerHeader>
                 <Divider />
                 <List>
-
                     <ListItem key={"main"} disablePadding sx={sx_ListItem}>
                         <ListItemButton component={Link} to={`/main`} sx={sx_ListItemButton}>
                             <ListItemIcon sx={sx_ListItemIcon}>
@@ -452,17 +436,14 @@ export default function Layout() {
                 </List>
             </Drawer>
 
-
-            <div onMouseEnter={handleMouseEnterSpeedDial}
-                onMouseLeave={handleMouseLeaveSpeedDial}>
+            <div onMouseEnter={handleMouseEnterSpeedDial} onMouseLeave={handleMouseLeaveSpeedDial}>
                 <SpeedDial
                     ariaLabel="SpeedDial tooltip example"
-                    sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                    sx={{ position: "absolute", bottom: 16, right: 16 }}
                     icon={<SpeedDialIcon />}
                     style={{ margin: "3%" }}
                     open={speedDialDialogOpen}
                 >
-
                     <SpeedDialAction
                         key={"client"}
                         icon={<ProfileIcon />}
@@ -472,7 +453,6 @@ export default function Layout() {
                     />
                     <AddClientDialog />
 
-
                     <SpeedDialAction
                         key={"order"}
                         icon={<TaskIcon />}
@@ -481,8 +461,6 @@ export default function Layout() {
                         onClick={() => dispatch(setOrderDialog(true))}
                     />
                     <AddOrderDialog />
-
-
 
                     <SpeedDialAction
                         key={"invoice"}
@@ -519,12 +497,8 @@ export default function Layout() {
                         onClick={() => dispatch(setQuotationDialog(true))}
                     />
                     <AddQuotationDialog />
-
                 </SpeedDial>
-
-
             </div>
-            {/* <ListLayout /> */}
             {/* <Divider orientation="vertical" variant="middle" flexItem /> */}
 
             {/* <DetailsLayout /> */}
