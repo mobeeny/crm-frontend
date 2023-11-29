@@ -12,15 +12,14 @@ import AddBusiness from "@mui/icons-material/AddBusiness";
 import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDoc, collection, writeBatch, arrayUnion, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
-import SearchClientsCompanyForm from "./SearchClientsCompanyForm";
-import { clearDirectorsNewCompany, setCompanyContacts } from "../redux/reducers/clients";
 import { Divider, Root } from "@mui/material";
 import { setCompanyDialog } from "../redux/reducers/dialogFlags";
-import SetCompanyPrimaryClient from "./SetCompanyPrimaryClient";
+import { setCompanyPrimaryClient } from "../redux/reducers/companyCrud";
+import SelectClientComponent from "./SelectClientComponent";
 
 export default function AddCompanyDialog() {
     const [fullWidth, setFullWidth] = React.useState(true);
-    const [maxWidth, setMaxWidth] = React.useState('sm');
+    const [maxWidth, setMaxWidth] = React.useState("sm");
     // const username = useSelector((state) => state.config.username);
     const contactsDetails = {};
     const dispatch = useDispatch();
@@ -30,7 +29,7 @@ export default function AddCompanyDialog() {
 
     const [cName, setCName] = useState("");
     const [cEmail, setCEmail] = useState("");
-    const cPrimaryClient = useSelector((state)=> state.companyCrud.companyPrimaryClient)
+    const cPrimaryClient = useSelector((state) => state.companyCrud.companyPrimaryClient);
     // const cContacts = useSelector((state) => state.companyCrud.companyContacts);
     const [cNtn, setCNtn] = useState("");
     const [cInc, setCInc] = useState("");
@@ -48,9 +47,9 @@ export default function AddCompanyDialog() {
     const [cDateContact, setCDateContact] = useState("2023-05-10");
     const [cDateRegistration, setCDateRegistration] = useState("2023-05-10");
     const [cDateGST, setCDateGST] = useState("2023-05-10");
-    const [companySid, setCompanySid] = useState(0)
+    const [companySid, setCompanySid] = useState(0);
 
-    const companyDialogOpen = useSelector((state) => state.dialogs.companyDialogOpen)
+    const companyDialogOpen = useSelector((state) => state.dialogs.companyDialogOpen);
 
     // const handleClickOpen = () => {
     //     setOpen(true);
@@ -72,8 +71,7 @@ export default function AddCompanyDialog() {
             // });
 
             const clientRef = doc(db, instancesRef + auth.currentUser.uid + "/client/" + cPrimaryClient.id);
-            updateDoc(clientRef, { company: arrayUnion(companyId) } )
-
+            updateDoc(clientRef, { company: arrayUnion(companyId) });
 
             // Commit the batched write to update all documents at once
             // await batch.commit();
@@ -154,14 +152,9 @@ export default function AddCompanyDialog() {
         }
     };
 
-
     return (
         <div>
-
-            <Dialog open={companyDialogOpen} onClose={handleClose}
-                fullWidth={fullWidth}
-                maxWidth={maxWidth}
-            >
+            <Dialog open={companyDialogOpen} onClose={handleClose} fullWidth={fullWidth} maxWidth={maxWidth}>
                 <DialogTitle>Add New Company</DialogTitle>
                 <DialogContent>
                     {/* <DialogContentText>
@@ -175,18 +168,16 @@ export default function AddCompanyDialog() {
                         noValidate
                         autoComplete="off"
                     >
-                       
-                            <TextField
-                                    
-                                autoFocus
-                                id="name"
-                                label="Company Name"
-                                type="name"
-                                variant="standard"
-                                onChange={(e) => setCName(e.target.value)}
-                            />
-                            <SetCompanyPrimaryClient />
-                       
+                        <TextField
+                            autoFocus
+                            id="name"
+                            label="Company Name"
+                            type="name"
+                            variant="standard"
+                            onChange={(e) => setCName(e.target.value)}
+                        />
+                        <SelectClientComponent dispatchAction={setCompanyPrimaryClient} />
+
                         <TextField
                             id="email"
                             label="Company Email"
@@ -250,7 +241,7 @@ export default function AddCompanyDialog() {
                             variant="standard"
                             onChange={(e) => setCAddress(e.target.value)}
                         />
-                        <Divider style={{ marginTop: '22px' }}>
+                        <Divider style={{ marginTop: "22px" }}>
                             <Chip label="Banking Details" />
                         </Divider>
                         <TextField
@@ -273,10 +264,9 @@ export default function AddCompanyDialog() {
                             type="name"
                             variant="standard"
                             onChange={(e) => setCBankCode(e.target.value)}
-                        /><br />
-                        <Divider style={{ marginBottom: '16px', marginTop: '10px' }}>
-
-                        </Divider>
+                        />
+                        <br />
+                        <Divider style={{ marginBottom: "16px", marginTop: "10px" }}></Divider>
                         <TextField
                             id="contactDate"
                             label="Contact Date"

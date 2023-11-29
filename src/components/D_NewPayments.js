@@ -10,55 +10,45 @@ import { Box, Chip } from "@mui/material";
 import { auth, db, instancesRef } from "../config/firebase";
 import { getDoc, collection, writeBatch, arrayUnion, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
-import SearchClientsCompanyForm from "./SearchClientsCompanyForm";
-import { Divider,  } from "@mui/material";
+import { Divider } from "@mui/material";
 import { setPaymentDialog } from "../redux/reducers/dialogFlags";
 
 export default function AddPaymentDialog() {
     const [fullWidth, setFullWidth] = React.useState(true);
-    const [maxWidth, setMaxWidth] = React.useState('sm');
-    const [invoice,setInvoice] =useState();
-    const [date,setDate] = useState();
-    const [PaymentMethod,setPaymentMethod]=useState();
-    const [transaction,setTransaction]=useState()
-    const [amount,setAmount]=useState()
+    const [maxWidth, setMaxWidth] = React.useState("sm");
+    const [invoice, setInvoice] = useState();
+    const [date, setDate] = useState();
+    const [PaymentMethod, setPaymentMethod] = useState();
+    const [transaction, setTransaction] = useState();
+    const [amount, setAmount] = useState();
 
     // const username = useSelector((state) => state.config.username);
     const dispatch = useDispatch();
     const paymentCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/Payment");
-    const paymentDialogOpen= useSelector((state)=>state.dialogs.paymentDialogOpen)
-
-   
-    
-  
+    const paymentDialogOpen = useSelector((state) => state.dialogs.paymentDialogOpen);
 
     const handleClose = () => {
-       dispatch(setPaymentDialog(false));
+        dispatch(setPaymentDialog(false));
     };
-    
-    const onSubmitPayment = async ()=> {
-        try{
-            await addDoc(paymentCollectionRef,{
-                invoice:invoice,
-                date:date,
-                PaymentMethod:PaymentMethod,
-                transaction:transaction,
-                amount:amount
-            })
-        }
-        catch(error){
-            console.log("error in writing payment Data")
+
+    const onSubmitPayment = async () => {
+        try {
+            await addDoc(paymentCollectionRef, {
+                invoice: invoice,
+                date: date,
+                PaymentMethod: PaymentMethod,
+                transaction: transaction,
+                amount: amount,
+            });
+        } catch (error) {
+            console.log("error in writing payment Data");
         }
         handleClose();
-     }
+    };
 
     return (
         <div>
-            
-            <Dialog open={paymentDialogOpen} onClose={handleClose}
-                fullWidth={fullWidth}
-                maxWidth={maxWidth}
-            >
+            <Dialog open={paymentDialogOpen} onClose={handleClose} fullWidth={fullWidth} maxWidth={maxWidth}>
                 <DialogTitle>Add New Payment</DialogTitle>
                 <DialogContent>
                     {/* <DialogContentText>
@@ -109,7 +99,6 @@ export default function AddPaymentDialog() {
                             variant="standard"
                             onChange={(e) => setAmount(e.target.value)}
                         />
-                       
                     </Box>
                 </DialogContent>
                 <DialogActions>

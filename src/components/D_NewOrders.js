@@ -10,7 +10,6 @@ import { Box, Chip } from "@mui/material";
 import { auth, db, instancesRef } from "../config/firebase";
 import { getDoc, collection, writeBatch, arrayUnion, addDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
-import SearchClientsCompanyForm from "./SearchClientsCompanyForm";
 import { Divider } from "@mui/material";
 import { setCompanyDialog, setOrderDialog } from "../redux/reducers/dialogFlags";
 
@@ -72,6 +71,7 @@ export default function AddOrderDialog() {
                         noValidate
                         autoComplete="off"
                     >
+                        {/* <SelectClientComponent dispatchAction={setCompanyPrimaryClient} /> */}
                         <TextField
                             autoFocus
                             id="order"

@@ -8,22 +8,16 @@ import ListItemText from "@mui/material/ListItemText";
 import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, addDoc, query, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
-import { setCompanyContacts } from "../redux/reducers/companyCrud";
-import { Avatar, Card, CardActions, CardContent, CardHeader, Chip, IconButton, Typography } from "@mui/material";
-import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import { Stack } from "@mui/system";
-import D_ContactRole from "./D_ContactRole";
-import {setcompanyPrimaryClient } from "../redux/reducers/companyCrud";
 
-const SetCompanyPrimaryClient = (props) => {
+const SelectClientComponent = ({ dispatchAction }) => {
     const [searchQuery, setSearchQuery] = useState("");
-    const [searchOn, setSearchOn] = useState(false)
+    const [searchOn, setSearchOn] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
     const [selectedResults, setSelectedResults] = useState([]);
     // const [showDialog, setShowDialog] = useState(false); // State to control dialog visibility
-    const [selectedContact, setSelectedContact] = useState({})
-    const [selectedUser, setSelectedUser] = useState()
-    const [showChip, setShowChip] = useState(false)
+    const [selectedContact, setSelectedContact] = useState({});
+    const [selectedUser, setSelectedUser] = useState();
+    const [showChip, setShowChip] = useState(false);
     const createContactId = useSelector((state) => state.companyCrud.createContactId);
 
     const companyContacts = useSelector((state) => state.companyCrud.companyContacts) || [];
@@ -35,19 +29,11 @@ const SetCompanyPrimaryClient = (props) => {
         console.info("You clicked the Chip.");
     };
 
-    // const handleDeleteChip = (contactId) => {
-    //     const updatedCompanyContacts = companyContacts.filter((contact) => contact.id !== contactId);
-    //     dispatch(setCompanyContacts(updatedCompanyContacts));
-    // };
-
     const fetchSearchResults = async (squery) => {
-
         try {
             const usersRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
             const q = query(usersRef, where("name", ">=", squery), where("name", "<=", squery + "\uf8ff"));
             const snapshot = await getDocs(q);
-
-
 
             results = snapshot.docs.map((doc) => ({
                 id: doc.id,
@@ -69,21 +55,18 @@ const SetCompanyPrimaryClient = (props) => {
         }
     }, [searchQuery]);
 
-
     // Do whatever you want with the userId, e.g., store it in state, perform an action, etc.
     const handleUserClick = (client) => {
-
         setSelectedContact(client);
         setSearchQuery(""); // Update the search query with the client's name
         setSearchResults([]); // Clear the search suggestion list
-        setSearchOn(false)
-        dispatch(setcompanyPrimaryClient(client))
+        setSearchOn(false);
+        dispatch(dispatchAction(client));
         // setShowDialog(true);
     };
     const handleMouseEnter = (id) => {
-        console.log("Mouse Enter: ", id)
-    }
-
+        console.log("Mouse Enter: ", id);
+    };
 
     const listContainerStyles = {
         position: "absolute",
@@ -98,16 +81,21 @@ const SetCompanyPrimaryClient = (props) => {
         zIndex: "1",
     };
 
-
     return (
         <div>
             <TextField
                 type="text"
                 fullWidth
-                value={searchOn?searchQuery:selectedContact.name+" - # "+selectedContact.clientSid}
+                value={
+                    searchOn
+                        ? searchQuery
+                        : selectedContact.name
+                        ? selectedContact.name + " - # " + selectedContact.clientSid
+                        : "Start typing..."
+                }
                 onChange={(e) => setSearchQuery(e.target.value)}
-                onClick={()=>setSearchOn(true)}
-                onMouseOut={()=>setSearchOn(false)}
+                onClick={() => setSearchOn(true)}
+                onMouseOut={() => setSearchOn(false)}
                 label="Search for users by name..."
                 variant="standard"
                 InputLabelProps={{
@@ -116,13 +104,13 @@ const SetCompanyPrimaryClient = (props) => {
             />
 
             {searchResults.length > 0 && searchQuery.length > 0 && (
-                < div style={listContainerStyles}>
-                    <List dense >
+                <div style={listContainerStyles}>
+                    <List dense>
                         {searchResults.map((client) => (
                             <ListItemButton
                                 key={client.id}
                                 onClick={() => handleUserClick(client)}
-                            // onMouseEnter={()=>handleMouseEnter(client.id)}
+                                // onMouseEnter={()=>handleMouseEnter(client.id)}
                             >
                                 <ListItemText primary={client.name} />
                             </ListItemButton>
@@ -130,7 +118,7 @@ const SetCompanyPrimaryClient = (props) => {
                     </List>
                 </div>
             )}
-            {/* <D_ContactRole open={showDialog} setShowDialog={setShowDialog} contact={selectedContact} />  */}
+
             {/* <Stack direction="row" spacing={1}>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                     {companyContacts?.map((contact) => (
@@ -149,4 +137,4 @@ const SetCompanyPrimaryClient = (props) => {
     );
 };
 
-export default SetCompanyPrimaryClient;
+export default SelectClientComponent;
