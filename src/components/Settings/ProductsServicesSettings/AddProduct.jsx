@@ -181,7 +181,7 @@ const AddProduct = () => {
                     />
                 </Grid>
                 <Grid item xs={6}>
-                    <Typography gutterBottom>Services</Typography>
+                    <Typography gutterBottom>Subtasks</Typography>
                     <Stack
                         p={4}
                         spacing={2}

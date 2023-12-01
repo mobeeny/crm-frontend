@@ -6,7 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
-import { Box, InputLabel } from "@mui/material";
+import { Box, Card, Grid, InputLabel, Paper } from "@mui/material";
 import { auth, db, instancesRef } from "../config/firebase";
 import { collection, addDoc } from "firebase/firestore";
 import { Checkbox, MenuItem, FormControlLabel } from "@mui/material";
@@ -18,11 +18,11 @@ import { Stack, Typography } from "@mui/material";
 import { Fragment } from "react";
 import { setQuotationDialog } from "../redux/reducers/dialogFlags";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
+import ButtonBase from '@mui/material/ButtonBase';
 
 export default function AddQuotaionDialog() {
     const [maxWidth, setMaxWidth] = React.useState("sm");
     const [fullWidth, setFullWidth] = React.useState(true);
-
     const productCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/products&services");
     const quotationCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/quotation");
 
@@ -60,6 +60,7 @@ export default function AddQuotaionDialog() {
     };
 
     const onSubmitClient = async () => {
+        console.log("product Details ", productDetails)
         try {
             const docRef = doc(db, instancesRef + auth.currentUser.uid + "/systemData/" + "sequenceIds");
             console.log("DocRef: ", docRef);
@@ -151,12 +152,13 @@ export default function AddQuotaionDialog() {
         console.log(quotation.id);
     };
 
-    const updateClientInQuotation = (clientValue) => {
-        setQuotation((quotation) => ({
-            ...quotation,
-            client: clientValue,
-        }));
+
+
+    const handleToggle = () => {
+        setSelectedButton((prev) => (prev === 'Right' ? 'Left' : 'Right'));
+
     };
+    const [selectedButton, setSelectedButton] = useState("Right")
 
     return (
         <div>
@@ -221,106 +223,145 @@ export default function AddQuotaionDialog() {
                             />
                         </Stack>
 
-                        {quotation.productName.length > 0 ? (
-                            <Typography style={{ fontSize: 18 }}>Product Description</Typography>
-                        ) : null}
-                        {quotation.productName.map((productName, index) => (
-                            <TextField
-                                key={productName}
-                                label={productName}
-                                onChange={(e) => {
-                                    const newQuotation = { ...quotation };
-                                    newQuotation.description[index] = e.target.value;
-                                    setQuotation(newQuotation);
-                                }}
-                                variant="standard"
-                            />
-                        ))}
 
-                        {quotation.productName.length > 0 ? (
-                            <Typography style={{ fontSize: 18 }}>Scope Of Work</Typography>
-                        ) : null}
+
 
                         {quotation.productName.map((productName, index) => (
-                            <TextField
-                                sx={{ width: "45ch" }}
-                                key={productName}
-                                label={productName}
-                                onChange={(e) => {
-                                    const newQuotation = { ...quotation };
-                                    newQuotation.scope[index] = e.target.value;
-                                    setQuotation(newQuotation);
-                                }}
-                                variant="standard"
-                            />
-                        ))}
 
-                        {quotation.productName.length > 0 ? (
-                            <Typography style={{ fontSize: 18 }}>Fulfilment By Client</Typography>
-                        ) : null}
+                            <Grid container spacing={2} sx={{ marginTop: 2 }}>
+                                <Paper
+                                    elevation={3}
+                                    sx={{
+                                        backgroundColor: '#F8F9FA',
+                                        padding: '16px',
+                                        borderRadius: '10px',
+                                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
 
-                        {quotation.productName.map((productName, index) => (
-                            <TextField
-                                key={productName}
-                                label={productName}
-                                onChange={(e) => {
-                                    const newQuotation = { ...quotation };
-                                    newQuotation.fulfilment[index] = e.target.value;
-                                    setQuotation(newQuotation);
-                                }}
-                                variant="standard"
-                            />
-                        ))}
+                                    }}>
+                                    <Grid item xs={12} sm container>
+                                        <Grid item xs container direction="column" spacing={2}>
+                                            <Grid item xs>
+                                                <Typography gutterBottom variant="subtitle1" component="div" style={{
+                                                    color: '#E9ECEF',
+                                                    backgroundColor: '#343A40',
+                                                    padding: '10px',
+                                                    borderRadius: '5px',
+                                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                                    textAlign: 'center',
+                                                    fontWeight: 'bold',
+                                                }}>
+                                                    {productName}
+                                                </Typography>
+                                                <Stack direction={"row"}>
+                                                    <TextField
+                                                        key={productName}
+                                                        label={"Product Description"}
+                                                        onChange={(e) => {
+                                                            const newQuotation = { ...quotation };
+                                                            newQuotation.description[index] = e.target.value;
+                                                            setQuotation(newQuotation);
+                                                        }}
+                                                        variant="standard"
+                                                    />
+                                                    <TextField
+                                                        key={productName}
+                                                        label={"Scope Of Work "}
+                                                        onChange={(e) => {
+                                                            const newQuotation = { ...quotation };
+                                                            newQuotation.description[index] = e.target.value;
+                                                            setQuotation(newQuotation);
+                                                        }}
+                                                        variant="standard"
+                                                    />
+                                                </Stack>
+                                                <Stack direction={"row"}>
+                                                    <TextField
+                                                        key={productName}
+                                                        label={"Fulfilment"}
+                                                        onChange={(e) => {
+                                                            const newQuotation = { ...quotation };
+                                                            newQuotation.description[index] = e.target.value;
+                                                            setQuotation(newQuotation);
+                                                        }}
+                                                        variant="standard"
+                                                    />
+                                                    <TextField
+                                                        key={productName}
+                                                        label={"Pre_Reqs"}
+                                                        onChange={(e) => {
+                                                            const newQuotation = { ...quotation };
+                                                            newQuotation.description[index] = e.target.value;
+                                                            setQuotation(newQuotation);
+                                                        }}
+                                                        variant="standard"
+                                                    />
+                                                </Stack>
+                                                <Stack direction={"row"}>
+                                                    <TextField
+                                                        key={productName}
+                                                        label={'Timeline '}
+                                                        onChange={(e) => {
+                                                            const newQuotation = { ...quotation };
+                                                            newQuotation.description[index] = e.target.value;
+                                                            setQuotation(newQuotation);
+                                                        }}
+                                                        variant="standard"
+                                                    />
+                                                    <TextField
+                                                        key={productName}
+                                                        label={"Terms & Conditions"}
+                                                        onChange={(e) => {
+                                                            const newQuotation = { ...quotation };
+                                                            newQuotation.description[index] = e.target.value;
+                                                            setQuotation(newQuotation);
+                                                        }}
+                                                        variant="standard"
+                                                    />
 
-                        {quotation.productName.length > 0 ? (
-                            <Typography style={{ fontSize: 18 }}>Pre_Reqs from Client</Typography>
-                        ) : null}
+                                                </Stack>
+                                                <div style={{ margin: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '50%', textAlign: 'center' }}>
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleToggle}
+                                                        style={{
+                                                            padding: '12px 16px',
+                                                            backgroundColor: selectedButton === 'Right' ? '#343A40' : '#ddd',
+                                                            color: selectedButton === 'Right' ? '#fff' : '#000',
+                                                            border: 'none',
+                                                            borderRadius: '5px 0 0 5px',
+                                                            cursor: 'pointer',
+                                                            transition: 'background-color 0.3s, color 0.3s',
+                                                            fontSize: '16px',  // Adjust the font size
+                                                        }}
+                                                    >
+                                                        Total  Price
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleToggle}
+                                                        style={{
+                                                            padding: '12px 16px',
+                                                            backgroundColor: selectedButton === 'Left' ? '#3498DB' : '#ddd',
+                                                            color: selectedButton === 'Left' ? '#fff' : '#000',
+                                                            border: 'none',
+                                                            borderRadius: '0 5px 5px 0',
+                                                            cursor: 'pointer',
+                                                            transition: 'background-color 0.3s, color 0.3s',
+                                                            fontSize: '16px',  // Adjust the font size
+                                                        }}
+                                                    >
+                                                        Price by Tasks
+                                                    </button>
+                                                </div>
+                                                {selectedButton == "Right" ? <TextField label={"price "} /> : productDetails[index].subtasks.map((product) => <TextField label={product.name} />)}
 
-                        {quotation.productName.map((productName, index) => (
-                            <TextField
-                                key={productName}
-                                label={productName}
-                                onChange={(e) => {
-                                    const newQuotation = { ...quotation };
-                                    newQuotation.pre_reqs[index] = e.target.value;
-                                    setQuotation(newQuotation);
-                                }}
-                                variant="standard"
-                            />
-                        ))}
+                                            </Grid>
 
-                        {quotation.productName.length > 0 ? (
-                            <Typography style={{ fontSize: 18 }}>Order Timeline</Typography>
-                        ) : null}
+                                        </Grid>
 
-                        {quotation.productName.map((productName, index) => (
-                            <TextField
-                                key={productName}
-                                label={productName}
-                                onChange={(e) => {
-                                    const newQuotation = { ...quotation };
-                                    newQuotation.timeline[index] = e.target.value;
-                                    setQuotation(newQuotation);
-                                }}
-                                variant="standard"
-                            />
-                        ))}
-
-                        {quotation.productName.length > 0 ? (
-                            <Typography style={{ fontSize: 18 }}>Terms and Conditions</Typography>
-                        ) : null}
-
-                        {quotation.productName.map((productName, index) => (
-                            <TextField
-                                key={productName}
-                                label={productName}
-                                variant="standard"
-                                onChange={(e) => {
-                                    const newQuotation = { ...quotation };
-                                    newQuotation.terms[index] = e.target.value;
-                                    setQuotation(newQuotation);
-                                }}
-                            />
+                                    </Grid>
+                                </Paper>
+                            </Grid>
                         ))}
 
                         <table

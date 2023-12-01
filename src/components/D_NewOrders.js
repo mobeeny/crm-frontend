@@ -12,6 +12,8 @@ import { getDoc, collection, writeBatch, arrayUnion, addDoc, doc, updateDoc } fr
 import { useSelector, useDispatch } from "react-redux";
 import { Divider } from "@mui/material";
 import { setCompanyDialog, setOrderDialog } from "../redux/reducers/dialogFlags";
+import { setOrderPrimaryClient } from "../redux/reducers/orderCrud";
+import SelectClientComponent from "./SelectClientComponent";
 
 export default function AddOrderDialog() {
     const [fullWidth, setFullWidth] = React.useState(true);
@@ -71,12 +73,12 @@ export default function AddOrderDialog() {
                         noValidate
                         autoComplete="off"
                     >
-                        {/* <SelectClientComponent dispatchAction={setCompanyPrimaryClient} /> */}
+                        <SelectClientComponent dispatchAction={setOrderPrimaryClient} />
                         <TextField
                             autoFocus
                             id="order"
-                            label="Order Title"
-                            type="name"
+                            label="Order Number"
+                            
                             variant="standard"
                             onChange={(e) => setOrderTitle(e.target.value)}
                         />

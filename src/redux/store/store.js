@@ -13,6 +13,7 @@ import companyCrudReducer from "../reducers/companyCrud";
 import selectedCompanyReducer from "../reducers/selectedCompany";
 import uiControlsReducer from "../reducers/uiControls";
 import selectedClientReducer from "../reducers/selectedClient"
+import orderCrudReducer from "../reducers/orderCrud";
 
 const store = configureStore({
     // reducer: rootReducer,
@@ -24,12 +25,13 @@ const store = configureStore({
         config: configReducer,
         proposal: proposalReducer,
         dialogs: dialogFlagsReducer,
-        orders:orderReducer,
-        companies:companiesReducer,
-        companyCrud:companyCrudReducer,
-        selectedCompany:selectedCompanyReducer,
+        orders: orderReducer,
+        companies: companiesReducer,
+        companyCrud: companyCrudReducer,
+        selectedCompany: selectedCompanyReducer,
         uiControls: uiControlsReducer,
-        selectedClient:selectedClientReducer
+        selectedClient: selectedClientReducer,
+        orderCrud:orderCrudReducer
     },
 });
 
