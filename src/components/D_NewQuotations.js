@@ -353,8 +353,15 @@ export default function AddQuotaionDialog() {
                                                         Price by Tasks
                                                     </button>
                                                 </div>
-                                                {selectedButton == "Right" ? <TextField label={"price "} /> : productDetails[index].subtasks.map((product) => <TextField label={product.name} />)}
-
+                                                {selectedButton === "Right" ?
+                                                    <TextField label={"price "} /> :
+                                                    productDetails[index].subtasks.map((product) => (
+                                                        <>
+                                                            <TextField value={product.name} />
+                                                            <TextField value={product.price} />
+                                                        </>
+                                                    ))
+                                                }
                                             </Grid>
 
                                         </Grid>
