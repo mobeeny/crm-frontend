@@ -18,7 +18,9 @@ import { Stack, Typography } from "@mui/material";
 import { Fragment } from "react";
 import { setQuotationDialog } from "../redux/reducers/dialogFlags";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
-import ButtonBase from '@mui/material/ButtonBase';
+import ButtonBase from "@mui/material/ButtonBase";
+import { setQuotationPrimaryClient } from "../redux/reducers/quotationCrud";
+import SelectClientComponent from "./SelectClientComponent";
 
 export default function AddQuotaionDialog() {
     const [maxWidth, setMaxWidth] = React.useState("sm");
@@ -60,7 +62,7 @@ export default function AddQuotaionDialog() {
     };
 
     const onSubmitClient = async () => {
-        console.log("product Details ", productDetails)
+        console.log("product Details ", productDetails);
         try {
             const docRef = doc(db, instancesRef + auth.currentUser.uid + "/systemData/" + "sequenceIds");
             console.log("DocRef: ", docRef);
@@ -152,13 +154,10 @@ export default function AddQuotaionDialog() {
         console.log(quotation.id);
     };
 
-
-
     const handleToggle = () => {
-        setSelectedButton((prev) => (prev === 'Right' ? 'Left' : 'Right'));
-
+        setSelectedButton((prev) => (prev === "Right" ? "Left" : "Right"));
     };
-    const [selectedButton, setSelectedButton] = useState("Right")
+    const [selectedButton, setSelectedButton] = useState("Right");
 
     return (
         <div>
@@ -173,6 +172,7 @@ export default function AddQuotaionDialog() {
                         noValidate
                         autoComplete="off"
                     >
+                        <SelectClientComponent dispatchAction={setQuotationPrimaryClient} />
                         <TextField
                             select
                             label="Select Products"
@@ -223,33 +223,34 @@ export default function AddQuotaionDialog() {
                             />
                         </Stack>
 
-
-
-
                         {quotation.productName.map((productName, index) => (
-
                             <Grid container spacing={2} sx={{ marginTop: 2 }}>
                                 <Paper
                                     elevation={3}
                                     sx={{
-                                        backgroundColor: '#F8F9FA',
-                                        padding: '16px',
-                                        borderRadius: '10px',
-                                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-
-                                    }}>
+                                        backgroundColor: "#F8F9FA",
+                                        padding: "16px",
+                                        borderRadius: "10px",
+                                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                    }}
+                                >
                                     <Grid item xs={12} sm container>
                                         <Grid item xs container direction="column" spacing={2}>
                                             <Grid item xs>
-                                                <Typography gutterBottom variant="subtitle1" component="div" style={{
-                                                    color: '#E9ECEF',
-                                                    backgroundColor: '#343A40',
-                                                    padding: '10px',
-                                                    borderRadius: '5px',
-                                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                                    textAlign: 'center',
-                                                    fontWeight: 'bold',
-                                                }}>
+                                                <Typography
+                                                    gutterBottom
+                                                    variant="subtitle1"
+                                                    component="div"
+                                                    style={{
+                                                        color: "#E9ECEF",
+                                                        backgroundColor: "#343A40",
+                                                        padding: "10px",
+                                                        borderRadius: "5px",
+                                                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                                        textAlign: "center",
+                                                        fontWeight: "bold",
+                                                    }}
+                                                >
                                                     {productName}
                                                 </Typography>
                                                 <Stack direction={"row"}>
@@ -299,7 +300,7 @@ export default function AddQuotaionDialog() {
                                                 <Stack direction={"row"}>
                                                     <TextField
                                                         key={productName}
-                                                        label={'Timeline '}
+                                                        label={"Timeline "}
                                                         onChange={(e) => {
                                                             const newQuotation = { ...quotation };
                                                             newQuotation.description[index] = e.target.value;
@@ -317,55 +318,64 @@ export default function AddQuotaionDialog() {
                                                         }}
                                                         variant="standard"
                                                     />
-
                                                 </Stack>
-                                                <div style={{ margin: 'auto', display: 'flex', justifyContent: 'center', alignItems: 'center', width: '50%', textAlign: 'center' }}>
+                                                <div
+                                                    style={{
+                                                        margin: "auto",
+                                                        display: "flex",
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                        width: "50%",
+                                                        textAlign: "center",
+                                                    }}
+                                                >
                                                     <button
                                                         type="button"
                                                         onClick={handleToggle}
                                                         style={{
-                                                            padding: '12px 16px',
-                                                            backgroundColor: selectedButton === 'Right' ? '#343A40' : '#ddd',
-                                                            color: selectedButton === 'Right' ? '#fff' : '#000',
-                                                            border: 'none',
-                                                            borderRadius: '5px 0 0 5px',
-                                                            cursor: 'pointer',
-                                                            transition: 'background-color 0.3s, color 0.3s',
-                                                            fontSize: '16px',  // Adjust the font size
+                                                            padding: "12px 16px",
+                                                            backgroundColor:
+                                                                selectedButton === "Right" ? "#343A40" : "#ddd",
+                                                            color: selectedButton === "Right" ? "#fff" : "#000",
+                                                            border: "none",
+                                                            borderRadius: "5px 0 0 5px",
+                                                            cursor: "pointer",
+                                                            transition: "background-color 0.3s, color 0.3s",
+                                                            fontSize: "16px", // Adjust the font size
                                                         }}
                                                     >
-                                                        Total  Price
+                                                        Total Price
                                                     </button>
                                                     <button
                                                         type="button"
                                                         onClick={handleToggle}
                                                         style={{
-                                                            padding: '12px 16px',
-                                                            backgroundColor: selectedButton === 'Left' ? '#3498DB' : '#ddd',
-                                                            color: selectedButton === 'Left' ? '#fff' : '#000',
-                                                            border: 'none',
-                                                            borderRadius: '0 5px 5px 0',
-                                                            cursor: 'pointer',
-                                                            transition: 'background-color 0.3s, color 0.3s',
-                                                            fontSize: '16px',  // Adjust the font size
+                                                            padding: "12px 16px",
+                                                            backgroundColor:
+                                                                selectedButton === "Left" ? "#3498DB" : "#ddd",
+                                                            color: selectedButton === "Left" ? "#fff" : "#000",
+                                                            border: "none",
+                                                            borderRadius: "0 5px 5px 0",
+                                                            cursor: "pointer",
+                                                            transition: "background-color 0.3s, color 0.3s",
+                                                            fontSize: "16px", // Adjust the font size
                                                         }}
                                                     >
                                                         Price by Tasks
                                                     </button>
                                                 </div>
-                                                {selectedButton === "Right" ?
-                                                    <TextField label={"price "} /> :
+                                                {selectedButton === "Right" ? (
+                                                    <TextField label={"price "} />
+                                                ) : (
                                                     productDetails[index].subtasks.map((product) => (
                                                         <>
                                                             <TextField value={product.name} />
                                                             <TextField value={product.price} />
                                                         </>
                                                     ))
-                                                }
+                                                )}
                                             </Grid>
-
                                         </Grid>
-
                                     </Grid>
                                 </Paper>
                             </Grid>
