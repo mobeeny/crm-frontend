@@ -55,14 +55,32 @@ export default function AddQuotaionDialog() {
         terms: [],
     });
 
+
+    const qPrimaryClient = useSelector((state) => state.quotationCrud.quotationPrimaryClient);
+    const [productNames, setProductNames] = useState({})
+    const [subtitle, setSubtitle] = useState("")
+    const [company, setCompany] = useState('')
+    const [productDescription, setProductDescription] = useState({})
+    const [scopeOfWork, setScopeOfWork] = useState({})
+    const [fulfilment, setFulfilment] = useState({})
+    const [pre_reqs, setPre_reqs] = useState({})
+    const [timeline, setProductTimeline] = useState({})
+    const [terms, setTerms] = useState({})
+    const [price, SetPrice] = useState({})
+    const [subtasks, setSubtasks] = useState({})
+
+    let filteredData = [];
+
     const quotationDialogOpen = useSelector((state) => state.dialogs.quotationDialogOpen);
 
     const handleClose = () => {
+
         dispatch(setQuotationDialog(false));
     };
 
     const onSubmitClient = async () => {
         console.log("product Details ", productDetails);
+
         try {
             const docRef = doc(db, instancesRef + auth.currentUser.uid + "/systemData/" + "sequenceIds");
             console.log("DocRef: ", docRef);
@@ -82,7 +100,7 @@ export default function AddQuotaionDialog() {
                     // Include the updated clientSid in the data object
                     await addDoc(quotationCollectionRef, {
                         productId: quotation.id,
-                        productName: quotation.productName,
+                        productName: quotation.productNames,
                         subtitle: quotation.subtitle,
                         client: quotation.client,
                         company: quotation.company,
@@ -120,9 +138,16 @@ export default function AddQuotaionDialog() {
         try {
             const data = await getDocs(productCollectionRef);
 
-            const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+            filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
             console.log(filteredData);
-            dispatch(setproductDetails(filteredData));
+            // dispatch(setproductDetails(filteredData));
+           filteredData.map((data)=>setProductNames(data.name))
+           
+            // setSubtitle(filteredData.name)
+            // setProductNames(filteredData.name)
+            // setProductNames(filteredData.name)
+            // setProductNames(filteredData.name)
+
         } catch (err) {
             console.error(err);
         }
@@ -130,6 +155,7 @@ export default function AddQuotaionDialog() {
 
     useEffect(() => {
         getProduct();
+   
     }, []);
 
     const handleCheckboxChange = (productId) => {
