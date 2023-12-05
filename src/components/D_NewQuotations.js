@@ -21,6 +21,7 @@ import { getDoc, doc, updateDoc } from "firebase/firestore";
 import ButtonBase from "@mui/material/ButtonBase";
 import { setQuotationPrimaryClient } from "../redux/reducers/quotationCrud";
 import SelectClientComponent from "./SelectClientComponent";
+import SelectProductsComponent from "./SelectProductsComponent";
 
 export default function AddQuotaionDialog() {
     const [maxWidth, setMaxWidth] = React.useState("sm");
@@ -55,26 +56,24 @@ export default function AddQuotaionDialog() {
         terms: [],
     });
 
-
     const qPrimaryClient = useSelector((state) => state.quotationCrud.quotationPrimaryClient);
-    const [productNames, setProductNames] = useState({})
-    const [subtitle, setSubtitle] = useState("")
-    const [company, setCompany] = useState('')
-    const [productDescription, setProductDescription] = useState({})
-    const [scopeOfWork, setScopeOfWork] = useState({})
-    const [fulfilment, setFulfilment] = useState({})
-    const [pre_reqs, setPre_reqs] = useState({})
-    const [timeline, setProductTimeline] = useState({})
-    const [terms, setTerms] = useState({})
-    const [price, SetPrice] = useState({})
-    const [subtasks, setSubtasks] = useState({})
+    const [productNames, setProductNames] = useState({});
+    const [subtitle, setSubtitle] = useState("");
+    const [company, setCompany] = useState("");
+    const [productDescription, setProductDescription] = useState({});
+    const [scopeOfWork, setScopeOfWork] = useState({});
+    const [fulfilment, setFulfilment] = useState({});
+    const [pre_reqs, setPre_reqs] = useState({});
+    const [timeline, setProductTimeline] = useState({});
+    const [terms, setTerms] = useState({});
+    const [price, SetPrice] = useState({});
+    const [subtasks, setSubtasks] = useState({});
 
     let filteredData = [];
 
     const quotationDialogOpen = useSelector((state) => state.dialogs.quotationDialogOpen);
 
     const handleClose = () => {
-
         dispatch(setQuotationDialog(false));
     };
 
@@ -141,13 +140,12 @@ export default function AddQuotaionDialog() {
             filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
             console.log(filteredData);
             // dispatch(setproductDetails(filteredData));
-           filteredData.map((data)=>setProductNames(data.name))
-           
+            filteredData.map((data) => setProductNames(data.name));
+
             // setSubtitle(filteredData.name)
             // setProductNames(filteredData.name)
             // setProductNames(filteredData.name)
             // setProductNames(filteredData.name)
-
         } catch (err) {
             console.error(err);
         }
@@ -155,7 +153,6 @@ export default function AddQuotaionDialog() {
 
     useEffect(() => {
         getProduct();
-   
     }, []);
 
     const handleCheckboxChange = (productId) => {
@@ -199,7 +196,8 @@ export default function AddQuotaionDialog() {
                         autoComplete="off"
                     >
                         <SelectClientComponent dispatchAction={setQuotationPrimaryClient} />
-                        <TextField
+                        <SelectProductsComponent />
+                        {/* <TextField
                             select
                             label="Select Products"
                             variant="standard"
@@ -229,7 +227,7 @@ export default function AddQuotaionDialog() {
                                     />
                                 </MenuItem>
                             ))}
-                        </TextField>
+                        </TextField> */}
 
                         <TextField // No margin here
                             autoFocus

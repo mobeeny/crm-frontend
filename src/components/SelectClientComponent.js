@@ -118,21 +118,6 @@ const SelectClientComponent = ({ dispatchAction }) => {
                     </List>
                 </div>
             )}
-
-            {/* <Stack direction="row" spacing={1}>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                    {companyContacts?.map((contact) => (
-                        <Chip
-                            label={contact.name}
-                            variant="outlined"
-                            onDelete={() => handleDeleteChip(contact.id)}
-                            // onMouseEnter={()=> handleMouseEnter(contact.id)}
-                            avatar={<Avatar>{contact.name ? contact.name.charAt(0) : ""}</Avatar>}
-                            color={contact.id<100?"primary":undefined}
-                        />
-                    ))}
-                </div>
-            </Stack> */}
         </div>
     );
 };

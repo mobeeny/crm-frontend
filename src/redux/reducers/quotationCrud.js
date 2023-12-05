@@ -3,15 +3,19 @@ import { createSlice } from "@reduxjs/toolkit";
 const quotationCrudSlice = createSlice({
     name: "quotationCrud",
     initialState: {
-        quotationPrimaryClient: {},
+        quotationClient: {},
+        quotationSelectedProducts: [],
     },
     reducers: {
         setQuotationPrimaryClient(state, action) {
-            state.quotationPrimaryClient = action.payload;
+            state.quotationClient = action.payload;
+        },
+        setQuotationSelectedProducts(state, action) {
+            state.quotationSelectedProducts = action.payload;
         },
     },
 });
 
-export const { setQuotationPrimaryClient } = quotationCrudSlice.actions;
+export const { setQuotationPrimaryClient, setQuotationSelectedProducts } = quotationCrudSlice.actions;
 
 export default quotationCrudSlice.reducer;
