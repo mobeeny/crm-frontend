@@ -17,7 +17,7 @@ import TablePagination from '@mui/material/TablePagination';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
+        backgroundColor: "#1976D2",
         color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {

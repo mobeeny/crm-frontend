@@ -19,7 +19,7 @@ import { Fragment } from "react";
 import { setQuotationDialog } from "../redux/reducers/dialogFlags";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import ButtonBase from "@mui/material/ButtonBase";
-import { setQuotationPrimaryClient } from "../redux/reducers/quotationCrud";
+import { setQuotationPrimaryClient, setQuotationSelectedProducts } from "../redux/reducers/quotationCrud";
 import SelectClientComponent from "./SelectClientComponent";
 import SelectProductsComponent from "./SelectProductsComponent";
 
@@ -72,6 +72,11 @@ export default function AddQuotaionDialog() {
     let filteredData = [];
 
     const quotationDialogOpen = useSelector((state) => state.dialogs.quotationDialogOpen);
+    const selectedProducts = useSelector((state) => state.quotationCrud.quotationSelectedProducts) || [];
+    
+   
+
+
 
     const handleClose = () => {
         dispatch(setQuotationDialog(false));
@@ -177,10 +182,18 @@ export default function AddQuotaionDialog() {
         console.log(quotation.id);
     };
 
-    const handleToggle = () => {
-        setSelectedButton((prev) => (prev === "Right" ? "Left" : "Right"));
+    const handleToggle = (product) => {
+        // setSelectedButton((prev) => (prev === "Right" ? "Left" : "Right"));
+        // const updatedProducts = [...selectedProducts]
+        const updatedProducts=selectedProducts.map((p)=>{
+            if(p.id===product.id){
+                return {...p,totalPricingFlag:!product.totalPricingFlag}
+            }
+            return p;
+        })
+             dispatch(setQuotationSelectedProducts(updatedProducts))
     };
-    const [selectedButton, setSelectedButton] = useState("Right");
+    // const [selectedButton, setSelectedButton] = useState("Right");
 
     return (
         <div>
@@ -247,7 +260,7 @@ export default function AddQuotaionDialog() {
                             />
                         </Stack>
 
-                        {quotation.productName.map((productName, index) => (
+                        {selectedProducts.map((product) => (
                             <Grid container spacing={2} sx={{ marginTop: 2 }}>
                                 <Paper
                                     elevation={3}
@@ -267,7 +280,7 @@ export default function AddQuotaionDialog() {
                                                     component="div"
                                                     style={{
                                                         color: "#E9ECEF",
-                                                        backgroundColor: "#343A40",
+                                                        backgroundColor: "#3498DB",
                                                         padding: "10px",
                                                         borderRadius: "5px",
                                                         boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -275,71 +288,71 @@ export default function AddQuotaionDialog() {
                                                         fontWeight: "bold",
                                                     }}
                                                 >
-                                                    {productName}
+                                                    {product.name}
                                                 </Typography>
                                                 <Stack direction={"row"}>
                                                     <TextField
-                                                        key={productName}
+                                                        key={product.id}
                                                         label={"Product Description"}
-                                                        onChange={(e) => {
-                                                            const newQuotation = { ...quotation };
-                                                            newQuotation.description[index] = e.target.value;
-                                                            setQuotation(newQuotation);
-                                                        }}
+                                                        // onChange={(e) => {
+                                                        //     const newQuotation = { ...quotation };
+                                                        //     newQuotation.description[index] = e.target.value;
+                                                        //     setQuotation(newQuotation);
+                                                        // }}
                                                         variant="standard"
                                                     />
                                                     <TextField
-                                                        key={productName}
+                                                        key={product.id}
                                                         label={"Scope Of Work "}
-                                                        onChange={(e) => {
-                                                            const newQuotation = { ...quotation };
-                                                            newQuotation.description[index] = e.target.value;
-                                                            setQuotation(newQuotation);
-                                                        }}
+                                                        // onChange={(e) => {
+                                                        //     const newQuotation = { ...quotation };
+                                                        //     newQuotation.description[index] = e.target.value;
+                                                        //     setQuotation(newQuotation);
+                                                        // }}
                                                         variant="standard"
                                                     />
                                                 </Stack>
                                                 <Stack direction={"row"}>
                                                     <TextField
-                                                        key={productName}
+                                                        key={product.id}
                                                         label={"Fulfilment"}
-                                                        onChange={(e) => {
-                                                            const newQuotation = { ...quotation };
-                                                            newQuotation.description[index] = e.target.value;
-                                                            setQuotation(newQuotation);
-                                                        }}
+                                                        // onChange={(e) => {
+                                                        //     const newQuotation = { ...quotation };
+                                                        //     newQuotation.description[index] = e.target.value;
+                                                        //     setQuotation(newQuotation);
+                                                        // }}
                                                         variant="standard"
                                                     />
                                                     <TextField
-                                                        key={productName}
+                                                        key={product.id}
                                                         label={"Pre_Reqs"}
-                                                        onChange={(e) => {
-                                                            const newQuotation = { ...quotation };
-                                                            newQuotation.description[index] = e.target.value;
-                                                            setQuotation(newQuotation);
-                                                        }}
+                                                        // onChange={(e) => {
+                                                        //     const newQuotation = { ...quotation };
+                                                        //     newQuotation.description[index] = e.target.value;
+                                                        //     setQuotation(newQuotation);
+                                                        // }}
                                                         variant="standard"
                                                     />
                                                 </Stack>
                                                 <Stack direction={"row"}>
                                                     <TextField
-                                                        key={productName}
+                                                        key={product.id}
                                                         label={"Timeline "}
-                                                        onChange={(e) => {
-                                                            const newQuotation = { ...quotation };
-                                                            newQuotation.description[index] = e.target.value;
-                                                            setQuotation(newQuotation);
-                                                        }}
+                                                        // onChange={(e) => {
+                                                        //     const newQuotation = { ...quotation };
+                                                        //     newQuotation.description[index] = e.target.value;
+                                                        //     setQuotation(newQuotation);
+                                                        // }}
                                                         variant="standard"
                                                     />
                                                     <TextField
-                                                        key={productName}
+                                                        key={product.id}
                                                         label={"Terms & Conditions"}
-                                                        onChange={(e) => {
-                                                            const newQuotation = { ...quotation };
-                                                            newQuotation.description[index] = e.target.value;
-                                                            setQuotation(newQuotation);
-                                                        }}
+                                                        // onChange={(e) => {
+                                                        //     const newQuotation = { ...quotation };
+                                                        //     newQuotation.description[index] = e.target.value;
+                                                        //     setQuotation(newQuotation);
+                                                        // }}
                                                         variant="standard"
                                                     />
                                                 </Stack>
@@ -355,12 +368,12 @@ export default function AddQuotaionDialog() {
                                                 >
                                                     <button
                                                         type="button"
-                                                        onClick={handleToggle}
+                                                        onClick={()=>handleToggle(product)}
                                                         style={{
                                                             padding: "12px 16px",
                                                             backgroundColor:
-                                                                selectedButton === "Right" ? "#343A40" : "#ddd",
-                                                            color: selectedButton === "Right" ? "#fff" : "#000",
+                                                                product.totalPricingFlag === true ? "#3498DB" : "#ddd",
+                                                            color: product.totalPricingFlag === true ? "#fff" : "#000",
                                                             border: "none",
                                                             borderRadius: "5px 0 0 5px",
                                                             cursor: "pointer",
@@ -372,12 +385,12 @@ export default function AddQuotaionDialog() {
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        onClick={handleToggle}
+                                                        onClick={()=>handleToggle(product)}
                                                         style={{
                                                             padding: "12px 16px",
                                                             backgroundColor:
-                                                                selectedButton === "Left" ? "#3498DB" : "#ddd",
-                                                            color: selectedButton === "Left" ? "#fff" : "#000",
+                                                                product.totalPricingFlag === false ? "#3498DB" : "#ddd",
+                                                            color: product.totalPricingFlag === false ? "#fff" : "#000",
                                                             border: "none",
                                                             borderRadius: "0 5px 5px 0",
                                                             cursor: "pointer",
@@ -388,10 +401,12 @@ export default function AddQuotaionDialog() {
                                                         Price by Tasks
                                                     </button>
                                                 </div>
-                                                {selectedButton === "Right" ? (
-                                                    <TextField label={"price "} />
+                                                {product.totalPricingFlag ===true ? (
+                                                    <TextField value={product.subtasks.reduce((acc, product) => acc + parseInt(product.price, 10), 0)} />
+
+
                                                 ) : (
-                                                    productDetails[index].subtasks.map((product) => (
+                                                    product.subtasks.map((product) => (
                                                         <>
                                                             <TextField value={product.name} />
                                                             <TextField value={product.price} />

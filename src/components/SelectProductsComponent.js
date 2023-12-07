@@ -23,7 +23,7 @@ const SelectProductsComponent = () => {
         try {
             const productsCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/products&services");
             const rawData = await getDocs(productsCollectionRef);
-            const results = rawData.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+            const results = rawData.docs.map((doc) => ({ ...doc.data(), id: doc.id ,totalPricingFlag:true}));
             console.log("Loaded Products", results);
             setProducts(results);
         } catch (error) {

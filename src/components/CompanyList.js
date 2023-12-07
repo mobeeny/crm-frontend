@@ -34,7 +34,7 @@ import { setSelectedClientId } from '../redux/reducers/selectedClient';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
+        backgroundColor: "#1976D2",
         color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
