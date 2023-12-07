@@ -90,7 +90,7 @@ const SelectProductsComponent = () => {
                 >
                     {products.map((product) => (
                         <MenuItem key={product} value={product}>
-                            <Checkbox variant="standard" checked={productNames.indexOf(product.name) > -1} />
+                            <Checkbox variant="standard" checked={productIds.indexOf(product.id) > -1} />
                             <ListItemText primary={product.name} onClick={() => handleClick(product)} />
                         </MenuItem>
                     ))}
