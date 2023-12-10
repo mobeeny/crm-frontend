@@ -253,25 +253,7 @@ export default function Layout() {
                                     </>
                                 }
                             />
-                            <Tab
-                                onClick={(event) => setAnchorOrder(event.currentTarget)}
-                                style={{
-                                    textTransform: "none",
-                                    color: "white",
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                    padding: "10px",
-                                    fontFamily: "Roboto, sans-serif",
-                                    alignItems: "center", // Vertically center the content
-                                    flexDirection: "row",
-                                }}
-                                label={
-                                    <>
-                                        Orders
-                                        <ArrowDropDownIcon />
-                                    </>
-                                }
-                            />
+
                             <Tab
                                 onClick={(event) => setAnchorQuotation(event.currentTarget)}
                                 style={{
@@ -291,6 +273,26 @@ export default function Layout() {
                                     </>
                                 }
                             />
+                            <Tab
+                                onClick={(event) => setAnchorOrder(event.currentTarget)}
+                                style={{
+                                    textTransform: "none",
+                                    color: "white",
+                                    fontSize: "16px",
+                                    fontWeight: "bold",
+                                    padding: "10px",
+                                    fontFamily: "Roboto, sans-serif",
+                                    alignItems: "center", // Vertically center the content
+                                    flexDirection: "row",
+                                }}
+                                label={
+                                    <>
+                                        Orders
+                                        <ArrowDropDownIcon />
+                                    </>
+                                }
+                            />
+
                         </Tabs>
 
                         <Popover
@@ -325,6 +327,27 @@ export default function Layout() {
                             <ListItemButton to={`/company`}>All Companies </ListItemButton>
                         </Popover>
 
+
+                        <Popover
+                            open={openMenu3}
+                            anchorEl={anchorQuotation}
+                            onClose={() => setAnchorQuotation(null)}
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "center",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "center",
+                            }}
+                        >
+                            <ListItemButton to={`/quotation`}>All Quotations </ListItemButton>
+                            <ListItemButton onClick={() => dispatch(setQuotationDialog(true))}>
+                                Create New Quotation{" "}
+                            </ListItemButton>
+                            <AddQuotationDialog /> {/* Add this line if you want to render the dialog immediately */}
+                        </Popover>
+
                         <Popover
                             open={openMenu2}
                             anchorEl={anchorOrder}
@@ -339,25 +362,6 @@ export default function Layout() {
                             }}
                         >
                             <MenuItem onClick={handleCloseMenu}>All orders</MenuItem>
-                        </Popover>
-                        <Popover
-                            open={openMenu3}
-                            anchorEl={anchorQuotation}
-                            onClose={() => setAnchorQuotation(null)}
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "center",
-                            }}
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "center",
-                            }}
-                        >
-                            <ListItemButton to={`/quotaion`}>All Quotations </ListItemButton>
-                            <ListItemButton onClick={() => dispatch(setQuotationDialog(true))}>
-                                Create New Quotation{" "}
-                            </ListItemButton>
-                            <AddQuotationDialog /> {/* Add this line if you want to render the dialog immediately */}
                         </Popover>
                     </div>
 
