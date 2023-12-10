@@ -29,61 +29,21 @@ export default function AddQuotaionDialog() {
     const productCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/products&services");
     const quotationCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/quotation");
 
-    const [quotation, setQuotation] = useState({
-        id: [],
-        productName: [],
-        subtitle: "",
-        client: "",
-        company: "",
-        description: [],
-        scope: [],
-        pre_reqs: [],
-        fulfilment: [],
-        timeline: [],
-        charges: {
-            task: [],
-            prices: [],
-            included: "",
-            excluded: "",
-            discount: 0,
-            total: 0,
-        },
-        payments: {
-            task: [],
-            due: [],
-            amount: [],
-        },
-        terms: [],
-    });
-
-    const qPrimaryClient = useSelector((state) => state.quotationCrud.quotationPrimaryClient);
-    const [productNames, setProductNames] = useState({});
-    const [subtitle, setSubtitle] = useState("");
-    const [company, setCompany] = useState("");
-    const [productDescription, setProductDescription] = useState({});
-    const [scopeOfWork, setScopeOfWork] = useState({});
-    const [fulfilment, setFulfilment] = useState({});
-    const [pre_reqs, setPre_reqs] = useState({});
-    const [timeline, setProductTimeline] = useState({});
-    const [terms, setTerms] = useState({});
-    const [price, SetPrice] = useState({});
-    const [subtasks, setSubtasks] = useState({});
-
-    let filteredData = [];
-
     const quotationDialogOpen = useSelector((state) => state.dialogs.quotationDialogOpen);
+    const quotationClient = useSelector((state) => state.quotationCrud.quotationClient);
     const selectedProducts = useSelector((state) => state.quotationCrud.quotationSelectedProducts) || [];
-    
-   
+    const [subtitle, setSubtitle] = useState("");
+    const [timeline, setTimeline] = useState("");
+    const [payments, setPayments] = useState("");
 
-
+    const dispatch = useDispatch();
 
     const handleClose = () => {
         dispatch(setQuotationDialog(false));
     };
 
     const onSubmitClient = async () => {
-        console.log("product Details ", productDetails);
+        // console.log("product Details ", productDetails);
 
         try {
             const docRef = doc(db, instancesRef + auth.currentUser.uid + "/systemData/" + "sequenceIds");
@@ -98,107 +58,65 @@ export default function AddQuotaionDialog() {
                     // Increment the clientSid value by 1
                     const updatedSid = currentSid + 1;
 
-                    // Update the document with the new clientSid value
+                    // Update the document with the new Sid value
                     await updateDoc(docRef, { quotationSid: updatedSid });
 
                     // Include the updated clientSid in the data object
                     await addDoc(quotationCollectionRef, {
-                        productId: quotation.id,
-                        productName: quotation.productNames,
-                        subtitle: quotation.subtitle,
-                        client: quotation.client,
-                        company: quotation.company,
-                        description: quotation.description,
-                        scope: quotation.scope,
-                        pre_reqs: quotation.pre_reqs,
-                        fulfilment: quotation.fulfilment,
-                        timeline: quotation.timeline,
-                        charges: quotation.charges,
-                        payments: quotation.payments,
-                        terms: quotation.terms,
+                        quotationClient: quotationClient,
+                        selectedProducts: selectedProducts,
+                        subtitle: subtitle,
+                        timeline: timeline,
+                        payments: payments,
                         quotationSid: updatedSid,
                     });
                 } else {
-                    console.log("Document does not exist.");
-                    // Handle the case where the document doesn't exist, if necessary.
+                    console.log("Quotation sId Document does not exist.");
                 }
             } catch (error) {
                 console.error("Error fetching document:", error);
-                // Handle any errors that may occur during the retrieval process.
             }
-
-            // Close the dialog
             handleClose();
         } catch (err) {
             console.error(err);
         }
     };
 
-    const productDetails = useSelector((state) => state.proposal.productDetails);
-    const dispatch = useDispatch();
-    const getProduct = async () => {
-        // Read the Data
-        // Set the Movie List
-        try {
-            const data = await getDocs(productCollectionRef);
-
-            filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-            console.log(filteredData);
-            // dispatch(setproductDetails(filteredData));
-            filteredData.map((data) => setProductNames(data.name));
-
-            // setSubtitle(filteredData.name)
-            // setProductNames(filteredData.name)
-            // setProductNames(filteredData.name)
-            // setProductNames(filteredData.name)
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    useEffect(() => {
-        getProduct();
-    }, []);
-
-    const handleCheckboxChange = (productId) => {
-        if (quotation.id.includes(productId)) {
-            setQuotation({
-                ...quotation,
-                id: quotation.id.filter((product) => product !== productId),
-                productName: quotation.productName.filter(
-                    (product, index) => index !== quotation.id.indexOf(productId)
-                ), // Remove corresponding product name
-            });
-        } else {
-            const selectedProduct = productDetails.find((product) => product.id === productId);
-            if (selectedProduct) {
-                setQuotation({
-                    ...quotation,
-                    id: [...quotation.id, productId],
-                    productName: [...quotation.productName, selectedProduct.name], // Add product name
-                });
-            }
-        }
-        console.log(quotation.id);
-    };
-
     const handleToggle = (product) => {
-        // setSelectedButton((prev) => (prev === "Right" ? "Left" : "Right"));
-        // const updatedProducts = [...selectedProducts]
-        const updatedProducts=selectedProducts.map((p)=>{
-            if(p.id===product.id){
-                return {...p,totalPricingFlag:!product.totalPricingFlag}
+        const updatedProducts = selectedProducts.map((p) => {
+            if (p.id === product.id) {
+                return { ...p, totalPricingFlag: !product.totalPricingFlag };
             }
             return p;
-        })
-             dispatch(setQuotationSelectedProducts(updatedProducts))
+        });
+        dispatch(setQuotationSelectedProducts(updatedProducts));
     };
-    // const [selectedButton, setSelectedButton] = useState("Right");
+
+    const handleUpdate = (product, updatedFields, arrayKey, index) => {
+        let updatedSubtask;
+        const updatedProducts = selectedProducts.map((p) => {
+            if (p.id === product.id) {
+                if (arrayKey) {
+                    updatedSubtask = p[arrayKey].map((sub, i) => {
+                        if (i === index) {
+                            return { ...sub, ...updatedFields };
+                        }
+                        return sub;
+                    });
+                    return { ...p, [arrayKey]: updatedSubtask };
+                } else {
+                    return { ...p, ...updatedFields };
+                }
+            }
+            return p;
+        });
+        dispatch(setQuotationSelectedProducts(updatedProducts));
+    };
 
     return (
         <div>
             <Dialog open={quotationDialogOpen} onClose={handleClose} fullWidth={fullWidth} maxWidth={maxWidth}>
-                <DialogTitle>Add New Quotation</DialogTitle>
+                <DialogTitle>Add New Quotation (Proposal)</DialogTitle>
                 <DialogContent>
                     <Box
                         component="form"
@@ -210,53 +128,23 @@ export default function AddQuotaionDialog() {
                     >
                         <SelectClientComponent dispatchAction={setQuotationPrimaryClient} />
                         <SelectProductsComponent />
-                        {/* <TextField
-                            select
-                            label="Select Products"
-                            variant="standard"
-                            value={quotation.id}
-                            onChange={(e) => setQuotation({ ...quotation, id: e.target.value })}
-                            SelectProps={{
-                                multiple: true, // Allow multiple selections
-                                renderValue: (selected) => {
-                                    const selectedNames = selected.map((id) => {
-                                        const selectedProduct = productDetails.find((product) => product.id === id);
-                                        return selectedProduct ? selectedProduct.name : "";
-                                    });
-                                    return selectedNames.join(", ");
-                                }, // Display selected items as comma-separated text
-                            }}
-                        >
-                            {productDetails.map((product) => (
-                                <MenuItem key={product.id} value={product.id}>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={quotation.id.includes(product.id)}
-                                                onChange={() => handleCheckboxChange(product.id)}
-                                            />
-                                        }
-                                        label={product.name}
-                                    />
-                                </MenuItem>
-                            ))}
-                        </TextField> */}
 
-                        <TextField // No margin here
+                        <TextField
                             autoFocus
                             id="Subtitle"
                             label="Proposal Subtitle"
                             variant="standard"
-                            onChange={(e) => setQuotation({ ...quotation, subtitle: e.target.value })}
+                            value={subtitle}
+                            onChange={(e) => setSubtitle(e.target.value)}
                         />
 
                         <Stack direction={"row"}>
                             <TextField
-                                id="company"
-                                label="Client Company"
+                                id="timeline"
+                                label="Estimated Timeline"
                                 type="name"
                                 variant="standard"
-                                onChange={(e) => setQuotation({ ...quotation, company: e.target.value })}
+                                onChange={(e) => setTimeline(e.target.value)}
                             />
                         </Stack>
 
@@ -265,7 +153,7 @@ export default function AddQuotaionDialog() {
                                 <Paper
                                     elevation={3}
                                     sx={{
-                                        backgroundColor: "#F8F9FA",
+                                        backgroundColor: "#D9DDDC",
                                         padding: "16px",
                                         borderRadius: "10px",
                                         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
@@ -292,68 +180,49 @@ export default function AddQuotaionDialog() {
                                                 </Typography>
                                                 <Stack direction={"row"}>
                                                     <TextField
-                                                        key={product.id}
-                                                        label={"Product Description"}
-                                                        // onChange={(e) => {
-                                                        //     const newQuotation = { ...quotation };
-                                                        //     newQuotation.description[index] = e.target.value;
-                                                        //     setQuotation(newQuotation);
-                                                        // }}
-                                                        variant="standard"
-                                                    />
-                                                    <TextField
-                                                        key={product.id}
+                                                        fullWidth
                                                         label={"Scope Of Work "}
-                                                        // onChange={(e) => {
-                                                        //     const newQuotation = { ...quotation };
-                                                        //     newQuotation.description[index] = e.target.value;
-                                                        //     setQuotation(newQuotation);
-                                                        // }}
+                                                        value={product.scope}
+                                                        onChange={(e) =>
+                                                            handleUpdate(product, { scope: e.target.value })
+                                                        }
                                                         variant="standard"
+                                                        multiline
+                                                        maxRows={4}
                                                     />
                                                 </Stack>
                                                 <Stack direction={"row"}>
                                                     <TextField
-                                                        key={product.id}
-                                                        label={"Fulfilment"}
-                                                        // onChange={(e) => {
-                                                        //     const newQuotation = { ...quotation };
-                                                        //     newQuotation.description[index] = e.target.value;
-                                                        //     setQuotation(newQuotation);
-                                                        // }}
+                                                        label={"Fulfilled by Company"}
+                                                        value={product.fulfilledBy}
+                                                        onChange={(e) =>
+                                                            handleUpdate(product, { fulfilledBy: e.target.value })
+                                                        }
                                                         variant="standard"
+                                                        multiline
+                                                        maxRows={4}
                                                     />
                                                     <TextField
-                                                        key={product.id}
-                                                        label={"Pre_Reqs"}
-                                                        // onChange={(e) => {
-                                                        //     const newQuotation = { ...quotation };
-                                                        //     newQuotation.description[index] = e.target.value;
-                                                        //     setQuotation(newQuotation);
-                                                        // }}
+                                                        label={"Provided by Customer"}
+                                                        value={product.providedBy}
+                                                        onChange={(e) =>
+                                                            handleUpdate(product, { providedBy: e.target.value })
+                                                        }
                                                         variant="standard"
+                                                        multiline
+                                                        maxRows={4}
                                                     />
                                                 </Stack>
                                                 <Stack direction={"row"}>
                                                     <TextField
-                                                        key={product.id}
-                                                        label={"Timeline "}
-                                                        // onChange={(e) => {
-                                                        //     const newQuotation = { ...quotation };
-                                                        //     newQuotation.description[index] = e.target.value;
-                                                        //     setQuotation(newQuotation);
-                                                        // }}
-                                                        variant="standard"
-                                                    />
-                                                    <TextField
-                                                        key={product.id}
                                                         label={"Terms & Conditions"}
-                                                        // onChange={(e) => {
-                                                        //     const newQuotation = { ...quotation };
-                                                        //     newQuotation.description[index] = e.target.value;
-                                                        //     setQuotation(newQuotation);
-                                                        // }}
+                                                        value={product.terms}
+                                                        onChange={(e) =>
+                                                            handleUpdate(product, { terms: e.target.value })
+                                                        }
                                                         variant="standard"
+                                                        multiline
+                                                        maxRows={4}
                                                     />
                                                 </Stack>
                                                 <div
@@ -368,7 +237,7 @@ export default function AddQuotaionDialog() {
                                                 >
                                                     <button
                                                         type="button"
-                                                        onClick={()=>handleToggle(product)}
+                                                        onClick={() => handleToggle(product)}
                                                         style={{
                                                             padding: "12px 16px",
                                                             backgroundColor:
@@ -378,14 +247,14 @@ export default function AddQuotaionDialog() {
                                                             borderRadius: "5px 0 0 5px",
                                                             cursor: "pointer",
                                                             transition: "background-color 0.3s, color 0.3s",
-                                                            fontSize: "16px", // Adjust the font size
+                                                            fontSize: "16px",
                                                         }}
                                                     >
                                                         Total Price
                                                     </button>
                                                     <button
                                                         type="button"
-                                                        onClick={()=>handleToggle(product)}
+                                                        onClick={() => handleToggle(product)}
                                                         style={{
                                                             padding: "12px 16px",
                                                             backgroundColor:
@@ -395,21 +264,47 @@ export default function AddQuotaionDialog() {
                                                             borderRadius: "0 5px 5px 0",
                                                             cursor: "pointer",
                                                             transition: "background-color 0.3s, color 0.3s",
-                                                            fontSize: "16px", // Adjust the font size
+                                                            fontSize: "16px",
                                                         }}
                                                     >
                                                         Price by Tasks
                                                     </button>
                                                 </div>
-                                                {product.totalPricingFlag ===true ? (
-                                                    <TextField value={product.subtasks.reduce((acc, product) => acc + parseInt(product.price, 10), 0)} />
-
-
+                                                {product.totalPricingFlag === true ? (
+                                                    <TextField
+                                                        value={product.subtasks.reduce(
+                                                            (acc, product) => acc + parseInt(product.price, 10),
+                                                            0
+                                                        )}
+                                                        onChange={(e) =>
+                                                            handleUpdate(product, { totalPrice: e.target.value })
+                                                        }
+                                                    />
                                                 ) : (
-                                                    product.subtasks.map((product) => (
+                                                    product.subtasks.map((subTask, index) => (
                                                         <>
-                                                            <TextField value={product.name} />
-                                                            <TextField value={product.price} />
+                                                            <TextField
+                                                                value={subTask.name}
+                                                                onChange={(e) =>
+                                                                    handleUpdate(
+                                                                        product,
+                                                                        { name: e.target.value },
+                                                                        "subtasks",
+                                                                        index
+                                                                    )
+                                                                }
+                                                            />
+                                                            <TextField
+                                                                value={subTask.price}
+                                                                onChange={(e) =>
+                                                                    handleUpdate(
+                                                                        product,
+                                                                        { price: e.target.value },
+                                                                        "subtasks",
+                                                                        index
+                                                                    )
+                                                                }
+                                                            />
                                                         </>
                                                     ))
                                                 )}
@@ -419,212 +314,6 @@ export default function AddQuotaionDialog() {
                                 </Paper>
                             </Grid>
                         ))}
-
-                        <table
-                            style={{
-                                border: "1px solid #ccc",
-                                width: "100%",
-                                textAlign: "center",
-                                borderCollapse: "collapse",
-                                marginTop: "2%",
-                                marginBottom: "2%",
-                            }}
-                        >
-                            <thead>
-                                <tr>
-                                    <th colSpan={3} style={{ padding: "10px", fontSize: "18px" }}>
-                                        Charges
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th style={{ border: "1px solid #000", padding: "10px" }}>Sr.No</th>
-                                    <th style={{ border: "1px solid #000", padding: "10px" }}>Task</th>
-                                    <th style={{ border: "1px solid #000", padding: "10px" }}>Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {quotation.productName.map((productName, index) => (
-                                    <Fragment key={index}>
-                                        <tr>
-                                            <td
-                                                colSpan={3}
-                                                align="center"
-                                                style={{ border: "1px solid #000", padding: "10px" }}
-                                            >
-                                                <b>{productName}</b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style={{ border: "1px solid #000", padding: "10px" }}>1</td>
-                                            <td
-                                                contentEditable
-                                                style={{
-                                                    border: "1px solid #000",
-                                                    padding: "10px",
-                                                    width: "50%",
-                                                    backgroundColor: "#fff",
-                                                }}
-                                                onInput={(e) => {
-                                                    const newQuotation = { ...quotation };
-                                                    newQuotation.charges.task[index] = e.target.innerText;
-                                                    setQuotation(newQuotation);
-                                                }}
-                                            >
-                                                sample
-                                            </td>
-                                            <td
-                                                align="right"
-                                                contentEditable
-                                                style={{
-                                                    border: "1px solid #000",
-                                                    padding: "10px",
-                                                    width: "20%",
-                                                    backgroundColor: "#fff",
-                                                }}
-                                                onInput={(e) => {
-                                                    const newQuotation = { ...quotation };
-                                                    newQuotation.charges.prices[index] = e.target.innerText;
-                                                    setQuotation(newQuotation);
-                                                }}
-                                            >
-                                                {" "}
-                                                price
-                                            </td>
-                                        </tr>
-                                    </Fragment>
-                                ))}
-                                <tr>
-                                    <td style={{ border: "1px solid #000", padding: "10px" }}>Included</td>
-                                    <td
-                                        onInput={(e) => {
-                                            const newQuotation = { ...quotation };
-                                            newQuotation.charges.included = e.target.innerText;
-                                            setQuotation(newQuotation);
-                                        }}
-                                        contentEditable
-                                        colSpan={2}
-                                        style={{ border: "1px solid #000", padding: "10px" }}
-                                    >
-                                        {quotation.charges.included}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        onInput={(e) => {
-                                            const newQuotation = { ...quotation };
-                                            newQuotation.charges.excluded = e.target.innerText;
-                                            setQuotation(newQuotation);
-                                        }}
-                                        style={{ border: "1px solid #000", padding: "10px" }}
-                                    >
-                                        Excluded
-                                    </td>
-                                    <td
-                                        contentEditable
-                                        colSpan={2}
-                                        style={{ border: "1px solid #000", padding: "10px" }}
-                                    >
-                                        {quotation.charges.excluded}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        colSpan={2}
-                                        align="center"
-                                        style={{ border: "1px solid #000", padding: "10px" }}
-                                    >
-                                        Total
-                                    </td>
-                                    <td
-                                        onInput={(e) => {
-                                            const newQuotation = { ...quotation };
-                                            newQuotation.charges.total = e.target.innerText;
-                                            setQuotation(newQuotation);
-                                        }}
-                                        contentEditable
-                                        style={{ border: "1px solid #000", padding: "10px" }}
-                                    >
-                                        {quotation.charges.total}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td
-                                        colSpan={2}
-                                        align="center"
-                                        style={{ border: "1px solid #000", padding: "10px" }}
-                                    >
-                                        Discount
-                                    </td>
-                                    <td
-                                        onInput={(e) => {
-                                            const newQuotation = { ...quotation };
-                                            newQuotation.charges.discount = e.target.innerText;
-                                            setQuotation(newQuotation);
-                                        }}
-                                        contentEditable
-                                        style={{ border: "1px solid #000", padding: "10px" }}
-                                    >
-                                        {" "}
-                                        {quotation.charges.discount}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <table
-                            style={{
-                                border: "1px solid #ccc",
-                                width: "100%",
-                                textAlign: "center",
-                                borderCollapse: "collapse",
-                                marginTop: "2%",
-                                marginBottom: "2%",
-                            }}
-                        >
-                            <thead>
-                                <tr>
-                                    <th colSpan={4} style={{ padding: "10px", fontSize: "18px" }}>
-                                        Payment Terms
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <td style={{ border: "1px solid #000", padding: "10px" }}>Sr. No</td>
-                                    <td style={{ border: "1px solid #000", padding: "10px" }}>Task</td>
-                                    <td style={{ border: "1px solid #000", padding: "10px" }}>Due %</td>
-                                    <td style={{ border: "1px solid #000", padding: "10px" }}>Amount %</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style={{ border: "1px solid #000", padding: "10px" }}>1</td>
-                                    <td
-                                        contentEditable
-                                        style={{ border: "1px solid #000", padding: "10px", backgroundColor: "#fff" }}
-                                        onInput={(e) => {
-                                            const newQuotation = { ...quotation };
-                                            newQuotation.payments.task = e.target.innerText;
-                                            setQuotation(newQuotation);
-                                        }}
-                                    >
-                                        Sample
-                                    </td>
-                                    <td
-                                        align="right"
-                                        contentEditable
-                                        style={{ border: "1px solid #000", padding: "10px", backgroundColor: "#fff" }}
-                                    >
-                                        $100.00
-                                    </td>
-                                    <td
-                                        align="right"
-                                        contentEditable
-                                        style={{ border: "1px solid #000", padding: "10px", backgroundColor: "#fff" }}
-                                    >
-                                        $100
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </Box>
 
                     <DialogActions>
@@ -632,7 +321,7 @@ export default function AddQuotaionDialog() {
                             Cancel
                         </Button>
                         <Button variant="contained" onClick={onSubmitClient}>
-                            Update
+                            Create
                         </Button>
                     </DialogActions>
                 </DialogContent>
