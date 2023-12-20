@@ -46,7 +46,6 @@ import {
     setClientDialog,
     setCompanyDialog,
     setOrderDialog,
-    setQuotationDialog,
     setInvoiceDialog,
     setPaymentDialog,
 } from "../redux/reducers/dialogFlags";
@@ -54,7 +53,6 @@ import AddCompanyDialog from "./D_NewCompany";
 import TaskIcon from "@mui/icons-material/TaskAlt";
 import AddOrderDialog from "./D_NewOrders";
 import FormatQuoteIcon from "@mui/icons-material/FormatQuote";
-import AddQuotationDialog from "./D_NewQuotations";
 import AddInvoiceDialog from "./D_NewInvoices";
 import ReceiptIcon from "@mui/icons-material/Receipt";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
@@ -64,8 +62,9 @@ import Tab from "@mui/material/Tab";
 import { useState } from "react";
 import { Popover } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import AddQuotaionDialog from "./D_NewQuotations";
+// import AddQuotaionDialog from "./D_NewOrders";
 import { setSpeedDialDialog } from "../redux/reducers/dialogFlags";
+import { useEffect } from "react";
 
 const drawerWidth = 150;
 
@@ -193,8 +192,8 @@ export default function Layout() {
 
     const [anchorClient, setAnchorClient] = useState(null);
     const [anchorCompany, setAnchorCompany] = useState(null);
-    const [anchorOrder, setAnchorOrder] = useState(null);
     const [anchorQuotation, setAnchorQuotation] = useState(null);
+    const [anchorOrder, setAnchorOrder] = useState(null);
 
     const handleCloseMenu = () => {
         setAnchorClient(null);
@@ -286,7 +285,7 @@ export default function Layout() {
                                 }}
                                 label={
                                     <>
-                                        Quotation
+                                        Quotes
                                         <ArrowDropDownIcon />
                                     </>
                                 }
@@ -338,7 +337,11 @@ export default function Layout() {
                                 horizontal: "center",
                             }}
                         >
-                            <MenuItem onClick={handleCloseMenu}>All orders</MenuItem>
+                            <ListItemButton to={`/orders`}>All Orders AAAA </ListItemButton>
+                            <ListItemButton onClick={() => dispatch(setOrderDialog(true))}>
+                                Create New Order
+                            </ListItemButton>
+                            <AddOrderDialog orderStatus="order" />
                         </Popover>
                         <Popover
                             open={openMenu3}
@@ -353,11 +356,11 @@ export default function Layout() {
                                 horizontal: "center",
                             }}
                         >
-                            <ListItemButton to={`/quotaion`}>All Quotations </ListItemButton>
-                            <ListItemButton onClick={() => dispatch(setQuotationDialog(true))}>
-                                Create New Quotation{" "}
+                            <ListItemButton to={`/quotaion`}>All Quotes </ListItemButton>
+                            <ListItemButton onClick={() => dispatch(setOrderDialog(true))}>
+                                Create New Quote
                             </ListItemButton>
-                            <AddQuotationDialog /> {/* Add this line if you want to render the dialog immediately */}
+                            <AddOrderDialog orderStatus="quote" />
                         </Popover>
                     </div>
 
@@ -454,13 +457,13 @@ export default function Layout() {
                     <AddClientDialog />
 
                     <SpeedDialAction
-                        key={"order"}
+                        key={"quote"}
                         icon={<TaskIcon />}
-                        tooltipTitle={"Order"}
+                        tooltipTitle={"Quote"}
                         tooltipOpen
                         onClick={() => dispatch(setOrderDialog(true))}
                     />
-                    <AddOrderDialog />
+                    <AddOrderDialog orderStatus="quote" />
 
                     <SpeedDialAction
                         key={"invoice"}
@@ -490,13 +493,13 @@ export default function Layout() {
                     <AddCompanyDialog />
 
                     <SpeedDialAction
-                        key={"Quotation"}
+                        key={"Order"}
                         icon={<FormatQuoteIcon />}
-                        tooltipTitle={"Quotation"}
+                        tooltipTitle={"Order"}
                         tooltipOpen
-                        onClick={() => dispatch(setQuotationDialog(true))}
+                        onClick={() => dispatch(setOrderDialog(true))}
                     />
-                    <AddQuotationDialog />
+                    <AddOrderDialog orderStatus="order" />
                 </SpeedDial>
             </div>
             {/* <Divider orientation="vertical" variant="middle" flexItem /> */}

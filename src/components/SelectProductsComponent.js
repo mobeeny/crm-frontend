@@ -9,7 +9,7 @@ import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, addDoc, query, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
 import { Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, OutlinedInput, Select } from "@mui/material";
-import { setQuotationSelectedProducts } from "../redux/reducers/quotationCrud";
+import { setOrderSelectedProducts } from "../redux/reducers/quotationCrud";
 
 const SelectProductsComponent = () => {
     const [products, setProducts] = useState([]);
@@ -23,7 +23,7 @@ const SelectProductsComponent = () => {
         try {
             const productsCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/products&services");
             const rawData = await getDocs(productsCollectionRef);
-            const results = rawData.docs.map((doc) => ({ ...doc.data(), id: doc.id ,totalPricingFlag:true}));
+            const results = rawData.docs.map((doc) => ({ ...doc.data(), id: doc.id, totalPricingFlag: true }));
             console.log("Loaded Products", results);
             setProducts(results);
         } catch (error) {
@@ -49,9 +49,9 @@ const SelectProductsComponent = () => {
             updatedProductNames.splice(productIndex, 1);
             setProductIds(updatedProductIds);
             setProductNames(updatedProductNames);
-            dispatch(setQuotationSelectedProducts(updatedSelectedProducts));
+            dispatch(setOrderSelectedProducts(updatedSelectedProducts));
         } else {
-            dispatch(setQuotationSelectedProducts([...selectedProducts, payload]));
+            dispatch(setOrderSelectedProducts([...selectedProducts, payload]));
             setProductIds([...productIds, payload.id]);
             setProductNames([...productNames, payload.name]);
         }

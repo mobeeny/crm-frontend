@@ -7,15 +7,15 @@ const quotationCrudSlice = createSlice({
         quotationSelectedProducts: [],
     },
     reducers: {
-        setQuotationPrimaryClient(state, action) {
+        setOrderPrimaryClient(state, action) {
             state.quotationClient = action.payload;
         },
-        setQuotationSelectedProducts(state, action) {
+        setOrderSelectedProducts(state, action) {
             state.quotationSelectedProducts = action.payload;
         },
     },
 });
 
-export const { setQuotationPrimaryClient, setQuotationSelectedProducts } = quotationCrudSlice.actions;
+export const { setOrderPrimaryClient, setOrderSelectedProducts } = quotationCrudSlice.actions;
 
 export default quotationCrudSlice.reducer;

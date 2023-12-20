@@ -5,66 +5,124 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useEffect, useState } from "react";
-import { Box, Chip } from "@mui/material";
+import { useState } from "react";
+import { Box, Card, Grid, InputLabel, Paper } from "@mui/material";
 import { auth, db, instancesRef } from "../config/firebase";
-import { getDoc, collection, writeBatch, arrayUnion, addDoc, doc, updateDoc } from "firebase/firestore";
-import { useSelector, useDispatch } from "react-redux";
-import { Divider } from "@mui/material";
-import { setCompanyDialog, setOrderDialog } from "../redux/reducers/dialogFlags";
-import { setOrderPrimaryClient } from "../redux/reducers/orderCrud";
+import { collection, addDoc } from "firebase/firestore";
+import { Checkbox, MenuItem, FormControlLabel } from "@mui/material";
+import { getDocs } from "firebase/firestore";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setproductDetails } from "../redux/reducers/proposal";
+import { Stack, Typography } from "@mui/material";
+import { Fragment } from "react";
+import { setOrderDialog } from "../redux/reducers/dialogFlags";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
+import ButtonBase from "@mui/material/ButtonBase";
+import { setOrderPrimaryClient, setOrderSelectedProducts } from "../redux/reducers/quotationCrud";
 import SelectClientComponent from "./SelectClientComponent";
+import SelectProductsComponent from "./SelectProductsComponent";
 
-export default function AddOrderDialog() {
-    const [fullWidth, setFullWidth] = React.useState(true);
+export default function AddOrderDialog(props) {
     const [maxWidth, setMaxWidth] = React.useState("sm");
-    // const username = useSelector((state) => state.config.username);
-    const [orderTitle, setOrderTitle] = useState();
-    const [productInvolved, setProductInvolved] = useState();
-    const [client, setClient] = useState();
-    const [company, setCompany] = useState();
-    const [orderTimeline, setOrderTimeline] = useState();
-    const [dueAmount, setDueAmount] = useState();
-    const [paidAmount, setPaidAmount] = useState();
-
-    const orderCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/order");
+    const [fullWidth, setFullWidth] = React.useState(true);
+    const productCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/products&services");
+    const quotationCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/quotation");
 
     const orderDialogOpen = useSelector((state) => state.dialogs.orderDialogOpen);
-    const dispatch = useDispatch();
+    const quotationClient = useSelector((state) => state.quotationCrud.quotationClient);
+    const selectedProducts = useSelector((state) => state.quotationCrud.quotationSelectedProducts) || [];
+    const [subtitle, setSubtitle] = useState("");
+    const [timeline, setTimeline] = useState("");
+    const [payments, setPayments] = useState("");
 
-    // const handleClickOpen = () => {
-    //     setOpen(true);
-    // };
+    const dispatch = useDispatch();
 
     const handleClose = () => {
         dispatch(setOrderDialog(false));
     };
 
-    const onSubmitOrder = async () => {
+    const onSubmitClient = async () => {
+        // console.log("product Details ", productDetails);
+
         try {
-            await addDoc(orderCollectionRef, {
-                title: orderTitle,
-                productInvolved: productInvolved,
-                client: client,
-                company: company,
-                orderTimeline: orderTimeline,
-                dueAmount: dueAmount,
-                paidAmount: paidAmount,
-            });
-        } catch (error) {
-            console.log("error in writing data");
+            const docRef = doc(db, instancesRef + auth.currentUser.uid + "/systemData/" + "sequenceIds");
+            console.log("DocRef: ", docRef);
+
+            try {
+                const sIds = await getDoc(docRef);
+                if (sIds.exists()) {
+                    console.log("Current quotationtSid:", sIds.data());
+                    // Get the current clientSid value
+                    const currentSid = sIds.data().quotationSid;
+                    // Increment the clientSid value by 1
+                    const updatedSid = currentSid + 1;
+
+                    // Update the document with the new Sid value
+                    await updateDoc(docRef, { quotationSid: updatedSid });
+
+                    // Include the updated clientSid in the data object
+                    await addDoc(quotationCollectionRef, {
+                        quotationClient: quotationClient,
+                        selectedProducts: selectedProducts,
+                        subtitle: subtitle,
+                        timeline: timeline,
+                        payments: payments,
+                        quotationSid: updatedSid,
+                        orderStatus: props.orderStatus,
+                    });
+                } else {
+                    console.log("Order sId Document does not exist.");
+                }
+            } catch (error) {
+                console.error("Error fetching document:", error);
+            }
+            handleClose();
+        } catch (err) {
+            console.error(err);
         }
-        handleClose();
     };
 
+    const handleToggle = (product) => {
+        const updatedProducts = selectedProducts.map((p) => {
+            if (p.id === product.id) {
+                return { ...p, totalPricingFlag: !product.totalPricingFlag };
+            }
+            return p;
+        });
+        dispatch(setOrderSelectedProducts(updatedProducts));
+    };
+
+    const handleUpdate = (product, updatedFields, arrayKey, index) => {
+        let updatedSubtask;
+        const updatedProducts = selectedProducts.map((p) => {
+            if (p.id === product.id) {
+                if (arrayKey) {
+                    updatedSubtask = p[arrayKey].map((sub, i) => {
+                        if (i === index) {
+                            return { ...sub, ...updatedFields };
+                        }
+                        return sub;
+                    });
+                    return { ...p, [arrayKey]: updatedSubtask };
+                } else {
+                    return { ...p, ...updatedFields };
+                }
+            }
+            return p;
+        });
+        dispatch(setOrderSelectedProducts(updatedProducts));
+    };
+    useEffect(() => {
+        console.log("OrderStatus: ", props.orderStatus);
+    }, []);
     return (
         <div>
             <Dialog open={orderDialogOpen} onClose={handleClose} fullWidth={fullWidth} maxWidth={maxWidth}>
-                <DialogTitle>Add New Order</DialogTitle>
+                <DialogTitle>
+                    Add New {props.orderStatus} {props.orderStatus === "quote" ? "Quote" : "Order"}
+                </DialogTitle>
                 <DialogContent>
-                    {/* <DialogContentText>
-                        
-                    </DialogContentText> */}
                     <Box
                         component="form"
                         sx={{
@@ -74,59 +132,204 @@ export default function AddOrderDialog() {
                         autoComplete="off"
                     >
                         <SelectClientComponent dispatchAction={setOrderPrimaryClient} />
+                        <SelectProductsComponent />
+
                         <TextField
                             autoFocus
-                            id="order"
-                            label="Order Number"
-                            
+                            id="Subtitle"
+                            label="Proposal Subtitle"
                             variant="standard"
-                            onChange={(e) => setOrderTitle(e.target.value)}
+                            value={subtitle}
+                            onChange={(e) => setSubtitle(e.target.value)}
                         />
 
-                        <TextField
-                            id="product"
-                            label="Product Involved"
-                            type="name"
-                            variant="standard"
-                            onChange={(e) => setProductInvolved(e.target.value)}
-                        />
+                        <Stack direction={"row"}>
+                            <TextField
+                                id="timeline"
+                                label="Estimated Timeline"
+                                type="name"
+                                variant="standard"
+                                onChange={(e) => setTimeline(e.target.value)}
+                            />
+                        </Stack>
 
-                        <TextField
-                            id="company"
-                            label="Company"
-                            fullWidth
-                            variant="standard"
-                            onChange={(e) => setCompany(e.target.value)}
-                        />
-                        <TextField
-                            id="orderTimeline"
-                            label="Order Timeline"
-                            type="phone"
-                            variant="standard"
-                            onChange={(e) => setOrderTimeline(e.target.value)}
-                        />
-                        <TextField
-                            id="dueAmount"
-                            label="Amount Due"
-                            type="name"
-                            variant="standard"
-                            onChange={(e) => setDueAmount(e.target.value)}
-                        />
-                        <TextField
-                            id="paidAmount"
-                            label="Paid Amount"
-                            type="name"
-                            variant="standard"
-                            onChange={(e) => setPaidAmount(e.target.value)}
-                        />
+                        {selectedProducts.map((product) => (
+                            <Grid container spacing={2} sx={{ marginTop: 2 }}>
+                                <Paper
+                                    elevation={3}
+                                    sx={{
+                                        backgroundColor: "#D9DDDC",
+                                        padding: "16px",
+                                        borderRadius: "10px",
+                                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                    }}
+                                >
+                                    <Grid item xs={12} sm container>
+                                        <Grid item xs container direction="column" spacing={2}>
+                                            <Grid item xs>
+                                                <Typography
+                                                    gutterBottom
+                                                    variant="subtitle1"
+                                                    component="div"
+                                                    style={{
+                                                        color: "#E9ECEF",
+                                                        backgroundColor: "#3498DB",
+                                                        padding: "10px",
+                                                        borderRadius: "5px",
+                                                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                                        textAlign: "center",
+                                                        fontWeight: "bold",
+                                                    }}
+                                                >
+                                                    {product.name}
+                                                </Typography>
+                                                <Stack direction={"row"}>
+                                                    <TextField
+                                                        fullWidth
+                                                        label={"Scope Of Work "}
+                                                        value={product.scope}
+                                                        onChange={(e) =>
+                                                            handleUpdate(product, { scope: e.target.value })
+                                                        }
+                                                        variant="standard"
+                                                        multiline
+                                                        maxRows={4}
+                                                    />
+                                                </Stack>
+                                                <Stack direction={"row"}>
+                                                    <TextField
+                                                        label={"Fulfilled by Company"}
+                                                        value={product.fulfilledBy}
+                                                        onChange={(e) =>
+                                                            handleUpdate(product, { fulfilledBy: e.target.value })
+                                                        }
+                                                        variant="standard"
+                                                        multiline
+                                                        maxRows={4}
+                                                    />
+                                                    <TextField
+                                                        label={"Provided by Customer"}
+                                                        value={product.providedBy}
+                                                        onChange={(e) =>
+                                                            handleUpdate(product, { providedBy: e.target.value })
+                                                        }
+                                                        variant="standard"
+                                                        multiline
+                                                        maxRows={4}
+                                                    />
+                                                </Stack>
+                                                <Stack direction={"row"}>
+                                                    <TextField
+                                                        label={"Terms & Conditions"}
+                                                        value={product.terms}
+                                                        onChange={(e) =>
+                                                            handleUpdate(product, { terms: e.target.value })
+                                                        }
+                                                        variant="standard"
+                                                        multiline
+                                                        maxRows={4}
+                                                    />
+                                                </Stack>
+                                                <div
+                                                    style={{
+                                                        margin: "auto",
+                                                        display: "flex",
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                        width: "50%",
+                                                        textAlign: "center",
+                                                    }}
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleToggle(product)}
+                                                        style={{
+                                                            padding: "12px 16px",
+                                                            backgroundColor:
+                                                                product.totalPricingFlag === true ? "#3498DB" : "#ddd",
+                                                            color: product.totalPricingFlag === true ? "#fff" : "#000",
+                                                            border: "none",
+                                                            borderRadius: "5px 0 0 5px",
+                                                            cursor: "pointer",
+                                                            transition: "background-color 0.3s, color 0.3s",
+                                                            fontSize: "16px",
+                                                        }}
+                                                    >
+                                                        Total Price
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleToggle(product)}
+                                                        style={{
+                                                            padding: "12px 16px",
+                                                            backgroundColor:
+                                                                product.totalPricingFlag === false ? "#3498DB" : "#ddd",
+                                                            color: product.totalPricingFlag === false ? "#fff" : "#000",
+                                                            border: "none",
+                                                            borderRadius: "0 5px 5px 0",
+                                                            cursor: "pointer",
+                                                            transition: "background-color 0.3s, color 0.3s",
+                                                            fontSize: "16px",
+                                                        }}
+                                                    >
+                                                        Price by Tasks
+                                                    </button>
+                                                </div>
+                                                {product.totalPricingFlag === true ? (
+                                                    <TextField
+                                                        value={product.subtasks.reduce(
+                                                            (acc, product) => acc + parseInt(product.price, 10),
+                                                            0
+                                                        )}
+                                                        onChange={(e) =>
+                                                            handleUpdate(product, { totalPrice: e.target.value })
+                                                        }
+                                                    />
+                                                ) : (
+                                                    product.subtasks.map((subTask, index) => (
+                                                        <>
+                                                            <TextField
+                                                                value={subTask.name}
+                                                                onChange={(e) =>
+                                                                    handleUpdate(
+                                                                        product,
+                                                                        { name: e.target.value },
+                                                                        "subtasks",
+                                                                        index
+                                                                    )
+                                                                }
+                                                            />
+                                                            <TextField
+                                                                value={subTask.price}
+                                                                onChange={(e) =>
+                                                                    handleUpdate(
+                                                                        product,
+                                                                        { price: e.target.value },
+                                                                        "subtasks",
+                                                                        index
+                                                                    )
+                                                                }
+                                                            />
+                                                        </>
+                                                    ))
+                                                )}
+                                            </Grid>
+                                        </Grid>
+                                    </Grid>
+                                </Paper>
+                            </Grid>
+                        ))}
                     </Box>
+
+                    <DialogActions>
+                        <Button variant="outlined" onClick={handleClose}>
+                            Cancel
+                        </Button>
+                        <Button variant="contained" onClick={onSubmitClient}>
+                            Create
+                        </Button>
+                    </DialogActions>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button variant="contained" onClick={onSubmitOrder}>
-                        Add Order
-                    </Button>
-                </DialogActions>
             </Dialog>
         </div>
     );
