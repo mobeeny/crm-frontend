@@ -153,10 +153,11 @@ export default function AddQuotaionDialog() {
                                 <Paper
                                     elevation={3}
                                     sx={{
-                                        backgroundColor: "#D9DDDC",
+                                        backgroundColor: "#ECF0EF",
                                         padding: "16px",
                                         borderRadius: "10px",
                                         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                                        margin:"1%"
                                     }}
                                 >
                                     <Grid item xs={12} sm container>
@@ -316,7 +317,7 @@ export default function AddQuotaionDialog() {
                         ))}
                     </Box>
 
-                    <DialogActions>
+                    <DialogActions sx={{marginTop:"2%"}}>
                         <Button variant="outlined" onClick={handleClose}>
                             Cancel
                         </Button>

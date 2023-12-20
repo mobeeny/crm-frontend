@@ -31,7 +31,7 @@ import TablePagination from '@mui/material/TablePagination';
 import { setdetailsSelectedTab } from '../redux/reducers/uiControls';
 import { useNavigate } from 'react-router-dom';
 import { setSelectedClientId } from '../redux/reducers/selectedClient';
-import { setQuotationList } from '../redux/reducers/quotationCrud';
+import { setQuotationList } from '../redux/reducers/quotations';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -114,12 +114,11 @@ export default function QuotationList() {
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const selectedCompanyId1 = useSelector((state) => state.selectedCompany.selectedCompanyId);
     const quotationRef = collection(db, instancesRef + auth.currentUser.uid + "/quotation");
-    const quotationList = useSelector((state) => state.quotationCrud.quotationList);
+    const quotationList = useSelector((state) => state.quotationList.quotationList);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    let filteredData = []
+
 
 
     const getQuotation = async () => {
@@ -127,7 +126,7 @@ export default function QuotationList() {
         //Set the Movie List
         try {
             const data = await getDocs(quotationRef);
-            filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+            const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
             dispatch(setQuotationList(filteredData));
 
         } catch (err) {
