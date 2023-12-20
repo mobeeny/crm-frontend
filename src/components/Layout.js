@@ -267,7 +267,7 @@ export default function Layout() {
                                 }}
                                 label={
                                     <>
-                                        Quotation
+                                        Orders
                                         <ArrowDropDownIcon />
                                     </>
                                 }
@@ -286,7 +286,7 @@ export default function Layout() {
                                 }}
                                 label={
                                     <>
-                                        Quotes Orders
+                                        Quotes
                                         <ArrowDropDownIcon />
                                     </>
                                 }

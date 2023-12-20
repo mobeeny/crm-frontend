@@ -95,7 +95,6 @@ export default function QuotationList() {
     const quotationList = useSelector((state) => state.quotationList.quotationList);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
     const getQuotation = async () => {
         //Read the Data
         //Set the Movie List
