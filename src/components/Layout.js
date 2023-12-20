@@ -252,25 +252,7 @@ export default function Layout() {
                                     </>
                                 }
                             />
-                            <Tab
-                                onClick={(event) => setAnchorOrder(event.currentTarget)}
-                                style={{
-                                    textTransform: "none",
-                                    color: "white",
-                                    fontSize: "16px",
-                                    fontWeight: "bold",
-                                    padding: "10px",
-                                    fontFamily: "Roboto, sans-serif",
-                                    alignItems: "center", // Vertically center the content
-                                    flexDirection: "row",
-                                }}
-                                label={
-                                    <>
-                                        Orders
-                                        <ArrowDropDownIcon />
-                                    </>
-                                }
-                            />
+
                             <Tab
                                 onClick={(event) => setAnchorQuotation(event.currentTarget)}
                                 style={{
@@ -285,7 +267,26 @@ export default function Layout() {
                                 }}
                                 label={
                                     <>
-                                        Quotes
+                                        Quotation
+                                        <ArrowDropDownIcon />
+                                    </>
+                                }
+                            />
+                            <Tab
+                                onClick={(event) => setAnchorOrder(event.currentTarget)}
+                                style={{
+                                    textTransform: "none",
+                                    color: "white",
+                                    fontSize: "16px",
+                                    fontWeight: "bold",
+                                    padding: "10px",
+                                    fontFamily: "Roboto, sans-serif",
+                                    alignItems: "center", // Vertically center the content
+                                    flexDirection: "row",
+                                }}
+                                label={
+                                    <>
+                                        Quotes Orders
                                         <ArrowDropDownIcon />
                                     </>
                                 }
@@ -325,9 +326,9 @@ export default function Layout() {
                         </Popover>
 
                         <Popover
-                            open={openMenu2}
-                            anchorEl={anchorOrder}
-                            onClose={() => setAnchorOrder(null)}
+                            open={openMenu3}
+                            anchorEl={anchorQuotation}
+                            onClose={() => setAnchorQuotation(null)}
                             anchorOrigin={{
                                 vertical: "bottom",
                                 horizontal: "center",
@@ -337,16 +338,17 @@ export default function Layout() {
                                 horizontal: "center",
                             }}
                         >
-                            <ListItemButton to={`/orders`}>All Orders AAAA </ListItemButton>
+                            <ListItemButton to={`/orders`}>All Orders</ListItemButton>
                             <ListItemButton onClick={() => dispatch(setOrderDialog(true))}>
                                 Create New Order
                             </ListItemButton>
                             <AddOrderDialog orderStatus="order" />
                         </Popover>
+
                         <Popover
-                            open={openMenu3}
-                            anchorEl={anchorQuotation}
-                            onClose={() => setAnchorQuotation(null)}
+                            open={openMenu2}
+                            anchorEl={anchorOrder}
+                            onClose={() => setAnchorOrder(null)}
                             anchorOrigin={{
                                 vertical: "bottom",
                                 horizontal: "center",
