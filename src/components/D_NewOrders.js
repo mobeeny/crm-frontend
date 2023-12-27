@@ -19,19 +19,20 @@ import { Fragment } from "react";
 import { setOrderDialog } from "../redux/reducers/dialogFlags";
 import { getDoc, doc, updateDoc } from "firebase/firestore";
 import ButtonBase from "@mui/material/ButtonBase";
-import { setOrderPrimaryClient, setOrderSelectedProducts } from "../redux/reducers/quotationCrud";
+import { setOrderPrimaryClient, setOrderSelectedProducts } from "../redux/reducers/orderCrud";
 import SelectClientComponent from "./SelectClientComponent";
 import SelectProductsComponent from "./SelectProductsComponent";
 
-export default function AddOrderDialog(props) {
+export default function AddOrderDialog() {
     const [maxWidth, setMaxWidth] = React.useState("sm");
     const [fullWidth, setFullWidth] = React.useState(true);
     const productCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/products&services");
     const quotationCollectionRef = collection(db, instancesRef + auth.currentUser.uid + "/quotation");
 
     const orderDialogOpen = useSelector((state) => state.dialogs.orderDialogOpen);
-    const quotationClient = useSelector((state) => state.quotationCrud.quotationClient);
-    const selectedProducts = useSelector((state) => state.quotationCrud.quotationSelectedProducts) || [];
+    const orderClient = useSelector((state) => state.orderCrud.orderClient);
+    const selectedProducts = useSelector((state) => state.orderCrud.orderSelectedProducts) || [];
+    const orderState = useSelector((state) => state.orderCrud.orderState);
     const [subtitle, setSubtitle] = useState("");
     const [timeline, setTimeline] = useState("");
     const [payments, setPayments] = useState("");
@@ -63,13 +64,13 @@ export default function AddOrderDialog(props) {
 
                     // Include the updated clientSid in the data object
                     await addDoc(quotationCollectionRef, {
-                        quotationClient: quotationClient,
+                        quotationClient: orderClient,
                         selectedProducts: selectedProducts,
                         subtitle: subtitle,
                         timeline: timeline,
                         payments: payments,
                         quotationSid: updatedSid,
-                        orderStatus: props.orderStatus,
+                        orderStatus: orderState,
                     });
                 } else {
                     console.log("Order sId Document does not exist.");
@@ -114,14 +115,12 @@ export default function AddOrderDialog(props) {
         dispatch(setOrderSelectedProducts(updatedProducts));
     };
     useEffect(() => {
-        console.log("OrderStatus: ", props.orderStatus);
+        console.log("OrderStatus: ", orderState);
     }, []);
     return (
         <div>
             <Dialog open={orderDialogOpen} onClose={handleClose} fullWidth={fullWidth} maxWidth={maxWidth}>
-                <DialogTitle>
-                    Add New {props.orderStatus} {props.orderStatus === "quote" ? "Quote" : "Order"}
-                </DialogTitle>
+                <DialogTitle>Add New {orderState === "quote" ? "Quote" : "Order"}</DialogTitle>
                 <DialogContent>
                     <Box
                         component="form"

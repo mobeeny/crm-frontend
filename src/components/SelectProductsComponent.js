@@ -9,11 +9,11 @@ import { auth, googleAuthProvider, db, instancesRef } from "../config/firebase";
 import { getDocs, collection, addDoc, query, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useSelector, useDispatch } from "react-redux";
 import { Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, OutlinedInput, Select } from "@mui/material";
-import { setOrderSelectedProducts } from "../redux/reducers/quotationCrud";
+import { setOrderSelectedProducts } from "../redux/reducers/orderCrud";
 
 const SelectProductsComponent = () => {
     const [products, setProducts] = useState([]);
-    const selectedProducts = useSelector((state) => state.quotationCrud.quotationSelectedProducts) || [];
+    const selectedProducts = useSelector((state) => state.orderCrud.orderSelectedProducts) || [];
     const [productNames, setProductNames] = React.useState([]);
     const [productIds, setProductIds] = React.useState([]);
 

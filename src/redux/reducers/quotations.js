@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const quotationListSlice = createSlice({
-    name: "quotationList",
+    name: "quotations",
     initialState: {
         quotationList: [],
     },

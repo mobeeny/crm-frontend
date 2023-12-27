@@ -3,15 +3,23 @@ import { createSlice } from "@reduxjs/toolkit";
 const orderCrudSlice = createSlice({
     name: "orderCrud",
     initialState: {
-        orderPrimaryClient: [],
+        orderClient: {},
+        orderSelectedProducts: [],
+        orderState: "quote",
     },
     reducers: {
         setOrderPrimaryClient(state, action) {
-            state.orderPrimaryClient = action.payload;
-        }
+            state.orderClient = action.payload;
+        },
+        setOrderSelectedProducts(state, action) {
+            state.orderSelectedProducts = action.payload;
+        },
+        setOrderState(state, action) {
+            state.orderState = action.payload;
+        },
     },
 });
 
-export const { setOrderPrimaryClient } = orderCrudSlice.actions;
+export const { setOrderPrimaryClient, setOrderSelectedProducts, setOrderState } = orderCrudSlice.actions;
 
 export default orderCrudSlice.reducer;

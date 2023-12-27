@@ -49,6 +49,7 @@ import {
     setInvoiceDialog,
     setPaymentDialog,
 } from "../redux/reducers/dialogFlags";
+import { setOrderState } from "../redux/reducers/orderCrud";
 import AddCompanyDialog from "./D_NewCompany";
 import TaskIcon from "@mui/icons-material/TaskAlt";
 import AddOrderDialog from "./D_NewOrders";
@@ -254,7 +255,7 @@ export default function Layout() {
                             />
 
                             <Tab
-                                onClick={(event) => setAnchorQuotation(event.currentTarget)}
+                                onClick={(event) => setAnchorOrder(event.currentTarget)}
                                 style={{
                                     textTransform: "none",
                                     color: "white",
@@ -273,7 +274,7 @@ export default function Layout() {
                                 }
                             />
                             <Tab
-                                onClick={(event) => setAnchorOrder(event.currentTarget)}
+                                onClick={(event) => setAnchorQuotation(event.currentTarget)}
                                 style={{
                                     textTransform: "none",
                                     color: "white",
@@ -326,26 +327,6 @@ export default function Layout() {
                         </Popover>
 
                         <Popover
-                            open={openMenu3}
-                            anchorEl={anchorQuotation}
-                            onClose={() => setAnchorQuotation(null)}
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "center",
-                            }}
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "center",
-                            }}
-                        >
-                            <ListItemButton to={`/orders`}>All Orders</ListItemButton>
-                            <ListItemButton onClick={() => dispatch(setOrderDialog(true))}>
-                                Create New Order
-                            </ListItemButton>
-                            <AddOrderDialog orderStatus="order" />
-                        </Popover>
-
-                        <Popover
                             open={openMenu2}
                             anchorEl={anchorOrder}
                             onClose={() => setAnchorOrder(null)}
@@ -358,11 +339,41 @@ export default function Layout() {
                                 horizontal: "center",
                             }}
                         >
-                            <ListItemButton to={`/quotaion`}>All Quotes </ListItemButton>
-                            <ListItemButton onClick={() => dispatch(setOrderDialog(true))}>
+                            <ListItemButton to={`/orders`}>All Orders</ListItemButton>
+                            <ListItemButton
+                                onClick={() => {
+                                    dispatch(setOrderDialog(true));
+                                    dispatch(setOrderState("order"));
+                                }}
+                            >
+                                Create New Order
+                            </ListItemButton>
+                            <AddOrderDialog />
+                        </Popover>
+
+                        <Popover
+                            open={openMenu3}
+                            anchorEl={anchorQuotation}
+                            onClose={() => setAnchorQuotation(null)}
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "center",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "center",
+                            }}
+                        >
+                            <ListItemButton to={`/order`}>All Quotes </ListItemButton>
+                            <ListItemButton
+                                onClick={() => {
+                                    dispatch(setOrderDialog(true));
+                                    dispatch(setOrderState("quote"));
+                                }}
+                            >
                                 Create New Quote
                             </ListItemButton>
-                            <AddOrderDialog orderStatus="quote" />
+                            <AddOrderDialog />
                         </Popover>
                     </div>
 
@@ -463,9 +474,12 @@ export default function Layout() {
                         icon={<TaskIcon />}
                         tooltipTitle={"Quote"}
                         tooltipOpen
-                        onClick={() => dispatch(setOrderDialog(true))}
+                        onClick={() => {
+                            dispatch(setOrderDialog(true));
+                            dispatch(setOrderState("quote"));
+                        }}
                     />
-                    <AddOrderDialog orderStatus="quote" />
+                    <AddOrderDialog />
 
                     <SpeedDialAction
                         key={"invoice"}
@@ -499,9 +513,12 @@ export default function Layout() {
                         icon={<FormatQuoteIcon />}
                         tooltipTitle={"Order"}
                         tooltipOpen
-                        onClick={() => dispatch(setOrderDialog(true))}
+                        onClick={() => {
+                            dispatch(setOrderDialog(true));
+                            dispatch(setOrderState("order"));
+                        }}
                     />
-                    <AddOrderDialog orderStatus="order" />
+                    <AddOrderDialog />
                 </SpeedDial>
             </div>
             {/* <Divider orientation="vertical" variant="middle" flexItem /> */}

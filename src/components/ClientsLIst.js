@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
-import { getDocs } from 'firebase/firestore';
-import { db, instancesRef, auth } from '../config/firebase';
-import { collection } from 'firebase/firestore';
-import { useEffect } from 'react';
-import { setClients } from '../redux/reducers/clients';
-import { useDispatch, useSelector } from 'react-redux';
-import { styled } from '@mui/material/styles';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableRow from '@mui/material/TableRow';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import Paper from '@mui/material/Paper';
-import TablePagination from '@mui/material/TablePagination';
+import React, { useState } from "react";
+import { getDocs } from "firebase/firestore";
+import { db, instancesRef, auth } from "../config/firebase";
+import { collection } from "firebase/firestore";
+import { useEffect } from "react";
+import { setClients } from "../redux/reducers/clients";
+import { useDispatch, useSelector } from "react-redux";
+import { styled } from "@mui/material/styles";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableRow from "@mui/material/TableRow";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import Paper from "@mui/material/Paper";
+import TablePagination from "@mui/material/TablePagination";
+import { setdetailsSelectedTab } from "../redux/reducers/uiControls";
+import { useNavigate } from "react-router-dom";
+import { setSelectedClient, setSelectedClientId } from "../redux/reducers/selectedClient";
+import { setSelectedCompanyId } from "../redux/reducers/selectedCompany";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -26,22 +30,22 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
+    "&:nth-of-type(odd)": {
         backgroundColor: theme.palette.action.hover,
     },
     // hide last border
-    '&:last-child td, &:last-child th': {
+    "&:last-child td, &:last-child th": {
         border: 0,
     },
 }));
 
 const columns = [
-    { field: 'id', headerName: 'ID', flex: 1 },
-    { field: 'Name', headerName: ' Name', flex: 2 },
-    { field: 'email', headerName: 'Email', flex: 2 },
+    { field: "id", headerName: "ID", flex: 1 },
+    { field: "Name", headerName: " Name", flex: 2 },
+    { field: "email", headerName: "Email", flex: 2 },
     {
-        field: 'Contact',
-        headerName: 'Contact',
+        field: "Contact",
+        headerName: "Contact",
         flex: 2,
     },
 ];
@@ -49,9 +53,10 @@ const columns = [
 export default function ClientsList() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(5); // Set your initial rows per page
-    const clientsRef = collection(db, instancesRef + auth.currentUser.uid + '/client');
+    const clientsRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
     const clientList = useSelector((state) => state.clients.clients);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const getClient = async () => {
         try {
@@ -76,8 +81,24 @@ export default function ClientsList() {
         setPage(0);
     };
 
+    const handleClick = (path, tabIndex) => {
+        // Dispatch your Redux actions before navigating
+        dispatch(setdetailsSelectedTab(tabIndex));
+        // Navigate to the /clients route
+        navigate(path);
+    };
+
+    const handleClientSelected = (client) => {
+        console.log("Selected Clinet:", client);
+
+        dispatch(setSelectedClientId(client.id));
+        dispatch(setSelectedClient(client));
+
+        dispatch(setSelectedCompanyId(client.company[0]));
+    };
+
     return (
-        <div style={{ height: 400, width: '100%', margin: '1%' }}>
+        <div style={{ height: 400, width: "100%", margin: "1%" }}>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
@@ -93,11 +114,13 @@ export default function ClientsList() {
                             ? clientList.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             : clientList
                         ).map((client) => (
-                            <StyledTableRow key={client.clientSid}>
+                            <StyledTableRow key={client.clientSid} onClick={() => handleClientSelected(client)} hover>
                                 <TableCell component="th" scope="row">
                                     {client.clientSid}
                                 </TableCell>
-                                <StyledTableCell align="left">{client.name}</StyledTableCell>
+                                <StyledTableCell align="left" onClick={() => handleClick("/details", 0)}>
+                                    {client.name}
+                                </StyledTableCell>
                                 <StyledTableCell align="left">{client.email}</StyledTableCell>
                                 <StyledTableCell align="left">{client.phone}</StyledTableCell>
                             </StyledTableRow>
@@ -114,6 +137,7 @@ export default function ClientsList() {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
             </TableContainer>
+             
         </div>
     );
 }

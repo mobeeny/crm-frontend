@@ -32,6 +32,7 @@ import { setdetailsSelectedTab } from "../redux/reducers/uiControls";
 import { useNavigate } from "react-router-dom";
 import { setSelectedClientId } from "../redux/reducers/selectedClient";
 import { setQuotationList } from "../redux/reducers/quotations";
+import { Button, Stack } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -92,7 +93,7 @@ export default function QuotationList() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const quotationRef = collection(db, instancesRef + auth.currentUser.uid + "/quotation");
-    const quotationList = useSelector((state) => state.quotationList.quotationList);
+    const quotationList = useSelector((state) => state.quotations.quotationList);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const getQuotation = async () => {
@@ -147,8 +148,8 @@ export default function QuotationList() {
                             <StyledTableCell>ID</StyledTableCell>
                             <StyledTableCell align="left">Client</StyledTableCell>
                             <StyledTableCell align="left">Subtitle</StyledTableCell>
-                            <StyledTableCell align="left">EStimated Timeline</StyledTableCell>
-                            <StyledTableCell align="left">Products</StyledTableCell>
+                            <StyledTableCell align="left">Estimated Timeline</StyledTableCell>
+                            <StyledTableCell align="left">Actions</StyledTableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -177,7 +178,7 @@ export default function QuotationList() {
                                     <StyledTableCell align="left">{quotation.subtitle}</StyledTableCell>
                                     <StyledTableCell align="left">{quotation.timeline}</StyledTableCell>
                                     <TableCell align="left">
-                                        <select
+                                        {/* <select
                                             style={{
                                                 padding: "10px",
                                                 fontSize: "16px",
@@ -200,7 +201,10 @@ export default function QuotationList() {
                                                     {product.name}
                                                 </option>
                                             ))}
-                                        </select>
+                                        </select> */}
+                                        <Stack>
+                                            <Button>Download Invoice</Button>
+                                        </Stack>
                                     </TableCell>
                                 </TableRow>
                             ))}

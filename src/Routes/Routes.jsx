@@ -8,7 +8,7 @@ import PrimaryActions from "../components/PrimaryActions";
 import ClientList from "../components/ClientsLIst";
 import CompanyList from "../components/CompanyList";
 import DetailsLayout from "../components/DetailsLayout";
-import QuotationLIst from "../components/QuotationList";
+import QuotationList from "../components/QuotationList";
 
 function Index(props) {
   return useRoutes([
@@ -38,8 +38,8 @@ function Index(props) {
           element: <CompanyList/>,
         },
         {
-          path: "quotation",
-          element: <QuotationLIst/>,
+          path: "order",
+          element: <QuotationList/>,
         },
         {
           path: "details",
