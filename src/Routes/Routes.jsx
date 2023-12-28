@@ -5,10 +5,10 @@ import HomeComponent from "../components/HomeComponent";
 import ClientsComponent from "../components/ClientsHome";
 import Settings from "../components/Settings";
 import PrimaryActions from "../components/PrimaryActions";
-import ClientList from "../components/ClientsLIst";
+import ClientList from "../components/ClientsList";
 import CompanyList from "../components/CompanyList";
 import DetailsLayout from "../components/DetailsLayout";
-import QuotationList from "../components/QuotationList";
+import OrderList from "../components/OrderList";
 
 function Index(props) {
   return useRoutes([
@@ -38,8 +38,8 @@ function Index(props) {
           element: <CompanyList/>,
         },
         {
-          path: "order",
-          element: <QuotationList/>,
+          path: "orders",
+          element: <OrderList/>,
         },
         {
           path: "details",

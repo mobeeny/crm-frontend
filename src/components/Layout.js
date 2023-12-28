@@ -339,7 +339,15 @@ export default function Layout() {
                                 horizontal: "center",
                             }}
                         >
-                            <ListItemButton to={`/orders`}>All Orders</ListItemButton>
+                            <ListItemButton
+                                component={Link}
+                                to={`/orders`}
+                                onClick={() => {
+                                    dispatch(setOrderState("order"));
+                                }}
+                            >
+                                All Orders
+                            </ListItemButton>
                             <ListItemButton
                                 onClick={() => {
                                     dispatch(setOrderDialog(true));
@@ -364,7 +372,15 @@ export default function Layout() {
                                 horizontal: "center",
                             }}
                         >
-                            <ListItemButton to={`/order`}>All Quotes </ListItemButton>
+                            <ListItemButton
+                                component={Link}
+                                to={`/orders`}
+                                onClick={() => {
+                                    dispatch(setOrderState("quote"));
+                                }}
+                            >
+                                All Quotes
+                            </ListItemButton>
                             <ListItemButton
                                 onClick={() => {
                                     dispatch(setOrderDialog(true));

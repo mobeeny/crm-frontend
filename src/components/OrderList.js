@@ -16,7 +16,7 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { setSelectedCompany, setSelectedCompanyId } from "../redux/reducers/selectedCompany";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, query, where } from "firebase/firestore";
 import AddCompanyDialog from "./D_NewCompany";
 import { setCompanyDialog } from "../redux/reducers/dialogFlags";
 import Table from "@mui/material/Table";
@@ -93,23 +93,30 @@ export default function QuotationList() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const quotationRef = collection(db, instancesRef + auth.currentUser.uid + "/quotation");
+
     const quotationList = useSelector((state) => state.quotations.quotationList);
+    const orderState = useSelector((state) => state.orderCrud.orderState);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const getQuotation = async () => {
         //Read the Data
-        //Set the Movie List
+        const statusQuery = query(quotationRef, where("orderStatus", "==", orderState));
         try {
-            const data = await getDocs(quotationRef);
+            const data = await getDocs(statusQuery);
             const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
             dispatch(setQuotationList(filteredData));
         } catch (err) {
             console.error(err);
         }
     };
+    // useEffect(() => {
+    //     getQuotation();
+    // }, []);
     useEffect(() => {
+        console.log("Change: ", orderState);
         getQuotation();
-    }, []);
+    }, [orderState]);
 
     const handleCompanySelected = (company) => {
         console.log("Selected Company:", company);
