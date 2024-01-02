@@ -61,7 +61,8 @@ export const Auth = () => {
                 const newSysData = {
                     clientSid: 0,
                     companySid: 0,
-                    quotationSid: 0
+                    quotationSid: 0,
+                    orderSid:0
                 }
 
                 await addDoc(usersCollection, newUserDoc);

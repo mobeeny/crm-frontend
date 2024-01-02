@@ -33,6 +33,11 @@ import { useNavigate } from "react-router-dom";
 import { setSelectedClientId } from "../redux/reducers/selectedClient";
 import { setQuotationList } from "../redux/reducers/quotations";
 import { Button, Stack } from "@mui/material";
+import Checkbox from '@mui/material/Checkbox';
+import { setSelectedQuote, setSelectedQuoteId } from "../redux/reducers/selectedQuote";
+import { setSelectedOrder, setSelectedOrderId } from "../redux/reducers/selectedOrder";
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -44,50 +49,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-function EnhancedTableToolbar() {
-    const selectedCompanyId = useSelector((state) => state.selectedCompany.selectedCompanyId);
-    const dispatch = useDispatch();
 
-    const handleEdit = () => {
-        dispatch(setCompanyDialog(true));
-    };
-
-    return (
-        <Toolbar
-            sx={{
-                pl: { sm: 2 },
-                pr: { xs: 1, sm: 1 },
-                ...(selectedCompanyId.length > 0 && {
-                    bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-                }),
-            }}
-        >
-            {selectedCompanyId.length > 0 ? (
-                <Typography sx={{ flex: "1 1 100%" }} color="inherit" variant="subtitle1" component="div">
-                    {selectedCompanyId.length} selected
-                </Typography>
-            ) : (
-                <Typography sx={{ flex: "1 1 100%" }} variant="h6" id="tableTitle" component="div">
-                    All Quotations
-                </Typography>
-            )}
-
-            {selectedCompanyId.length > 0 ? (
-                <Tooltip title="Edit">
-                    <IconButton>
-                        <EditIcon onClick={handleEdit} />
-                    </IconButton>
-                </Tooltip>
-            ) : (
-                <Tooltip title="Filter list">
-                    <IconButton>
-                        <FilterListIcon />
-                    </IconButton>
-                </Tooltip>
-            )}
-        </Toolbar>
-    );
-}
 
 export default function QuotationList() {
     const [page, setPage] = useState(0);
@@ -96,6 +58,8 @@ export default function QuotationList() {
 
     const quotationList = useSelector((state) => state.quotations.quotationList);
     const orderState = useSelector((state) => state.orderCrud.orderState);
+    const selectedId = useSelector((state) => orderState === "quote" ? state.selectedQuote.selectedQuoteId : state.selectedOrder.selectedOrderId)
+
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -118,14 +82,14 @@ export default function QuotationList() {
         getQuotation();
     }, [orderState]);
 
-    const handleCompanySelected = (company) => {
-        console.log("Selected Company:", company);
+    // const handleOrderSelected = (company) => {
+    //     console.log("Selected Company:", company);
 
-        dispatch(setSelectedCompanyId(company.id));
-        dispatch(setSelectedCompany(company));
+    //     dispatch(setSelectedCompanyId(company.id));
+    //     dispatch(setSelectedCompany(company));
 
-        dispatch(setSelectedClientId(company.primaryClientId));
-    };
+    //     dispatch(setSelectedClientId(company.primaryClientId));
+    // };
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -143,11 +107,26 @@ export default function QuotationList() {
         navigate(path);
     };
 
+    const handleOrderSelected = (payload) => {
+        if (orderState === "quote") {
+
+            dispatch(setSelectedQuoteId(payload.id))
+            dispatch(setSelectedQuote(payload))
+
+
+        }
+        else {
+
+            dispatch(setSelectedOrderId(payload.id))
+            dispatch(setSelectedOrder(payload))
+
+        }
+    }
+
     return (
         <div style={{ height: "auto", width: "98%", margin: "1%" }}>
             {console.log("Data")}
 
-            <EnhancedTableToolbar />
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
@@ -163,7 +142,7 @@ export default function QuotationList() {
                         {quotationList
                             ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) // Use slice to get the rows for the current page
                             .map((quotation) => (
-                                <TableRow
+                                <TableRow onClick={() => handleOrderSelected(quotation)}
                                     // key={company.companySid}
                                     // onClick={() => handleCompanySelected(company)}
                                     hover
@@ -175,10 +154,11 @@ export default function QuotationList() {
                                         }
                                     }
                                 >
+
                                     <TableCell component="th" scope="row">
-                                        {quotation.quotationSid}
+                                        {orderState === "quote" ? quotation.quotationSid : quotation.orderSid}
                                     </TableCell>
-                                    <StyledTableCell align="left" onClick={() => handleClick("/details", 1)}>
+                                    <StyledTableCell align="left" onClick={() => orderState === "quote" ? handleClick("/details", 3) : handleClick("/details", 2)}>
                                         {quotation.quotationClient.name}
                                     </StyledTableCell>
 

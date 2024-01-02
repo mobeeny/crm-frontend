@@ -55,13 +55,19 @@ export default function AddOrderDialog() {
                 if (sIds.exists()) {
                     console.log("Current quotationtSid:", sIds.data());
                     // Get the current clientSid value
-                    const currentSid = sIds.data().quotationSid;
+                    const currentSid =orderState==="quote"? sIds.data().quotationSid:sIds.data().orderSid;
                     // Increment the clientSid value by 1
                     const updatedSid = currentSid + 1;
 
                     // Update the document with the new Sid value
-                    await updateDoc(docRef, { quotationSid: updatedSid });
+                    const fieldToUpdate = orderState === "quote" ? "quotationSid" : "orderSid";
 
+                    // Create an object with the field to be updated
+                    const updateObject = { [fieldToUpdate]: updatedSid };
+                
+                    // Update the document with the new Sid value
+                    await updateDoc(docRef, updateObject);
+                
                     // Include the updated clientSid in the data object
                     await addDoc(quotationCollectionRef, {
                         quotationClient: orderClient,
@@ -69,7 +75,7 @@ export default function AddOrderDialog() {
                         subtitle: subtitle,
                         timeline: timeline,
                         payments: payments,
-                        quotationSid: updatedSid,
+                        [fieldToUpdate]: updatedSid, // Use the same field in the data object
                         orderStatus: orderState,
                     });
                 } else {

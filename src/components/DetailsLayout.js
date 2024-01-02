@@ -15,6 +15,7 @@ import DataLoader from "./DataLoader";
 import DetailCompany from "./Detail_Company";
 import { useSelector, useDispatch } from "react-redux";
 import { setdetailsSelectedTab } from "../redux/reducers/uiControls";
+import DetailOrder from "./DetailOrders";
 
 export default function DetailsLayout() {
     // const [selectedTab, setSelectedTab] = React.useState(0);
@@ -57,7 +58,7 @@ export default function DetailsLayout() {
                     ) : selectedTab == 1 ? (
                         <DetailCompany sx={{ textAlign: "left", margin: 2 }} />
                     ) : selectedTab == 2 ? (
-                        <>Orders</>
+                       <DetailOrder/>
                     ) : selectedTab == 3 ? (
                         <>Quotes</>
                     ) : selectedTab == 4 ? (

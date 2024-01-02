@@ -169,7 +169,6 @@ export default function CompanyList() {
         <div style={{ height: "auto", width: '98%', margin: "1%" }}>
             {console.log("Data", CompanyList)}
 
-            <EnhancedTableToolbar />
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 700 }} aria-label="customized table" >
                     <TableHead>
