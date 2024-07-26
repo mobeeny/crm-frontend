@@ -115,6 +115,8 @@ export default function CompanyList() {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const selectedCompanyId1 = useSelector((state) => state.selectedCompany.selectedCompanyId);
     const companyRef = collection(db, instancesRef + auth.currentUser.uid + "/company");
+    // const companyRef = collection(db, instancesRef + "hGPco8Q6m1cXtOK9BAB3JEAl67X2" + "/company");
+    //hGPco8Q6m1cXtOK9BAB3JEAl67X2
     const companiesList = useSelector((state) => state.companies.companies);
     const dispatch = useDispatch();
     const navigate = useNavigate();

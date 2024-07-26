@@ -177,7 +177,7 @@ const AddProduct = () => {
                     <TextField
                         label="Total Price"
                         variant="standard"
-                        disabled
+                        onChange={(e) => handleChange("totalPrice", e.target.value)}
                     />
                 </Grid>
                 <Grid item xs={6}>

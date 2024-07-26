@@ -21,6 +21,8 @@ const SelectClientComponent = ({ dispatchAction }) => {
     const createContactId = useSelector((state) => state.companyCrud.createContactId);
 
     const companyContacts = useSelector((state) => state.companyCrud.companyContacts) || [];
+    const companyPrimaryClient = useSelector((state)=> state.companyCrud.companyPrimaryClient);
+
 
     const dispatch = useDispatch();
     let results = {};
@@ -81,23 +83,27 @@ const SelectClientComponent = ({ dispatchAction }) => {
         zIndex: "1",
     };
 
+    console.log("DEBUG: companyPrimaryClient", companyPrimaryClient.name, selectedContact.name);
     return (
         <div>
             <TextField
             
                 type="text"
+                required
+                error={!selectedContact.name}
+                helperText={selectedContact.name ? "" : "Please search a valid client"}
                 fullWidth
                 value={
                     searchOn
                         ? searchQuery
                         : selectedContact.name
                         ? selectedContact.name + " - # " + selectedContact.clientSid
-                        : "Start typing..."
+                        : ""
                 }
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onClick={() => setSearchOn(true)}
                 onMouseOut={() => setSearchOn(false)}
-                label="Search for users by name..."
+                label="Client Name"
                 variant="standard"
                 InputLabelProps={{
                     shrink: true,

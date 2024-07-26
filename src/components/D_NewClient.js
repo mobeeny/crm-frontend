@@ -107,7 +107,13 @@ export default function AddClientDialog(props) {
         <div>
 
             <Dialog open={clientDialogOpen}
-                onClose={handleClose}>
+                onClose={(event, reason) => {
+                    if (reason !== "backdropClick") {
+                      handleClose();
+                    }
+                  }}
+                disableEscapeKeyDown
+                >
                 <DialogTitle>Add New Client</DialogTitle>
                 <DialogContent>
                     {/* <DialogContentText>

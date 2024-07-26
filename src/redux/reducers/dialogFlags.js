@@ -9,6 +9,7 @@ const dialogFlagSlice = createSlice({
         invoiceDialogOpen: false,
         paymentDialogOpen: false,
         speedDialDialogOpen: false,
+        changeCompanyOwnershipDialogOpen: false,
     },
     reducers: {
         setClientDialog(state, action) {
@@ -29,6 +30,9 @@ const dialogFlagSlice = createSlice({
         setSpeedDialDialog(state, action) {
             state.speedDialDialogOpen = action.payload;
         },
+        setChangeCompanyOwnershipDialog(state, action){
+            state.changeCompanyOwnershipDialogOpen = action.payload;
+        }
     },
 });
 
@@ -39,6 +43,7 @@ export const {
     setInvoiceDialog,
     setPaymentDialog,
     setSpeedDialDialog,
+    setChangeCompanyOwnershipDialog,
 } = dialogFlagSlice.actions;
 
 export default dialogFlagSlice.reducer;
