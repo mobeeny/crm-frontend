@@ -1,6 +1,7 @@
 //This is a Sample Redux Component
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { getDocs, query, where } from "firebase/firestore";
 import { increment, decrement } from "../redux/reducers/counter";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -36,8 +37,7 @@ import Menu from "@mui/material/Menu";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { setChangeCompanyOwnershipDialog } from "../redux/reducers/dialogFlags";
 import SelectClientComponent from "./SelectClientComponent";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 function DetailCompany() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -67,7 +67,9 @@ function DetailCompany() {
     (state) => state.dialogs.changeCompanyOwnershipDialogOpen
   );
 
-  const companyPrimaryClient = useSelector((state)=> state.companyCrud.companyPrimaryClient); 
+  const companyPrimaryClient = useSelector(
+    (state) => state.companyCrud.companyPrimaryClient
+  );
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -78,38 +80,36 @@ function DetailCompany() {
 
   const getCompaniesList = async () => {
     try {
-      const clientCollectionRef = collection(
-        db,
-        instancesRef + auth.currentUser.uid + "/client"
-      );
-      const childCollectionRef = collection(
+      const companysRef = collection(
         db,
         instancesRef + auth.currentUser.uid + "/company"
       );
-      const clientDocRef = doc(clientCollectionRef, selectedClientId);
 
-      const itemList = [];
-      const docSnapShot = await getDoc(clientDocRef);
-      if (docSnapShot.exists()) {
-        // dispatch(setSelectedClient(docSnapShot.data()))
-        const childListIds = docSnapShot.data().company;
+      // const companiesListData = await getDocs(companysRef);
+      const q = query(
+        companysRef,
+        where("primaryClientId", "==", selectedClientId)
+      );
+      const companiesListData = await getDocs(q);
 
-        for (const childId of childListIds) {
-          const childDocRef = doc(childCollectionRef, childId);
-          const childDoc = await getDoc(childDocRef);
-          itemList.push({
-            id: childId,
-            sid: childDoc.data().companySid ? childDoc.data().companySid : "NA",
-            title: childDoc.data().name,
-          });
-        }
-        //Set the fetched child list to component's hook
-        setCompanyList(itemList);
-      }
-    } catch (err) {
-      console.log("error", err);
-    }
+      const companies = companiesListData.docs.map((doc) => {
+        return {
+          id: doc.id,
+          sid: doc.data().companySid,
+          title: doc.data().name,
+          ...doc.data()
+        };
+      });
+      //Set All companies for Dropdown
+      setCompanyList(companies);
+      //Set First company for default
+      dispatch(setSelectedCompanyId(companies[0].id))
+      console.log("Debug: companysRef", companies);
+
+    } catch (err) {}
   };
+
+
 
   useEffect(() => {
     getCompaniesList();
@@ -121,13 +121,12 @@ function DetailCompany() {
   const [toastOpen, setToastOpen] = useState(false);
 
   const methodOwnershipChange = () => {
-      currentCompany = {
-        ...currentCompany, 
-        primaryClientId: companyPrimaryClient.id
-      }
-      dispatch(setSelectedCompany(currentCompany));
-  }
-
+    currentCompany = {
+      ...currentCompany,
+      primaryClientId: companyPrimaryClient.id,
+    };
+    dispatch(setSelectedCompany(currentCompany));
+  };
 
   const handleInputChange = (event) => {
     const { id, value } = event.target;
@@ -155,8 +154,8 @@ function DetailCompany() {
     await updateDoc(companyDoc, currentCompany);
     // dispatch(setUpdatedClient());
     setToastOpen(true);
-    dispatch(setChangeCompanyOwnershipDialog(false))
-    navigate('/company')
+    dispatch(setChangeCompanyOwnershipDialog(false));
+    navigate("/company");
   };
 
   const getCompanyData = async () => {
@@ -204,7 +203,8 @@ function DetailCompany() {
               Companies
             </InputLabel>
             <Select
-              value={13}
+              value={selectedCompanyId}
+              defaultValue={selectedCompanyId}
               onChange={handleDropDownChange} //={dispatch(setSelectedCompanyId(company.id))}
               label="Companies for selected client">
               {companyList.map((company) => (
@@ -242,15 +242,16 @@ function DetailCompany() {
                     variant="standard"
                     // onChange={(e) => setClient(e.target.value)}
                   /> */}
-                  <SelectClientComponent dispatchAction={setCompanyPrimaryClient} />
+                  <SelectClientComponent
+                    dispatchAction={setCompanyPrimaryClient}
+                  />
                 </Box>
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
                 <Button
                   variant="contained"
-                  onClick={() => updateCompanyProfile(selectedCompanyId)}
-                >
+                  onClick={() => updateCompanyProfile(selectedCompanyId)}>
                   Change Client
                 </Button>
               </DialogActions>
@@ -282,13 +283,12 @@ function DetailCompany() {
               open={Boolean(anchorEl)}
               onClose={handleClose}>
               <MenuItem
-                onClick={()=> dispatch(setChangeCompanyOwnershipDialog(true))}>
+                onClick={() => dispatch(setChangeCompanyOwnershipDialog(true))}>
                 Transfer Ownership
               </MenuItem>
               <MenuItem onClick={handleClose}>Delete - TBD</MenuItem>
             </Menu>
           </div>
-          
         </div>
 
         {/* <TransferCompanyOwnershipDialog /> */}
@@ -302,9 +302,8 @@ function DetailCompany() {
             autoComplete="off">
             <TextField
               autoFocus
-              id="id"
+              id="companySid"
               label="Company Id"
-              type="number"
               variant="standard"
               value={currentCompany.companySid}
               onChange={handleInputChange}

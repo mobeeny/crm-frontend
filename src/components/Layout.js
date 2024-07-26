@@ -218,7 +218,7 @@ export default function Layout() {
         <Toolbar>
           <img
             src="./logo.png"
-            style={{ maxWidth: "120px", marginRight: "5ch", marginLeft: "2ch" }}
+            style={{ maxWidth: "160px", marginRight: "5ch", marginLeft: "2ch" }}
           />
           <Typography
             variant="h6"

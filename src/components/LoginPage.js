@@ -61,7 +61,7 @@ export default function SignInSide() {
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage: "url(https://source.unsplash.com/random?wallpapers)",
+                        backgroundImage: "url(https://img.freepik.com/free-photo/high-angle-shot-beautiful-forest-with-lot-green-trees-enveloped-fog-new-zealand_181624-19717.jpg?t=st=1721974266~exp=1721977866~hmac=f773039b094a2e5f21124ef27e6b8090abb3b9c82a3085a665ee4704f8054dce&w=1380)",
                         backgroundRepeat: "no-repeat",
                         backgroundColor: (t) => (t.palette.mode === "light" ? t.palette.grey[50] : t.palette.grey[900]),
                         backgroundSize: "cover",
@@ -79,7 +79,7 @@ export default function SignInSide() {
                         }}
                     >
                         <img
-                            src="https://hosterlink.com/wp-content/uploads/2023/03/Logo_Blue_Black_small.png"
+                            src="./logoc.png"
                             width="60%"
                         />
 

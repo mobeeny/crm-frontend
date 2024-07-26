@@ -112,7 +112,7 @@ function EnhancedTableToolbar() {
 export default function CompanyList() {
 
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [rowsPerPage, setRowsPerPage] = useState(100);
     const selectedCompanyId1 = useSelector((state) => state.selectedCompany.selectedCompanyId);
     const companyRef = collection(db, instancesRef + auth.currentUser.uid + "/company");
     // const companyRef = collection(db, instancesRef + "hGPco8Q6m1cXtOK9BAB3JEAl67X2" + "/company");
@@ -208,7 +208,7 @@ export default function CompanyList() {
                     </TableBody>
                 </Table>
                 <TablePagination
-                    rowsPerPageOptions={[5, 13, 25]}
+                    rowsPerPageOptions={[50, 100, 200]}
                     component="div"
                     count={companiesList.length}
                     rowsPerPage={rowsPerPage}

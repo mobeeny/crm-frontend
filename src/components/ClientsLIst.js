@@ -52,7 +52,7 @@ const columns = [
 
 export default function ClientsList() {
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5); // Set your initial rows per page
+    const [rowsPerPage, setRowsPerPage] = useState(100); // Set your initial rows per page
     const clientsRef = collection(db, instancesRef + auth.currentUser.uid + "/client");
     const clientList = useSelector((state) => state.clients.clients);
     const dispatch = useDispatch();
@@ -94,7 +94,7 @@ export default function ClientsList() {
         dispatch(setSelectedClientId(client.id));
         dispatch(setSelectedClient(client));
 
-        dispatch(setSelectedCompanyId(client.company[0]));
+        
     };
 
     return (
@@ -128,7 +128,7 @@ export default function ClientsList() {
                     </TableBody>
                 </Table>
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={[50, 100, 200]}
                     component="div"
                     count={clientList.length}
                     rowsPerPage={rowsPerPage}

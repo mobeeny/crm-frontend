@@ -78,24 +78,11 @@ export default function AddCompanyDialog() {
 
   const updateClientsCompanyField = async (companyId) => {
     try {
-      const batch = writeBatch(db);
-      // console.log("COMPANY: Clients: ", cContacts);
-      // Loop through each client id in cContacts and update the "company" field
-      // cContacts.forEach((clientObject) => {
-      //     const clientRef = doc(db, instancesRef + auth.currentUser.uid + "/client/" + clientObject.id);
-      //     batch.update(clientRef, { company: arrayUnion(companyId) });
-      //     console.log("COMPANY: LOOP: ", clientRef, clientObject, companyId);
-      // });
-
       const clientRef = doc(
         db,
         instancesRef + auth.currentUser.uid + "/client/" + cPrimaryClient.id
       );
       updateDoc(clientRef, { company: arrayUnion(companyId) });
-
-      // Commit the batched write to update all documents at once
-      // await batch.commit();
-
       console.log("Company field updated for all clients in cContacts array.");
     } catch (error) {
       console.error("Error updating company field:", error);

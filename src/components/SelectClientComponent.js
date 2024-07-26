@@ -72,8 +72,8 @@ const SelectClientComponent = ({ dispatchAction }) => {
 
     const listContainerStyles = {
         position: "absolute",
-        width: "80%",
-        maxHeight: "200px", // Adjust the max-height as needed
+        width: "40%",
+        maxHeight: "300px", // Adjust the max-height as needed
         overflowY: "auto",
         border: "1px solid #ccc",
         borderTop: "none",
@@ -119,7 +119,7 @@ const SelectClientComponent = ({ dispatchAction }) => {
                                 onClick={() => handleUserClick(client)}
                                 // onMouseEnter={()=>handleMouseEnter(client.id)}
                             >
-                                <ListItemText primary={client.name} />
+                                <ListItemText primary={client.name + " -#" + client.clientSid} />
                             </ListItemButton>
                         ))}
                     </List>

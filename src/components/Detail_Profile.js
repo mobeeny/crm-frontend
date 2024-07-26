@@ -80,7 +80,7 @@ function Profile() {
                             </InputLabel> */}
                         <TextField
                             autoFocus
-                            id="id"
+                            id="clientSid"
                             label="ID"
                             variant="standard"
                             value={currentClient.clientSid}
